@@ -64,6 +64,8 @@ GDSC Open Source is a wonderful opportunity to gain real experience working with
 
 This project will focus on delivering a **complete product** that other developers and recruiters can see, with **extensive documentation, diagrams, and photos**. There will also be a focus on **DevOps and cloud infrastructure**.
 
+If you are interested in learning more in these areas, consider applying to my team! I am looking for dedicated individuals who are able to learn things as they go. You don't have to know any of the tools listed below (although it would be a plus), as I didn't know them before. Just show up consistently!
+
 <!-- ABOUT THE PROJECT -->
 
 ## 📋 About The Project
@@ -81,6 +83,8 @@ It also doesn't matter what you journal about, as numerous studies find that peo
 <!-- TOOLS -->
 
 ## 🛠️ Built With
+
+(_*subject to change*_)
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
