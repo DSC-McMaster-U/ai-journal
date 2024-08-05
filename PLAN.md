@@ -86,8 +86,6 @@ This stack is not set in stone and will almost definitely change based on discus
   - [Name]
   - [Name]
   - [Name]
-- **UI/UX Figma Designer:**
-  - [Name]
 - **Backend Developers:**
   - [Name]
   - [Name]
