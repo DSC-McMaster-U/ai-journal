@@ -71,8 +71,6 @@ This stack is not set in stone and will almost definitely change based on discus
 
 [Testing & CI/CD Plan Eraser.io Documentation](https://app.eraser.io/workspace/REldmOGaxXlQqWZVVQb0?origin=share)
 
-![WLhvOW4Bih-6YnO9wUzV6](https://github.com/user-attachments/assets/6de4db53-d698-4722-bbd7-ddc5fe0b7860)
-
 ### Hosting
 
 [Hosting and Deployment Eraser.io Documentation](https://app.eraser.io/workspace/tA3cpgURfOfrJfOkImal?origin=share)

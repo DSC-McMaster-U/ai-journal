@@ -58,6 +58,14 @@
 
 <!-- ABOUT THE PROJECT -->
 
+## 🚨 Join This Team!
+
+GDSC Open Source is a wonderful opportunity to gain real experience working with other developers in an agile-like environment. My goal with this project and team is to provide applicable experience for your future co-ops and software positions. [AutoML](https://github.com/DSC-McMaster-U/Auto-ML) was the most mentioned piece on my resume during interviews, allowing me to discuss higher-level topics in more detail and to talk about DevOps, cloud, and AI comfortably. I hope to give everyone on this team the same experience.
+
+This project will focus on delivering a **complete product** that other developers and recruiters can see, with **extensive documentation, diagrams, and photos**. There will also be a focus on **DevOps and cloud infrastructure**.
+
+<!-- ABOUT THE PROJECT -->
+
 ## 📋 About The Project
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
@@ -89,7 +97,9 @@ It also doesn't matter what you journal about, as numerous studies find that peo
 ![cypress](https://img.shields.io/badge/-cypress-%23E5E5E5?style=for-the-badge&logo=cypress&logoColor=058a5e)
 ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
 
-## Contributors
+![WLhvOW4Bih-6YnO9wUzV6](https://github.com/user-attachments/assets/6de4db53-d698-4722-bbd7-ddc5fe0b7860)
+
+## 🧑‍💻 Contributors
 
 | <div style="width:100px"> Contributor </div>                                                                   | Most Used Frameworks/Tools | Notable Contributions |
 | -------------------------------------------------------------------------------------------------------------- | -------------------------- | --------------------- |
