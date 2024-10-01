@@ -19,7 +19,7 @@
   <p align="center">
   Open-source AI-assisted journaling and mood-tracking application designed to improve mental health using insightful analysis and personalized support for their users' mental well-being
     <br />
-    <a href="https://github.com/DSC-McMaster-U/ai-journal/blob/main/PLAN.md"><strong>Explore project plan »</strong></a>
+    <a href="https://github.com/DSC-McMaster-U/ai-journal/blob/main/PROJECT-ROADMAP.MD"><strong>Explore project plan »</strong></a>
     <br />
     <br />
     <!-- <a href="https://github.com/DSC-McMaster-U/ai-journal">View Demo</a> -->
