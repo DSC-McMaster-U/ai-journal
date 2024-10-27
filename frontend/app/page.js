@@ -16,24 +16,51 @@ export default function LandingPage() {
         </header>
 
         <main className="flex-grow p-6">
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Features</h2>
-            <ul className="list-disc list-inside">
-              <li>Feature 1</li>
-              <li>Feature 2</li>
-              <li>Feature 3</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">Get Journalling</h2>
-            <button className="btn btn-accent" onClick={() => router.push('/login')}>
+            <section>
+            <h2 className="text-2xl font-semibold mb-4">Let's get journalling!</h2>
+            <button className="btn btn-accent mr-4" onClick={() => router.push('/login')}>
               Log In
             </button>
             <button className="btn btn-accent" onClick={() => router.push('/register')}>
               Register
             </button>
           </section>
+
+          <div className="card glass w-96 mt-8">
+            <figure>
+              <img
+                src='/frontend/app/images/journalling-card.jpg'
+                alt="journalling" />
+            </figure>
+            <div className="card-body">
+              <h2 className="card-title">Journalling</h2>
+              <p>Enjoy easily jotting down your thoughts and feelings using our user-friendly interface.</p>
+            </div>
+          </div>
+
+          <div className="card glass w-96 mt-8">
+            <figure>
+              <img
+                src='/frontend/app/images/journalling-card.jpg'
+                alt="journalling" />
+            </figure>
+            <div className="card-body">
+              <h2 className="card-title">Mood Tracking</h2>
+              <p>Visualize patterns in your mood over time through personalized graphs.</p>
+            </div>
+          </div>
+
+          <div className="card glass w-96 mt-8">
+            <figure>
+              <img
+                src='/frontend/app/images/journalling-card.jpg'
+                alt="journalling" />
+            </figure>
+            <div className="card-body">
+              <h2 className="card-title">AI Buddy</h2>
+              <p>Level up your journalling game with AI-assisted custom prompts and analysis.</p>
+            </div>
+          </div>
         </main>
 
         <footer className="bg-secondary text-white p-6">
