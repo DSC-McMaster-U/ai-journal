@@ -1,18 +1,21 @@
-const { specs, swaggerUi } = require("./swagger");
-
 const express = require("express");
-const api = require("./api/routing");
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+const sampleRoutes = require("./routes/sample");
+const userRoutes = require("./routes/users");
+const productRoutes = require("./routes/products");
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+// Swagger docs setup
+const setupSwagger = require("./swagger");
+setupSwagger(app);
 
-api.generateRoutes(app);
+// Route setup
+app.use("/api/sample", sampleRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
-app.listen(port, () => {
-  console.log("Server is running on port 3000");
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });
