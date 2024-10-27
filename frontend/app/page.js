@@ -1,6 +1,7 @@
-// import Navbar from "@/components/navbar/Navbar";
-// import { useRouter } from "next/router";
 'use client'
+
+import Navbar from "@/components/navbar/Navbar";
+// import { useRouter } from "next/router";
 import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 
@@ -8,24 +9,26 @@ export default function LandingPage() {
   const router = useRouter()
 
   return (
-      <div className="flex flex-col min-h-screen">
-        {/* <Navbar/> */}
-        <header className="bg-primary text-white p-6">
+      <div className="flex justify-center flex-col min-h-screen">
+        <Navbar/>
+        <header className="bg-primary text-white text-center p-6">
           <h1 className="text-3xl font-bold">Welcome to your AI Journal</h1>
           <p className="mt-2">Your one-stop solution for awesome content!</p>
         </header>
 
         <main className="flex-grow p-6">
-            <section>
-            <h2 className="text-2xl font-semibold mb-4">Let's get journalling!</h2>
+        <section className="text-center mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Let's get journalling!</h2>
             <button className="btn btn-accent mr-4" onClick={() => router.push('/login')}>
               Log In
             </button>
             <button className="btn btn-accent" onClick={() => router.push('/register')}>
               Register
             </button>
-          </section>
+        </section>
 
+          <h2 className="text-2xl font-semibold mb-4 text-center">Features</h2>
+          <div className="flex grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <div className="card glass w-96 mt-8">
             <figure>
               <img
@@ -60,6 +63,7 @@ export default function LandingPage() {
               <h2 className="card-title">AI Buddy</h2>
               <p>Level up your journalling game with AI-assisted custom prompts and analysis.</p>
             </div>
+          </div>
           </div>
         </main>
 
