@@ -1,18 +1,25 @@
-// routes/sample.js
+const express = require("express");
+const router = express.Router();
+
 /**
  * @swagger
- * /sample:
+ * /api/sample:
  *   get:
  *     summary: Returns a sample message
  *     responses:
  *       200:
- *         description: A successful response
+ *         description: A sample message
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Welcome to the Sample API!
  */
-const express = require("express");
-const router = express.Router();
-
-router.get("/sample", (req, res) => {
-  res.json({ message: "Sample message" });
+router.get("/", (req, res) => {
+  res.json({ message: "Welcome to the Sample API!" });
 });
 
 module.exports = router;
