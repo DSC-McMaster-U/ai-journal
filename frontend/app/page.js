@@ -13,7 +13,7 @@ export default function LandingPage() {
         <Navbar/>
         <header className="bg-primary text-white text-center p-6">
           <h1 className="text-3xl font-bold">Welcome to your AI Journal</h1>
-          <p className="mt-2">Your one-stop solution for awesome content!</p>
+          <p className="mt-2">Empower your well-being: document your thoughts, track your mood, and unlock insights into your mental health</p>
         </header>
 
         <main className="flex-grow p-6">
@@ -29,10 +29,10 @@ export default function LandingPage() {
 
           <h2 className="text-2xl font-semibold mb-4 text-center">Features</h2>
           <div className="flex grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="card glass w-96 mt-8">
+          <div className="card glass w-96 mt-8 bg-primary">
             <figure>
               <img
-                src='/frontend/app/images/journalling-card.jpg'
+                src='ai-journal\frontend\app\images\journalling-card.jpg' // not working.
                 alt="journalling" />
             </figure>
             <div className="card-body">
@@ -41,7 +41,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="card glass w-96 mt-8">
+          <div className="card glass w-96 mt-8 bg-primary">
             <figure>
               <img
                 src='/frontend/app/images/journalling-card.jpg'
@@ -53,7 +53,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="card glass w-96 mt-8">
+          <div className="card glass w-96 mt-8 bg-primary">
             <figure>
               <img
                 src='/frontend/app/images/journalling-card.jpg'
@@ -66,10 +66,6 @@ export default function LandingPage() {
           </div>
           </div>
         </main>
-
-        <footer className="bg-secondary text-white p-6">
-          <p>2024 GDSC McMaster.</p>
-        </footer>
       </div>
   );
 }
