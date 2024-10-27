@@ -1,12 +1,17 @@
 // import Navbar from "@/components/navbar/Navbar";
+// import { useRouter } from "next/router";
+'use client'
+import Link from 'next/link'
+import {useRouter} from 'next/navigation'
 
 export default function LandingPage() {
+  const router = useRouter()
+
   return (
-    <html data-theme="synthwave">
       <div className="flex flex-col min-h-screen">
         {/* <Navbar/> */}
-        <header className="bg-primary text-black p-6">
-          <h1 className="text-3xl font-bold">Hi to your AI Journal</h1>
+        <header className="bg-primary text-white p-6">
+          <h1 className="text-3xl font-bold">Welcome to your AI Journal</h1>
           <p className="mt-2">Your one-stop solution for awesome content!</p>
         </header>
 
@@ -21,12 +26,13 @@ export default function LandingPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Get Started</h2>
-            <button className="btn btn-accent">Log In</button>
-          </section>
-
-          <section>
-            <button className="btn btn-accent">Sign Up</button>
+            <h2 className="text-2xl font-semibold mb-4">Get Journalling</h2>
+            <button className="btn btn-accent" onClick={() => router.push('/login')}>
+              Log In
+            </button>
+            <button className="btn btn-accent" onClick={() => router.push('/register')}>
+              Register
+            </button>
           </section>
         </main>
 
@@ -34,6 +40,5 @@ export default function LandingPage() {
           <p>2024 GDSC McMaster.</p>
         </footer>
       </div>
-    </html>
   );
 }
