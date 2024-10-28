@@ -1,20 +1,22 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "Backend For AI Journal",
-  "main": "index.js",
-  "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.21.1",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.7"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Backend For AI Journal",
+    "main": "index.js",
+    "scripts": {
+        "start": "node --env-file=.env src/index.js",
+        "dev": "nodemon --env-file=.env src/index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.21.1",
+        "express-session": "^1.18.1",
+        "passport-google-oidc": "^0.1.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.7"
+    }
 }

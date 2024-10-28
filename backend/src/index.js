@@ -1,10 +1,24 @@
 const express = require("express");
 const app = express();
-const PORT = 3000;
+const session = require("express-session");
+const passport = require("passport");
+//const path = require("path");
+const auth = require("./auth.js");
+
+const PORT = process.env["PORT"];
 
 const sampleRoutes = require("./routes/sample");
 const userRoutes = require("./routes/users");
 const productRoutes = require("./routes/products");
+
+//Passport Auth Setup
+app.use(
+    session({ secret: "Test Secret ", resave: false, saveUninitialized: true })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+//app.use(express.static(path.join(__dirname, "public")));
+auth.initialize(passport);
 
 // Swagger docs setup
 const setupSwagger = require("./swagger");
