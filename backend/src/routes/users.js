@@ -69,10 +69,10 @@ router.post("/", (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: Object
+ *               type: object
  *               properties:
  *                 user:
- *                   type: Object
+ *                   type: object
  *                   properties:
  *                     name:
  *                       type: string
@@ -88,7 +88,7 @@ router.post("/", (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: Object
+ *               type: object
  *               properties:
  *                 error:
  *                   type: string
