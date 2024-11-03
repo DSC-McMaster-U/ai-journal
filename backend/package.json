@@ -10,6 +10,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "connect-sqlite3": "^0.9.15",
         "express": "^4.21.1",
         "express-session": "^1.18.1",
         "passport-google-oidc": "^0.1.0",

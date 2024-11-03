@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
+const cors = require("cors");
 
 /**
  * @swagger
@@ -63,6 +64,30 @@ router.post("/", (req, res) => {
  */
 router.get("/google-o-auth", passport.authenticate("google"));
 
+//building o-auth requests based on googles documentation:
+//https://developers.google.com/identity/protocols/oauth2/web-server#node.js
+//https://www.descope.com/blog/post/oauth2-react-authentication-authorization
+
+/*
+const generateAuthToken = function (req, res, next) {
+    //Create a unique token
+    const expirationTime = 120; //Token set to expire after 120s
+    const token = new Token(32, req["user"]["id"], expirationTime);
+
+    console.log(req.session);
+    console.log(req.session.authtokens);
+
+    //Store token in session storage
+    req.session[token.value] = token;
+
+    //Add token to request
+    req["authtoken"] = token.value;
+
+    console.log(token);
+
+    next(null, req);
+};*/
+
 /**
  * @swagger
  * /api/users/google-o-auth:
@@ -81,12 +106,44 @@ router.get(
         failureMessage: true,
     }),
     function (req, res) {
-        res.redirect("http://localhost:3000/dashboard");
+        res.redirect("http://localhost:3000/login?method=o-auth-google");
     }
 );
 
-//building o-auth requests based on googles documentation:
-//https://developers.google.com/identity/protocols/oauth2/web-server#node.js
-//https://www.descope.com/blog/post/oauth2-react-authentication-authorization
+/**
+ * @swagger
+ * /api/users/get-session-user:
+ *   get:
+ *     summary: Called for getting this user from a given session
+ *     responses:
+ *       200:
+ *         description: Returns the user data from the current session
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: string
+ *                  example: 1471034918
+ *                username:
+ *                  type: string
+ *                  example: John_Doe_1782
+ *                name:
+ *                  type: string
+ *                  example: John Doe
+ *       400:
+ *         description: Returns an error as there is no user in the current session
+ */
+router.get("/get-session-user", cors(), function (req, res) {
+    console.log(req.session);
+
+    if (req.session == undefined || req.session.passport == undefined) {
+        res.status(400).end();
+        return;
+    }
+
+    req.send(req.session.passport.user);
+});
 
 module.exports = router;

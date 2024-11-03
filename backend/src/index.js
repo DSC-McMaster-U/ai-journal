@@ -4,6 +4,8 @@ const session = require("express-session");
 const passport = require("passport");
 //const path = require("path");
 const auth = require("./auth.js");
+//Will be needed once we add the DB
+const SQLiteStore = require("connect-sqlite3")(session);
 
 const PORT = process.env["PORT"];
 
@@ -13,7 +15,11 @@ const productRoutes = require("./routes/products");
 
 //Passport Auth Setup
 app.use(
-    session({ secret: "Test Secret ", resave: false, saveUninitialized: true })
+    session({
+        secret: "Test Secret ",
+        resave: false,
+        saveUninitialized: true,
+    })
 );
 app.use(passport.initialize());
 app.use(passport.session());
