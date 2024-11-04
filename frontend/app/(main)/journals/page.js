@@ -9,12 +9,22 @@ export default function JournalsPage() {
     { id: "6", date: "Mon 14", title: "Day 236" },
     { id: "7", date: "Tues 15", title: "Day 237" },
     { id: "8", date: "Wed 16", title: "Day 238" },
+
+    // More entries just to test
+    { id: "9", date: "Wed 9", title: "Day 231" },
+    { id: "10", date: "Thurs 10", title: "Day 232" },
+    { id: "11", date: "Fri 11", title: "Day 233" },
+    { id: "12", date: "Sat 12", title: "Day 234" },
+    { id: "13", date: "Sun 13", title: "Day 235" },
+    { id: "14", date: "Mon 14", title: "Day 236" },
+    { id: "15", date: "Tues 15", title: "Day 237" },
+    { id: "16", date: "Wed 16", title: "Day 238" },
   ];
 
   return (
     <div className="flex-1">
       <div className="text-4xl px-8 pt-14 pb-5 font-bold">Journals</div>
-      <div>
+      <div className="overflow-y-scroll" style={{ height: 'calc(94vh - 5rem - 3.5rem - 1.25rem'}}>
         {journalEntries.length !== 0 ? journalEntries.map((entry) => (
           <div key={entry.id} className="flex justify-between items-center bg-slate-50 px-5 border-t-4 h-20">
             <div className="flex gap-5">
