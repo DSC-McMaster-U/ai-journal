@@ -40,7 +40,7 @@ export default function Navbar() {
     const isLoggedIn = true;
 
     return (
-      <div className="flex justify-evenly items-center bg-indigo-100 h-24 fixed bottom-0 left-0 right-0">
+      <div className="footer flex justify-evenly items-center bg-indigo-100 h-24 max-h-24 p-0 m-0 z[2]">
         {routes.map((route) => (
             <Link className={
                 `${currentPath === route.path ? 'text-purple-600' : 'text-gray-600'}
