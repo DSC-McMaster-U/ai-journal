@@ -1,9 +1,11 @@
+'use client'
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faFaceFrown, faFaceFrownOpen, faFaceGrin, faFaceLaugh } from "@fortawesome/free-solid-svg-icons";
 
 export default function JournalsPage() {
   // Placeholder data
-  const journalEntries = [
+  const [journalEntries, setJournalEntries] = useState([
     { id: "1", date: "Wed 9", title: "Day 231" },
     { id: "2", date: "Thurs 10", title: "Day 232" },
     { id: "3", date: "Fri 11", title: "Day 233" },
@@ -22,7 +24,7 @@ export default function JournalsPage() {
     { id: "14", date: "Mon 14", title: "Day 236" },
     { id: "15", date: "Tues 15", title: "Day 237" },
     { id: "16", date: "Wed 16", title: "Day 238" },
-  ];
+  ]);
 
   return (
     <div className="flex-1">
