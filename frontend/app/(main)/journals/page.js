@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsisVertical, faFaceFrown, faFaceFrownOpen, faFaceGrin, faFaceLaugh } from "@fortawesome/free-solid-svg-icons";
+
 export default function JournalsPage() {
   // Placeholder data
   const journalEntries = [
@@ -26,12 +29,20 @@ export default function JournalsPage() {
       <div className="text-4xl px-8 pt-14 pb-5 font-bold">Journals</div>
       <div className="overflow-y-scroll" style={{ height: 'calc(94vh - 5rem - 3.5rem - 1.25rem'}}>
         {journalEntries.length !== 0 ? journalEntries.map((entry) => (
-          <div key={entry.id} className="flex justify-between items-center bg-slate-50 px-5 border-t-4 h-20">
-            <div className="flex gap-5">
-              <div className="text-lg">{entry.date}</div>
-              <div className="text-xl">{entry.title}</div>
+          <div key={entry.id} className="flex justify-between items-center bg-slate-50 px-6 border-t-4 h-20">
+            <div className="flex gap-12">
+              <div className="text-lg text-slate-600 text-wrap text-center max-w-6">{entry.date}</div>
+              <div className="text-xl">
+                <div className="text-slate-700 font-semibold">{entry.title}</div>
+                <div className="flex gap-2 text-slate-600">
+                  <FontAwesomeIcon icon={faFaceLaugh} />
+                  <FontAwesomeIcon icon={faFaceGrin} />
+                  <FontAwesomeIcon icon={faFaceFrownOpen} />
+                  <FontAwesomeIcon icon={faFaceFrown} />
+                </div>
+              </div>
             </div>
-            <div>dot dot dot</div>
+            <div className="text-3xl text-slate-600"><FontAwesomeIcon icon={faEllipsisVertical}/></div>
           </div>
         )) : (<div>No journal entries yet.</div>)}
       </div>
