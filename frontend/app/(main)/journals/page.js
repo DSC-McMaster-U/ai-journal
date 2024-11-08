@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisVertical, faFaceFrown, faFaceFrownOpen, faFaceGrin, faFaceLaugh } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisVertical, faFaceFrown, faFaceFrownOpen, faFaceGrin, faFaceLaugh, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function JournalsPage() {
   // Placeholder data
@@ -65,7 +65,9 @@ export default function JournalsPage() {
           </div>
         )) : (<div>No journal entries yet.</div>)}
       </div>
-      <button className="fixed btn right-3 bottom-28 rounded-full w-20 h-20 bg-indigo-100 active:bg-indigo-300 shadow-md z-[5]" onClick={() => navigateToJournal(`temp-id`)}>Plus</button>
+      <button className="fixed btn right-3 bottom-28 rounded-full w-20 h-20 bg-indigo-100 active:bg-indigo-300 shadow-md z-[5]" onClick={() => navigateToJournal(`temp-id`)}>
+        <FontAwesomeIcon icon={faPlus} className="text-4xl"/>
+      </button>
     </div>
   );
 }
