@@ -57,7 +57,7 @@ export default function JournalsPage() {
             </div>
             <details className="dropdown dropdown-end">
               <summary className="btn m-1 text-3xl text-slate-600 bg-transparent border-none shadow-none" onClick={preventPropagation}><FontAwesomeIcon icon={faEllipsisVertical}/></summary>
-              <ul className="menu dropdown-content bg-base-100 rounded-box z-[100] w-52 p-2 shadow max-w-24 font-semibold" onClick={preventPropagation}>
+              <ul className="menu dropdown-content bg-base-100 rounded-box z-[3] w-52 p-2 shadow max-w-24 font-semibold" onClick={preventPropagation}>
                 <li className="text-red-500"><a>Delete</a></li>
                 <li><a>Share</a></li>
               </ul>
@@ -65,6 +65,7 @@ export default function JournalsPage() {
           </div>
         )) : (<div>No journal entries yet.</div>)}
       </div>
+      <button className="fixed btn right-3 bottom-28 rounded-full w-20 h-20 bg-indigo-100 active:bg-indigo-300 shadow-md z-[5]" onClick={() => navigateToJournal(`temp-id`)}>Plus</button>
     </div>
   );
 }
