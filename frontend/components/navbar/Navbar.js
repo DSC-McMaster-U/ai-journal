@@ -1,43 +1,49 @@
 'use client';
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBook, faComments, faHouse, faChartColumn, faGear } from "@fortawesome/free-solid-svg-icons";
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBook,
+  faComments,
+  faHouse,
+  faChartColumn,
+  faGear
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function Navbar() {
-    const routes = [
-        {
-            name: 'Journals',
-            path: '/journals',
-            icon: faBook,
-        },
-        {
-            name: 'Chats',
-            path: '/chats',
-            icon: faComments,
-        },
-        {
-            name: 'Dashboard',
-            path: '/dashboard',
-            icon: faHouse,
-        },
-        {
-            name: 'Stats',
-            path: '/stats',
-            icon: faChartColumn,
-        },
-        {
-            name: 'Settings',
-            path: '/settings',
-            icon: faGear,
-        },
-    ];
+  const routes = [
+    {
+      name: 'Journals',
+      path: '/journals',
+      icon: faBook
+    },
+    {
+      name: 'Chats',
+      path: '/chats',
+      icon: faComments
+    },
+    {
+      name: 'Dashboard',
+      path: '/dashboard',
+      icon: faHouse
+    },
+    {
+      name: 'Stats',
+      path: '/stats',
+      icon: faChartColumn
+    },
+    {
+      name: 'Settings',
+      path: '/settings',
+      icon: faGear
+    }
+  ];
 
-    const currentPath = usePathname();
+  const currentPath = usePathname();
 
-    // PLACEHOLDER
-    const isLoggedIn = true;
+  // PLACEHOLDER
+  const isLoggedIn = true;
 
     return (
       <div className="footer flex justify-evenly items-center bg-indigo-100 h-24 max-h-24 p-0 m-0 z[2]">

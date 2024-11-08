@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faFaceFrown, faFaceFrownOpen, faFaceGrin, faFaceLaugh, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function JournalsPage() {
+
   // Placeholder data
   const [journalEntries, setJournalEntries] = useState([
     { id: "1", date: "Wed 9", title: "Day 231" },
