@@ -42,7 +42,7 @@ export default function JournalsPage() {
       <div className="text-4xl px-8 pt-12 pb-5 font-bold">Journals</div>
       <div className="overflow-y-scroll" style={{ height: 'calc(94vh - 5rem - 3.5rem - 1.25rem'}}>
         {journalEntries.length !== 0 ? journalEntries.map((entry) => (
-          <div key={entry.id} className="flex justify-between items-center bg-slate-50 pl-6 pr-2 border-t-4 h-20" onClick={() => navigateToJournal(entry.id)}>
+          <div key={entry.id} className="flex justify-between items-center bg-slate-50 active:bg-slate-100 pl-6 pr-2 border-t-4 h-20" onClick={() => navigateToJournal(entry.id)}>
             <div className="flex gap-12">
               <div className="text-lg text-slate-600 text-wrap text-center max-w-6">{entry.date}</div>
               <div className="text-xl">
@@ -56,9 +56,9 @@ export default function JournalsPage() {
               </div>
             </div>
             <details className="dropdown dropdown-end">
-              <summary className="btn m-1 text-3xl text-slate-600 bg-transparent border-none shadow-none" onClick={preventPropagation}><FontAwesomeIcon icon={faEllipsisVertical}/></summary>
+              <summary className="btn m-1 text-3xl text-slate-600 active:text-slate-950 bg-transparent border-none shadow-none" onClick={preventPropagation}><FontAwesomeIcon icon={faEllipsisVertical}/></summary>
               <ul className="menu dropdown-content bg-base-100 rounded-box z-[3] w-52 p-2 shadow max-w-24 font-semibold" onClick={preventPropagation}>
-                <li className="text-red-500"><a>Delete</a></li>
+                <li className="text-red-500 active:text-red-500"><a>Delete</a></li>
                 <li><a>Share</a></li>
               </ul>
             </details>
