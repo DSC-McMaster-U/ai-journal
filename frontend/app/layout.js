@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html data-theme="luxury" lang="en">
+    <html data-theme="night" lang="en">
       <body className={`antialiased`}>{children}</body>
     </html>
   );
