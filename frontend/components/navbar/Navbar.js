@@ -2,41 +2,34 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faBook,
-  faComments,
-  faHouse,
-  faChartColumn,
-  faGear
-} from '@fortawesome/free-solid-svg-icons';
+import { FaBook, FaChartColumn, FaComment, FaGear, FaHouse } from 'react-icons/fa6';
 
 export default function Navbar() {
   const routes = [
     {
       name: 'Journals',
       path: '/journals',
-      icon: faBook
+      icon: <FaBook />
     },
     {
       name: 'Chats',
       path: '/chats',
-      icon: faComments
+      icon: <FaComment />
     },
     {
       name: 'Dashboard',
       path: '/dashboard',
-      icon: faHouse
+      icon: <FaHouse />
     },
     {
       name: 'Stats',
       path: '/stats',
-      icon: faChartColumn
+      icon: <FaChartColumn />
     },
     {
       name: 'Settings',
       path: '/settings',
-      icon: faGear
+      icon: <FaGear />
     }
   ];
 
@@ -46,14 +39,14 @@ export default function Navbar() {
   const isLoggedIn = true;
 
   return (
-    <div className="flex justify-evenly items-center bg-indigo-100 h-24">
+    <div className="fixed bottom-0 left-0 w-full flex justify-evenly items-center h-16 p-0 m-0 bg-neutral z[2]">
       {routes.map((route) => (
         <Link
-          className={`${currentPath === route.path ? 'text-purple-600' : 'text-gray-600'}
-                transition ease-in-out duration-500 text-3xl`}
+          className={`${currentPath === route.path ? 'text-primary' : 'text-neutral-content'}
+                transition ease-in-out duration-500 text-3xl cursor-pointer`}
           href={isLoggedIn ? route.path : '/login'}
           key={route.name}>
-          <FontAwesomeIcon icon={route.icon} />
+          {route.icon}
         </Link>
       ))}
     </div>
