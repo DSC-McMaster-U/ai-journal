@@ -1,21 +1,31 @@
-const express = require("express");
-const app = express();
-const PORT = 3000;
+// index.js
+require("dotenv").config();
 
-const sampleRoutes = require("./routes/sample");
-const userRoutes = require("./routes/users");
-const productRoutes = require("./routes/products");
+const express = require("express");
+const bodyParser = require("body-parser");
+const setupSwagger = require("./swagger");
+const warehouseRoutes = require("./routes/warehouseRoutes");
+
+const app = express();
+app.use(bodyParser.json());
 
 // Swagger docs setup
-const setupSwagger = require("./swagger");
 setupSwagger(app);
 
 // Route setup
-app.use("/api/sample", sampleRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/products", productRoutes);
+app.use("/api/warehouses", warehouseRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+// Default route
+app.get("/api", (req, res) =>
+  res.send("Try: /api/status, /api/warehouses, or /api/warehouses/:id")
+);
+
+// Status endpoint
+app.get("/api/status", (req, res) => res.send("Success."));
+
+// Set port based on environment
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+  console.log(`Swagger docs available at http://localhost:${port}/api-docs`);
 });
