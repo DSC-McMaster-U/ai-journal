@@ -5,6 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const setupSwagger = require("./swagger");
 const warehouseRoutes = require("./routes/warehouseRoutes");
+const dailyRecordRoutes = require("./routes/dailyRecordRoutes");
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,10 +15,11 @@ setupSwagger(app);
 
 // Route setup
 app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/daily_records", dailyRecordRoutes);
 
 // Default route
 app.get("/api", (req, res) =>
-  res.send("Try: /api/status, /api/warehouses, or /api/warehouses/:id")
+  res.send("Try: /api/status, /api/warehouses, /api/warehouses/:id, /api/daily_records, or /api/daily_records/:id")
 );
 
 // Status endpoint
