@@ -1,8 +1,8 @@
-// services/daily_recordService.js
+// services/dailyRecordService.js
 const connection = require("../database");
 
 // Fetch all daily records
-const getAllDaily_Records = () => {
+const getAllDailyRecords = () => {
   return new Promise((resolve, reject) => {
     connection.query(
       "SELECT * FROM `ai-journal`.`daily_records`",
@@ -17,8 +17,8 @@ const getAllDaily_Records = () => {
   });
 };
 
-// Fetch daily_record by ID
-const getDaily_RecordById = (id) => {
+// Fetch daily record by ID
+const getDailyRecordById = (id) => {
   return new Promise((resolve, reject) => {
     connection.query(
       "SELECT * FROM `ai-journal`.`daily_records` WHERE id = ?",
@@ -35,6 +35,6 @@ const getDaily_RecordById = (id) => {
 };
 
 module.exports = {
-    getAllDaily_Records,
-    getDaily_RecordById,
+    getAllDailyRecords,
+    getDailyRecordById,
 };
