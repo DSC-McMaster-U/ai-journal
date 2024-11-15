@@ -1,4 +1,4 @@
-// services/daily_recordsService.js
+// services/daily_recordService.js
 const connection = require("../database");
 
 // Fetch all daily records
