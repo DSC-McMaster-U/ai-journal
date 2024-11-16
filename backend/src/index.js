@@ -2,40 +2,26 @@
 require("dotenv").config();
 
 const express = require("express");
-const bodyParser = require("body-parser");
-const setupSwagger = require("./swagger");
-const warehouseRoutes = require("./routes/warehouseRoutes");
-
 const app = express();
-const session = require("express-session");
-const passport = require("passport");
-//const path = require("path");
-const auth = require("./auth.js");
-//Will be needed once we add the DB
-const SQLiteStore = require("connect-sqlite3")(session);
 
+// Body parser middleware
+const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
 //Passport Auth Setup
-app.use(
-  session({
-    secret: "Test Secret ",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
-//app.use(express.static(path.join(__dirname, "public")));
-auth.initialize(passport);
+const setupPassport = require("./passport");
+setupPassport(app);
 
 // Swagger docs setup
 const setupSwagger = require("./swagger");
 setupSwagger(app);
 
 // Route setup
+const authRoute = require("./routes/authRoute");
+const warehouseRoutes = require("./routes/warehouseRoute");
+
 app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/auth", authRoute);
 
 // Default route
 app.get("/api", (req, res) =>
@@ -46,8 +32,8 @@ app.get("/api", (req, res) =>
 app.get("/api/status", (req, res) => res.send("Success."));
 
 // Set port based on environment
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-  console.log(`Swagger docs available at http://localhost:${port}/api-docs`);
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });

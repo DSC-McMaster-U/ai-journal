@@ -1,30 +1,27 @@
+'use client';
+
+import { permanentRedirect, useSearchParams } from 'next/navigation';
+import { useAuthentication } from '@/hooks/authentication';
+import { useRouter } from 'next/navigation';
+
 export default function LoginPage() {
-  return <div>LoginPage</div>;
-"use client";
+  //const params = useSearchParams();
+  const router = useRouter();
 
-import { redirect, useSearchParams } from "next/navigation";
+  useAuthentication(
+    () => {
+      console.log('Successful authentication!');
+      router.push('/dashboard');
+    },
+    () => {
+      console.log('User is not authenticated');
+    },
+    []
+  );
 
-export default async function LoginPage() {
-    const params = useSearchParams();
-
-    if (params.get("method") == "o-auth-google") {
-        fetch("http://localhost:3001/api/users/get-session-user")
-            .catch((err) => {
-                alert("No user found. " + err);
-            })
-            .then((res) => {
-                alert("User id: " + res["id"]);
-                redirect("/dashboard");
-            });
-    }
-
-    return <div>LoginPage: {GoogleOAuthButton()}</div>;
+  return <div>LoginPage: {GoogleOAuthButton()}</div>;
 }
 
 function GoogleOAuthButton() {
-    return (
-        <a href="http://localhost:3001/api/users/google-o-auth">
-            Log in using Google
-        </a>
-    );
+  return <a href="http://localhost:8080/api/auth">Log in using Google</a>;
 }
