@@ -12,11 +12,14 @@
     "dependencies": {
         "connect-sqlite3": "^0.9.15",
         "cors": "^2.8.5",
-        "express": "^4.21.1",
+        "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
         "express-session": "^1.18.1",
         "passport": "^0.7.0",
         "passport-google-oidc": "^0.1.0",
-        "swagger-jsdoc": "^6.2.8",
+        "mysql": "^2.18.1",
+    "swagger-jsdoc": "^6.2.8",
         "swagger-ui-express": "^5.0.1"
     },
     "devDependencies": {

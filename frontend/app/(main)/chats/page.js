@@ -1,5 +1,3 @@
 export default function ChatsPage() {
-    return (
-      <div>ChatsPage</div>
-    );
+  return <div>ChatsPage</div>;
 }

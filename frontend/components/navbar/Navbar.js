@@ -1,52 +1,54 @@
 'use client';
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBook, faComments, faHouse, faChartColumn, faGear } from "@fortawesome/free-solid-svg-icons";
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { FaBook, FaChartColumn, FaComment, FaGear, FaHouse } from 'react-icons/fa6';
 
 export default function Navbar() {
-    const routes = [
-        {
-            name: 'Journals',
-            path: '/journals',
-            icon: faBook,
-        },
-        {
-            name: 'Chats',
-            path: '/chats',
-            icon: faComments,
-        },
-        {
-            name: 'Dashboard',
-            path: '/dashboard',
-            icon: faHouse,
-        },
-        {
-            name: 'Stats',
-            path: '/stats',
-            icon: faChartColumn,
-        },
-        {
-            name: 'Settings',
-            path: '/settings',
-            icon: faGear,
-        },
-    ];
+  const routes = [
+    {
+      name: 'Journals',
+      path: '/journals',
+      icon: <FaBook />
+    },
+    {
+      name: 'Chats',
+      path: '/chats',
+      icon: <FaComment />
+    },
+    {
+      name: 'Dashboard',
+      path: '/dashboard',
+      icon: <FaHouse />
+    },
+    {
+      name: 'Stats',
+      path: '/stats',
+      icon: <FaChartColumn />
+    },
+    {
+      name: 'Settings',
+      path: '/settings',
+      icon: <FaGear />
+    }
+  ];
 
-    const currentPath = usePathname();
+  const currentPath = usePathname();
 
-    // PLACEHOLDER
-    const isLoggedIn = true;
+  // PLACEHOLDER
+  const isLoggedIn = true;
 
-    return (
-      <div className="flex justify-evenly items-center bg-indigo-100 h-24">
-        {routes.map((route) => (
-            <Link className={
-                `${currentPath === route.path ? 'text-purple-600' : 'text-gray-600'}
-                transition ease-in-out duration-500 text-3xl`
-            } href={isLoggedIn ? route.path : '/login'} key={route.name}><FontAwesomeIcon icon={route.icon}/></Link>
-        ))}
-      </div>
-    );
+  return (
+    <div className="fixed bottom-0 left-0 w-full flex justify-evenly items-center h-16 p-0 m-0 bg-neutral z[2]">
+      {routes.map((route) => (
+        <Link
+          className={`${currentPath === route.path ? 'text-primary' : 'text-neutral-content'}
+                transition ease-in-out duration-500 text-3xl cursor-pointer`}
+          href={isLoggedIn ? route.path : '/login'}
+          key={route.name}>
+          {route.icon}
+        </Link>
+      ))}
+    </div>
+  );
 }

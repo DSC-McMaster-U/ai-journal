@@ -1,3 +1,5 @@
+export default function LoginPage() {
+  return <div>LoginPage</div>;
 "use client";
 
 import { redirect, useSearchParams } from "next/navigation";
