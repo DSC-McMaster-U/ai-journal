@@ -14,11 +14,7 @@ const auth = require("./auth.js");
 //Will be needed once we add the DB
 const SQLiteStore = require("connect-sqlite3")(session);
 
-const PORT = process.env["PORT"];
-
-const sampleRoutes = require("./routes/sample");
-const userRoutes = require("./routes/users");
-const productRoutes = require("./routes/products");
+app.use(bodyParser.json());
 
 //Passport Auth Setup
 app.use(
@@ -30,10 +26,12 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
 //app.use(express.static(path.join(__dirname, "public")));
 auth.initialize(passport);
 
 // Swagger docs setup
+const setupSwagger = require("./swagger");
 setupSwagger(app);
 
 // Route setup
