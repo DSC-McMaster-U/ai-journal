@@ -45,7 +45,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'gradient-purple-blue': 'linear-gradient(to right, #6a0dad, #4f80c0)', // Custom gradient
+        'gradient-purple-blue': 'linear-gradient(to top, #142952, #001a33)', // Custom gradient
       },
     },
   },
