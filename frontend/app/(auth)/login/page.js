@@ -33,7 +33,7 @@ function GoogleOAuthButton() {
   return (
     <a href="http://localhost:8080/api/auth">
       <button className="btn btn-primary flex items-center gap-2 btn-xs sm:btn-sm md:btn-md lg:btn-lg">
-        <FaGoogle /> Log in using Google
+        <FaGoogle /> Login with Google
       </button>
     </a>
   );
