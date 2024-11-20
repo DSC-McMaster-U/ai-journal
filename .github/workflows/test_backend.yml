@@ -26,10 +26,12 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install dependencies
+        working-directory: ./backend # Change to backend folder
         run: npm install
 
       # Step 4: Run tests
       - name: Run Jest tests
+        working-directory: ./backend # Change to backend folder
         run: npm test
         env:
           CI: true # Ensures proper output in CI environments
