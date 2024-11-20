@@ -17,12 +17,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js (in the backend folder)
+      # Step 2: Set up Node.js (no need to set working-directory here)
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18 # Specify your Node.js version
-        working-directory: ./backend # Specify the backend directory for Node.js setup
 
       # Step 3: Install dependencies (in the backend folder)
       - name: Install dependencies
