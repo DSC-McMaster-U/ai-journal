@@ -18,11 +18,11 @@ const dailyRecordController = require("../controllers/dailyRecordController");
  *                 type: object
  *                 properties:
  *                   id:
- *                     type: string
- *                     example: "1"
+ *                     type: int
+ *                     example: 123123
  *                   userId:
- *                     type: string
- *                     example: "123123"
+ *                     type: string 
+ *                     example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
  *                   date:
  *                     type: string
  *                     example: "2024-11-14"
@@ -50,11 +50,11 @@ router.get("/", dailyRecordController.getAllDailyRecords);
  *               type: object
  *               properties:
  *                 id:
- *                   type: string
- *                   example: "1"
+ *                   type: int
+ *                   example: 123123
  *                 userId:
  *                   type: string
- *                   example: "123123"
+ *                   example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
  *                 date:
  *                   type: string
  *                   example: "2024-11-14"  
