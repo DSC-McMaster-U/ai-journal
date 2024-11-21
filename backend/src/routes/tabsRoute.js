@@ -71,4 +71,8 @@ router.get('/', tabsController.getAllTabs);
  */
 router.get('/:id', tabsController.getTabById);
 
+router.post('/', tabsController.createTab);
+router.put('/:id', tabsController.updateTab);
+router.delete('/:id', tabsController.deleteTab);
+
 module.exports = router;

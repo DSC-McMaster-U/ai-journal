@@ -55,4 +55,7 @@ const deleteTab = async (req, res) => {
 module.exports = {
     getAllTabs,
     getTabById,
+    createTab,
+    updateTab,
+    deleteTab,
 };
