@@ -1,9 +1,9 @@
 'use client';
 
-import { permanentRedirect, useSearchParams } from 'next/navigation';
 import { useAuthentication } from '@/hooks/authentication';
-import { FaGoogle } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,21 +20,15 @@ export default function LoginPage() {
   );
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-gradient-purple-blue">
-      <h1 className="text-7xl font-bold text-primary mt-20">Login Page</h1>
-      <div className="mt-auto mb-80">
-        <GoogleOAuthButton />
+    <div className="flex flex-col justify-center items-center h-screen">
+      <div className="card card-bordered bg-neutral w-[80%] flex flex-col items-center mb-20 p-6">
+        <h1 className="text-2xl font-light tracking-wider mb-8">Sign In Using Google</h1>
+        <Link href="http://localhost:8080/api/auth" className="mt-auto">
+          <button className="btn btn-wide btn-outline text-lg flex items-center gap-2">
+            <FcGoogle /> Sign In
+          </button>
+        </Link>
       </div>
     </div>
-  );
-}
-
-function GoogleOAuthButton() {
-  return (
-    <a href="http://localhost:8080/api/auth">
-      <button className="btn btn-primary flex items-center gap-2 btn-xs sm:btn-sm md:btn-md lg:btn-lg">
-        <FaGoogle /> Login with Google
-      </button>
-    </a>
   );
 }
