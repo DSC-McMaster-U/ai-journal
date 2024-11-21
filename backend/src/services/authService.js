@@ -1,5 +1,6 @@
 const GoogleStrategy = require("passport-google-oidc");
 const jwt = require("jsonwebtoken");
+const connection = require("../database.js");
 
 const generateUsername = (profile) => {
     let username = profile.displayName ?? "";
@@ -9,15 +10,65 @@ const generateUsername = (profile) => {
     return username + Date.now().toString().slice(-7);
 };
 
-const addUser = (user) => {};
+const addUser = (user) => {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            "INSERT INTO `ai-journal`.`users` (id, name, email, created_at) VALUES (?, ?, ?, ?)",
+            [user.id, user.name, user.email, new Date()],
+            (err, results) => {
+                console.log("I'm crying for aiden");
 
-const getUserByID = (id) => {
-    return {
-        username: "Test username",
-        email: "Test email",
-        name: "Test name",
-        id: "T35T1D",
-    };
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+    })
+        .then(() => true)
+        .catch((err) => {
+            console.log(err);
+            return false;
+        });
+};
+
+const getUserByEmail = (email) => {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            "SELECT * FROM `ai-journal`.`users` WHERE email = ?",
+            [email],
+            (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+    })
+        .then((results) => {
+            console.log(results);
+
+            if (results.length > 1) {
+                throw "Multiple users with same ID!!";
+            }
+
+            if (results.length == 0) {
+                return undefined;
+            }
+
+            return {
+                username: "No usernames :(",
+                email: results[0]["email"],
+                name: results[0]["name"],
+                id: results[0]["id"],
+            };
+        })
+        .catch((err) => {
+            console.log(err);
+            undefined;
+        });
 };
 
 function initialize(passport) {
@@ -29,12 +80,12 @@ function initialize(passport) {
                 callbackURL: "/api/auth/callback",
                 scope: ["profile", "email"],
             },
-            function dbCallback(issuer, profile, cb) {
+            async function dbCallback(issuer, profile, cb) {
                 //TODO, verifies that the user is in the db
                 console.log("We in the DB callback 🔥");
                 console.log("Profile keys: " + Object.keys(profile));
 
-                let user = getUserByID(profile.id);
+                let user = await getUserByEmail(profile.emails[0].value);
 
                 if (user == undefined) {
                     user = {
