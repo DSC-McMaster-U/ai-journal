@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node --env-file=.env src/index.js",
     "dev": "nodemon --env-file=.env src/index.js",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",

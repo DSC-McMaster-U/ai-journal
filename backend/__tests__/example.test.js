@@ -1,7 +1,17 @@
 const request = require("supertest");
 const app = require("../src/index");
+const { closeConnection } = require("../src/database");
 
 describe("GET /api/sum", () => {
+  beforeAll(() => {
+    // Reset database to initial state if needed for testing
+  });
+
+  // Close the connection after all tests are done
+  afterAll(async () => {
+    await closeConnection();
+  });
+
   it("should return the sum of two numbers", async () => {
     const response = await request(app).get("/api/sum").query({ a: 5, b: 10 });
     expect(response.status).toBe(200);
