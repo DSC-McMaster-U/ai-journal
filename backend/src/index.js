@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const setupSwagger = require("./swagger");
 const warehouseRoutes = require("./routes/warehouseRoutes");
 const dailyRecordRoutes = require("./routes/dailyRecordRoutes");
+const dailyRecordMiddleware = require("./middleware/dailyRecordMiddleware");  // Path to your middleware
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,8 +15,8 @@ app.use(bodyParser.json());
 setupSwagger(app);
 
 // Route setup
-app.use("/api/warehouses", warehouseRoutes);
-app.use("/api/daily_records", dailyRecordRoutes);
+app.use("/api/warehouses", dailyRecordMiddleware, warehouseRoutes);
+app.use("/api/daily_records", dailyRecordMiddleware, dailyRecordRoutes);
 
 // Default route
 app.get("/api", (req, res) =>

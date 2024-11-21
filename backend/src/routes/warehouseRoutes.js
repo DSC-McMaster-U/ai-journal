@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const dailyRecordMiddleware = require("../middleware/dailyRecordMiddleware");
 const warehouseController = require("../controllers/warehouseController");
+
+// apply the middleware 
+router.use(dailyRecordMiddleware);
 
 /**
  * @swagger
