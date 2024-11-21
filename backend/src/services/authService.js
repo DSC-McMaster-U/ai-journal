@@ -1,6 +1,7 @@
 const GoogleStrategy = require("passport-google-oidc");
 const jwt = require("jsonwebtoken");
 const connection = require("../database.js");
+const { log, error } = require("../logger.js");
 
 const generateUsername = (profile) => {
     let username = profile.displayName ?? "";
@@ -16,8 +17,6 @@ const addUser = (user) => {
             "INSERT INTO `ai-journal`.`users` (id, name, email, created_at) VALUES (?, ?, ?, ?)",
             [user.id, user.name, user.email, new Date()],
             (err, results) => {
-                console.log("I'm crying for aiden");
-
                 if (err) {
                     reject(err);
                 } else {
@@ -26,9 +25,12 @@ const addUser = (user) => {
             }
         );
     })
-        .then(() => true)
+        .then((res) => {
+            log("Insertion request resulted in: " + res);
+            return true;
+        })
         .catch((err) => {
-            console.log(err);
+            error(err);
             return false;
         });
 };
@@ -48,7 +50,7 @@ const getUserByEmail = (email) => {
         );
     })
         .then((results) => {
-            console.log(results);
+            log("Selection request resulted in: " + results);
 
             if (results.length > 1) {
                 throw "Multiple users with same ID!!";
@@ -66,8 +68,8 @@ const getUserByEmail = (email) => {
             };
         })
         .catch((err) => {
-            console.log(err);
-            undefined;
+            error(err);
+            return undefined;
         });
 };
 
@@ -81,9 +83,11 @@ function initialize(passport) {
                 scope: ["profile", "email"],
             },
             async function dbCallback(issuer, profile, cb) {
-                //TODO, verifies that the user is in the db
-                console.log("We in the DB callback 🔥");
-                console.log("Profile keys: " + Object.keys(profile));
+                log(
+                    "In database check for " +
+                        profile.emails[0].value +
+                        " log in request"
+                );
 
                 let user = await getUserByEmail(profile.emails[0].value);
 
@@ -131,8 +135,7 @@ const jwtAuth = (req, res, next) => {
     }
     const jwtToken = token.substring(7, token.length);
     try {
-        console.log("Recieved Token: " + jwtToken);
-        console.log("Decoding...");
+        log("Recieved Token: " + jwtToken);
         const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET || "");
         req.token = decoded;
     } catch (err) {
