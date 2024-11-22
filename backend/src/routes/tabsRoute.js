@@ -27,7 +27,7 @@ const tabsController = require('../controllers/tabsController');
  *                     type: timestamp
  *                     format: date-time
  *                     example: "2021-09-21T21:00:00.000Z"
- *                   userId:
+ *                   user_id:
  *                     type: string
  *                     example: "1"
  */
@@ -63,7 +63,7 @@ router.get('/', tabsController.getAllTabs);
  *                   type: timestamp
  *                   format: date-time
  *                   example: "2021-09-21T21:00:00.000Z"
- *                 userId:
+ *                 user_id:
  *                   type: string
  *                   example: "1"
  *       404:
@@ -89,7 +89,7 @@ router.get('/:id', tabsController.getTabById);
  *               name:
  *                 type: string
  *                 example: "New Tab"
- *               userId:
+ *               user_id:
  *                 type: string
  *                 example: "user123"
  *     responses:

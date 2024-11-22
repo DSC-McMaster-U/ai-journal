@@ -29,7 +29,7 @@ const getTabById = (id) => {
 // Create a new tab
 const createTab = (id, name, userId) => {
     return new Promise((resolve, reject) => {
-        connection.query("INSERT INTO `ai-journal`.`tabs` (id, name, userId) VALUES (?, ?, ?)", [id, name, userId], (error, results) => {
+        connection.query("INSERT INTO `ai-journal`.`tabs` (id, name, user_id) VALUES (?, ?, ?)", [id, name, userId], (error, results) => {
             if (error) {
                 reject(error);
             } else {
