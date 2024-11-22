@@ -34,7 +34,7 @@ const getDailyRecordById = (id) => {
   });
 };
 
-// Fetch daily record by ID and date
+// Fetch daily record by user_id and date
 const getDailyRecordByIdAndDate = (id, date) => {
   return new Promise((resolve, reject) => {
     connection.query(

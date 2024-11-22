@@ -4,7 +4,7 @@ const dailyRecordMiddleware = async (req, res, next) => {
 
     try { 
         const today = new Date().toISOString().split('T')[0]; 
-        const userId = req.user?.id;  // ask about how to obtain the id 
+        const userId = req.user?.id;  
 
         if (!userId) {
             return res.status(401).json({ error: "User authentication required." });
@@ -14,11 +14,11 @@ const dailyRecordMiddleware = async (req, res, next) => {
         let dailyRecord = await dailyRecordService.getDailyRecordByIdAndDate(userId, today);
 
         // Create the daily record if it doesn't exist 
-        if (!dailyRecord) { 
+        if (!dailyRecord || dailyRecord.length === 0) {
             dailyRecord = await dailyRecordService.createDailyRecord(today, userId);
         }
 
-        // Attach the daily record to the request object for downstream use
+        // Attach the daily record to the request object for later user 
         req.dailyRecord = dailyRecord;
 
         next(); // pass control to the next middleware 
