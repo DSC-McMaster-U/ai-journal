@@ -1,38 +1,38 @@
 // index.js
-require("dotenv").config();
+require('dotenv').config();
 
-const express = require("express");
+const express = require('express');
 const app = express();
 
 // Body parser middleware
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 //Passport Auth Setup
-const setupPassport = require("./passport");
+const setupPassport = require('./passport');
 setupPassport(app);
 
 // Swagger docs setup
-const setupSwagger = require("./swagger");
+const setupSwagger = require('./swagger');
 setupSwagger(app);
 
 // Route setup
-const authRoute = require("./routes/authRoute");
-const warehouseRoutes = require("./routes/warehouseRoute");
+const authRoute = require('./routes/authRoute');
+const warehouseRoutes = require('./routes/warehouseRoute');
 
-app.use("/api/warehouses", warehouseRoutes);
-app.use("/api/auth", authRoute);
+app.use('/api/warehouses', warehouseRoutes);
+app.use('/api/auth', authRoute);
 
 // Default route
-app.get("/api", (req, res) =>
-  res.send("Try: /api/status, /api/warehouses, or /api/warehouses/:id")
+app.get('/api', (req, res) =>
+  res.send('Try: /api/status, /api/warehouses, or /api/warehouses/:id')
 );
 
 // Status endpoint
-app.get("/api/status", (req, res) => res.send("Success."));
+app.get('/api/status', (req, res) => res.send('Success.'));
 
 // Test sum endpoint
-app.get("/api/sum", (req, res) => {
+app.get('/api/sum', (req, res) => {
   const { a, b } = req.query;
 
   // Validate query parameters
@@ -68,9 +68,9 @@ if (require.main === module) {
   });
 
   // Graceful shutdown handling
-  process.on("SIGINT", () => {
+  process.on('SIGINT', () => {
     server.close(() => {
-      console.log("Server closed due to app termination");
+      console.log('Server closed due to app termination');
       process.exit(0);
     });
   });
