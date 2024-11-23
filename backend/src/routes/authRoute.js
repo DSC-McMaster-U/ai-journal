@@ -3,7 +3,7 @@ const passport = require("passport");
 const router = express.Router();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const { jwtAuth } = require("../services/authService");
+const { authProtect } = require("../services/authService");
 
 /**
  * @swagger
@@ -32,18 +32,22 @@ router.get("/", passport.authenticate("google"));
  *         description: Error with creating or handling the user has occurred
  */
 router.get(
-  "/callback",
-  passport.authenticate("google", {
-    failureRedirect: "http://localhost:3000/login",
-    failureMessage: true,
-  }),
-  function (req, res) {
-    const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET || "", {
-      expiresIn: "1h",
-    });
-    res.cookie("jwtToken", token);
-    res.redirect("http://localhost:3000/login?method=o-auth-google");
-  }
+    "/callback",
+    passport.authenticate("google", {
+        failureRedirect: "http://localhost:3000/login",
+        failureMessage: true,
+    }),
+    function (req, res) {
+        const token = jwt.sign(
+            { user: req.user },
+            process.env.JWT_SECRET || "",
+            {
+                expiresIn: "24h",
+            }
+        );
+        res.cookie("jwtToken", token);
+        res.redirect("http://localhost:3000/login?method=o-auth-google");
+    }
 );
 
 /**
@@ -79,20 +83,19 @@ router.get(
  */
 router.options("/get-session-user", cors({ origin: true }));
 router.get(
-  "/get-session-user",
-  cors({ origin: true }),
-  jwtAuth,
-  function (req, res) {
-    if (req.token == undefined) {
-      res.status(400).end();
-    }
+    "/get-session-user",
+    cors({ origin: true }),
+    authProtect,
+    function (req, res) {
+        if (req.token == undefined) {
+            res.status(400).end();
+        }
 
-    res.setHeader("Content-Type", "application/json");
-    res
-      .send(JSON.stringify({ user: req.token.user }))
-      .status(200)
-      .end();
-  }
+        res.setHeader("Content-Type", "application/json");
+        res.send(JSON.stringify({ user: req.token.user }))
+            .status(200)
+            .end();
+    }
 );
 
 module.exports = router;

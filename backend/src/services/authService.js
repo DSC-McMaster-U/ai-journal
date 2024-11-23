@@ -1,7 +1,7 @@
 const GoogleStrategy = require("passport-google-oidc");
 const jwt = require("jsonwebtoken");
 const connection = require("../database.js");
-const { log, error } = require("../logger.js");
+const { log, warn, error } = require("../logger.js");
 
 const generateUsername = (profile) => {
     let username = profile.displayName ?? "";
@@ -125,24 +125,51 @@ function initialize(passport) {
     });
 }
 
-const jwtAuth = (req, res, next) => {
+/*
+    Protects routes by verifying a valid JWT was sent with the request.
+    Passes to next with the decoded value placed into req.token
+    Sends response with code 400 if a missing or improperly formatted token is sent
+    Sends response with code 401 if a invalid token is sent
+*/
+const authProtect = (req, res, next) => {
+    const warnInvalidAuthenticationAttempt = () => {
+        warn(
+            "Invalid authentication attempt made from: " +
+                req.ip +
+                " @ " +
+                req.hostname
+        );
+    };
+
     const token = req.header("Authorization");
+
     if (!token) {
-        throw new Error("Authorization token is missing");
+        warnInvalidAuthenticationAttempt();
+        res.status(400).send("Authorization token is missing").end();
+        return;
     }
+
     if (token.startsWith("Bearer ") == false) {
-        throw new Error("Authorization token should start with Bearer");
+        warnInvalidAuthenticationAttempt();
+        res.status(400)
+            .send("Authorization token should start with Bearer")
+            .end();
+        return;
     }
+
     const jwtToken = token.substring(7, token.length);
+
     try {
-        log("Recieved Token: " + jwtToken);
+        log("Recieved Token: " + jwtToken + " from " + req.id);
         const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET || "");
         req.token = decoded;
-    } catch (err) {
-        throw new Error("Invalid token");
+    } catch (_) {
+        warnInvalidAuthenticationAttempt();
+        res.status(401).send("Invalid authorization token").end();
+        return;
     }
 
     next();
 };
 
-module.exports = { initialize, jwtAuth };
+module.exports = { initialize, authProtect };

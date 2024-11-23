@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 function initializeLogger() {
     //Do some initialization stuff
 }

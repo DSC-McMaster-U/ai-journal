@@ -18,14 +18,15 @@ setupSwagger(app);
 
 // Route setup
 const authRoute = require("./routes/authRoute");
+const { authProtect } = require("./services/authService");
 const warehouseRoutes = require("./routes/warehouseRoute");
 
-app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/warehouses", authProtect, warehouseRoutes);
 app.use("/api/auth", authRoute);
 
 // Default route
 app.get("/api", (req, res) =>
-  res.send("Try: /api/status, /api/warehouses, or /api/warehouses/:id")
+    res.send("Try: /api/status, /api/warehouses, or /api/warehouses/:id")
 );
 
 // Status endpoint
@@ -34,6 +35,6 @@ app.get("/api/status", (req, res) => res.send("Success."));
 // Set port based on environment
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });
