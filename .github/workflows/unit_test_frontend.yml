@@ -1,0 +1,33 @@
+name: Run Frontend Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js (no need to set working-directory here)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Specify your Node.js version
+
+      # Step 3: Install dependencies (in the frontend folder)
+      - name: Install dependencies
+        working-directory: ./frontend # Change to frontend folder
+        run: npm install
+
+      # Step 4: Run tests (in the frontend folder)
+      - name: Run Jest tests
+        working-directory: ./frontend # Change to frontend folder
+        run: npm test
+        env:
+          CI: true # Ensures proper output in CI environments

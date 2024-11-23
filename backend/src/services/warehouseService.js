@@ -1,5 +1,5 @@
 // services/warehouseService.js
-const connection = require("../database");
+const { connection } = require("../database");
 
 // Fetch all warehouses
 const getAllWarehouses = () => {
