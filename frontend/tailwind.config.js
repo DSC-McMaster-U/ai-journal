@@ -42,4 +42,11 @@ module.exports = {
       "sunset",
     ],
   },
+  theme: {
+    extend: {
+      backgroundImage: {
+        'gradient-purple-blue': 'linear-gradient(to top, #142952, #001a33)', // Custom gradient
+      },
+    },
+  },
 };
