@@ -28,4 +28,14 @@ connection.connect(function (err) {
   console.log("Connected as thread id: " + connection.threadId);
 });
 
-module.exports = connection;
+const closeConnection = () => {
+  return new Promise((resolve, reject) => {
+    connection.end((err) => {
+      if (err) return reject(err);
+      console.log("Database connection closed.");
+      resolve();
+    });
+  });
+};
+
+module.exports = { connection, closeConnection };
