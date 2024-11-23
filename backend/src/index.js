@@ -19,13 +19,15 @@ setupSwagger(app);
 // Route setup
 const authRoute = require("./routes/authRoute");
 const warehouseRoutes = require("./routes/warehouseRoute");
+const tabRoutes = require("./routes/tabsRoute");
 
 app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/auth", authRoute);
+app.use("/api/tabs", tabRoutes);
 
 // Default route
 app.get("/api", (req, res) =>
-  res.send("Try: /api/status, /api/warehouses, or /api/warehouses/:id")
+  res.send("Try: /api/status, /api/warehouses, /api/warehouses/:id, /api/tabs, or /api/tabs/:id")
 );
 
 // Status endpoint
