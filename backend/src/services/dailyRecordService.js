@@ -1,5 +1,5 @@
 // services/dailyRecordService.js
-const connection = require("../database");
+const { connection } = require("../database");
 
 // Fetch all daily records
 const getAllDailyRecords = () => {
@@ -51,12 +51,12 @@ const getDailyRecordByIdAndDate = (id, date) => {
   });
 };
 
-// Create daily record 
-const createDailyRecord = (id, date) => {
+// Create daily record
+const createDailyRecord = (id) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "INSERT INTO daily_records (date, user_id) VALUES (?, ?)",
-      [date, id],
+      "INSERT INTO daily_records (date, user_id) VALUES (CURDATE(), ?);",
+      [id],
       (error, results) => {
         if (error) {
           reject(error);
@@ -69,8 +69,8 @@ const createDailyRecord = (id, date) => {
 };
 
 module.exports = {
-    getAllDailyRecords,
-    getDailyRecordById,
-    getDailyRecordByIdAndDate,
-    createDailyRecord
+  getAllDailyRecords,
+  getDailyRecordById,
+  getDailyRecordByIdAndDate,
+  createDailyRecord,
 };

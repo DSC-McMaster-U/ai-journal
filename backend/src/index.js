@@ -6,10 +6,6 @@ const app = express();
 
 // Body parser middleware
 const bodyParser = require("body-parser");
-const setupSwagger = require("./swagger");
-const warehouseRoutes = require("./routes/warehouseRoutes");
-
-const app = express();
 app.use(bodyParser.json());
 
 //Passport Auth Setup
@@ -20,17 +16,21 @@ setupPassport(app);
 const setupSwagger = require("./swagger");
 setupSwagger(app);
 
+// Middleware
+const dailyRecordMiddleware = require("./middleware/dailyRecordMiddleware");
+
 // Route setup
 const authRoute = require("./routes/authRoute");
+const dailyRecordRoutes = require("./routes/dailyRecordRoute");
 const warehouseRoutes = require("./routes/warehouseRoute");
 const moodRoutes = require("./routes/moodRoute");
 const tabRoutes = require("./routes/tabsRoute");
 
-app.use("/api/warehouses", dailyRecordMiddleware, warehouseRoutes);
-app.use("/api/daily_records", dailyRecordMiddleware, dailyRecordRoutes);
+app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/daily-records", dailyRecordMiddleware, dailyRecordRoutes);
 app.use("/api/auth", authRoute);
-app.use("/api/moods", moodRoutes);
-app.use("/api/tabs", tabRoutes);
+app.use("/api/moods", dailyRecordMiddleware, moodRoutes);
+app.use("/api/tabs", dailyRecordMiddleware, tabRoutes);
 
 // Default route
 app.get("/api", (req, res) =>

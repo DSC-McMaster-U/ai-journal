@@ -22,7 +22,7 @@ const dailyRecordController = require("../controllers/dailyRecordController");
  *                     type: int
  *                     example: 123123
  *                   userId:
- *                     type: string 
+ *                     type: string
  *                     example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
  *                   date:
  *                     type: string
@@ -58,7 +58,7 @@ router.get("/", dailyRecordController.getAllDailyRecords);
  *                   example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
  *                 date:
  *                   type: string
- *                   example: "2024-11-14"  
+ *                   example: "2024-11-14"
  *       404:
  *         description: Daily record not found
  */
@@ -103,7 +103,7 @@ router.get("/:id", dailyRecordController.getDailyRecordById);
  *       404:
  *         description: Daily record not found
  */
-router.get("/:user_id/:date", dailyRecordController.getDailyRecordByIdAndDate);
+router.get("/:user-id/:date", dailyRecordController.getDailyRecordByIdAndDate);
 
 /**
  * @swagger
