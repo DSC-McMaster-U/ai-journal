@@ -19,10 +19,12 @@ setupSwagger(app);
 // Route setup
 const authRoute = require("./routes/authRoute");
 const warehouseRoutes = require("./routes/warehouseRoute");
+const moodRoutes = require("./routes/moodRoute");
 const tabRoutes = require("./routes/tabsRoute");
 
 app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/auth", authRoute);
+app.use("/api/moods", moodRoutes);
 app.use("/api/tabs", tabRoutes);
 
 // Default route
