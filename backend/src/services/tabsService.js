@@ -1,6 +1,5 @@
 const { connection } = require("../database");
 
-// Query all tabs
 const getAllTabs = () => {
   return new Promise((resolve, reject) => {
     connection.query("SELECT * FROM `ai-journal`.`tabs`", (error, results) => {
@@ -13,7 +12,6 @@ const getAllTabs = () => {
   });
 };
 
-// Query tab by ID
 const getTabById = (id) => {
   return new Promise((resolve, reject) => {
     connection.query(
@@ -30,7 +28,6 @@ const getTabById = (id) => {
   });
 };
 
-// Create a new tab
 const createTab = (name, userId) => {
   return new Promise((resolve, reject) => {
     connection.query(
@@ -47,7 +44,6 @@ const createTab = (name, userId) => {
   });
 };
 
-// Update a tab by ID
 const updateTab = (id, name) => {
   return new Promise((resolve, reject) => {
     connection.query(
@@ -64,7 +60,6 @@ const updateTab = (id, name) => {
   });
 };
 
-// Delete a tab by ID
 const deleteTab = (id) => {
   return new Promise((resolve, reject) => {
     connection.query(

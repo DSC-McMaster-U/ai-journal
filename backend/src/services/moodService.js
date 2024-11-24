@@ -1,4 +1,3 @@
-// connect to the database for this apis purpose - reading and writing to user_moods
 const { connection } = require("../database");
 
 const getMoodEntries = () => {
@@ -69,7 +68,6 @@ const deleteMoodEntry = (id) => {
   });
 };
 
-// export functions for use
 module.exports = {
   getMoodEntries,
   createMoodEntry,

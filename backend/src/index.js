@@ -27,15 +27,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/moods", moodRoutes);
 app.use("/api/tabs", tabRoutes);
 
-// Default route
-app.get("/api", (req, res) =>
-  res.send("Try: /api/status, /api/warehouses, /api/warehouses/:id, /api/tabs, or /api/tabs/:id")
-);
-
-// Status endpoint
-app.get("/api/status", (req, res) => res.send("Success."));
-
-// Test sum endpoint
+// TODO remove this and setup tests for the other endpoints
 app.get("/api/sum", (req, res) => {
   const { a, b } = req.query;
 
@@ -58,20 +50,16 @@ app.get("/api/sum", (req, res) => {
   res.status(200).send({ sum });
 });
 
-// Exporting the app for testing
+// Start the server
 module.exports = app;
 
-// Start the server if not in a testing environment. This if statement is only true if the file is run directly with node.
-// If not (aka when running tests), the file is imported as a module and the server is not started.
 if (require.main === module) {
-  // Set port based on environemnt
   const PORT = process.env.PORT || 8080;
   const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
   });
 
-  // Graceful shutdown handling
   process.on("SIGINT", () => {
     server.close(() => {
       console.log("Server closed due to app termination");
