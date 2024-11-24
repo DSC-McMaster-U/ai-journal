@@ -1,7 +1,5 @@
-// controllers/warehouseController.js
 const warehouseService = require("../services/warehouseService");
 
-// Controller for fetching all warehouses
 const getAllWarehouses = async (req, res) => {
   try {
     const warehouses = await warehouseService.getAllWarehouses();
@@ -11,7 +9,6 @@ const getAllWarehouses = async (req, res) => {
   }
 };
 
-// Controller for fetching a warehouse by ID
 const getWarehouseById = async (req, res) => {
   try {
     const warehouse = await warehouseService.getWarehouseById(req.params.id);
