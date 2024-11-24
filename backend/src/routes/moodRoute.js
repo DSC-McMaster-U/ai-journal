@@ -6,6 +6,45 @@ const moodController = require("../controllers/moodController");
 /**
  * @swagger
  * /api/moods:
+ *   get:
+ *     summary: Retrieve all mood entries
+ *     description: Fetches a list of all mood entries in the database.
+ *     responses:
+ *       200:
+ *         description: A list of mood entries retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   userId:
+ *                     type: string
+ *                     example: "123e4567-e89b-12d3-a456-426614174000"
+ *                   moodId:
+ *                     type: integer
+ *                     example: 1
+ *                   dailyRecordId:
+ *                     type: integer
+ *                     example: 101
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-11-24T12:00:00Z"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-11-24T12:30:00Z"
+ */
+router.get("/", moodController.getMoodEntries);
+
+/**
+ * @swagger
+ * /api/moods:
  *   post:
  *     summary: Create a new mood entry
  *     requestBody:
