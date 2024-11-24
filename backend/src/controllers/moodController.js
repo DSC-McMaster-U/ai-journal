@@ -1,4 +1,4 @@
-const moodService = require("../services/moodService");
+const moodService = require('../services/moodService');
 
 const getMoodEntries = async (req, res) => {
   //TODO: Get the moods for the specific user
@@ -6,7 +6,7 @@ const getMoodEntries = async (req, res) => {
     const result = await moodService.getMoodEntries();
     res.status(201).json({ data: result });
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve mood entries" });
+    res.status(500).json({ error: 'Failed to retrieve mood entries' });
   }
 };
 
@@ -17,7 +17,7 @@ const createMoodEntry = async (req, res) => {
   const { userId, moodId, dailyRecordId } = req.body;
 
   if (!userId || !moodId || !dailyRecordId) {
-    return res.status(400).json({ error: "Missing required fields" });
+    return res.status(400).json({ error: 'Missing required fields' });
   }
 
   // TODO: Make result return the created mood entry
@@ -27,9 +27,9 @@ const createMoodEntry = async (req, res) => {
       moodId,
       dailyRecordId
     );
-    res.status(201).json({ message: "Mood entry created successfully" });
+    res.status(201).json({ message: 'Mood entry created successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create mood entry" });
+    res.status(500).json({ error: 'Failed to create mood entry' });
   }
 };
 
@@ -41,9 +41,9 @@ const editMoodEntry = async (req, res) => {
   // TODO: Make result return the edited mood entry
   try {
     const result = await moodService.editMoodEntry(id, moodId);
-    res.status(200).json({ message: "Mood entry updated successfully" });
+    res.status(200).json({ message: 'Mood entry updated successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update mood entry" });
+    res.status(500).json({ error: 'Failed to update mood entry' });
   }
 };
 
@@ -51,9 +51,9 @@ const deleteMoodEntry = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await moodService.deleteMoodEntry(id);
-    res.status(200).json({ message: "Mood entry deleted successfully" });
+    res.status(200).json({ message: 'Mood entry deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete mood entry" });
+    res.status(500).json({ error: 'Failed to delete mood entry' });
   }
 };
 

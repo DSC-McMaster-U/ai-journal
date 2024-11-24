@@ -1,4 +1,4 @@
-const tabsService = require("../services/tabsService");
+const tabsService = require('../services/tabsService');
 
 const getAllTabs = async (req, res) => {
   // TODO make this return only tabs for this user
@@ -6,7 +6,7 @@ const getAllTabs = async (req, res) => {
     const tabs = await tabsService.getAllTabs();
     res.json(tabs);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch tabs" });
+    res.status(500).json({ error: 'Failed to fetch tabs' });
   }
 };
 
@@ -16,7 +16,7 @@ const getTabById = async (req, res) => {
     const tab = await tabsService.getTabById(req.params.id);
     res.json(tab);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch tab" });
+    res.status(500).json({ error: 'Failed to fetch tab' });
   }
 };
 
@@ -28,9 +28,9 @@ const createTab = async (req, res) => {
     await tabsService.createTab(name, user_id);
 
     // TODO return the created tab
-    res.json({ message: "Tab created successfully" });
+    res.json({ message: 'Tab created successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create tab" });
+    res.status(500).json({ error: 'Failed to create tab' });
   }
 };
 
@@ -40,18 +40,18 @@ const updateTab = async (req, res) => {
     await tabsService.updateTab(req.params.id, name);
 
     // TODO return the updated tab
-    res.json({ message: "Tab updated successfully" });
+    res.json({ message: 'Tab updated successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update tab" });
+    res.status(500).json({ error: 'Failed to update tab' });
   }
 };
 
 const deleteTab = async (req, res) => {
   try {
     await tabsService.deleteTab(req.params.id);
-    res.json({ message: "Tab deleted successfully" });
+    res.json({ message: 'Tab deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete tab" });
+    res.status(500).json({ error: 'Failed to delete tab' });
   }
 };
 
