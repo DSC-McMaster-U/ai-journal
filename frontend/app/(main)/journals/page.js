@@ -1,10 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  FaEllipsisVertical,
-  FaPlus,
-} from 'react-icons/fa6';
+import { FaEllipsisVertical, FaPlus } from 'react-icons/fa6';
 import Tabs from '@/components/journals/Tabs';
 
 export default function JournalsPage({ defaultTab = 'daily' }) {
@@ -20,7 +17,7 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
     // Daily Journal Entries
     {
       id: '1',
-      
+
       date: 'Wed 9',
       title: 'Morning Reflection',
       description: 'Started the day with meditation and gratitude practice',
@@ -141,7 +138,7 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
   };
 
   // Filter entries based on current tab
-  const filteredEntries = journalEntries.filter(entry => entry.tab === currentTab);
+  const filteredEntries = journalEntries.filter((entry) => entry.tab === currentTab);
 
   // Prevents drop down menu buttons from propagating click events
   const preventPropagation = (e) => {
@@ -167,20 +164,19 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col">
       <Tabs currentTab={currentTab} onTabChange={setCurrentTab} />
 
       <div className="flex-1 overflow-y-auto">
-        <h1 className="text-4xl px-8 pt-8 pb-5 font-bold text-primary">{getTabHeading()}</h1>
+        {/* <h1 className="text-4xl px-8 pt-8 pb-5 font-bold text-primary">{getTabHeading()}</h1> */}
 
         <div>
           {filteredEntries.length !== 0 ? (
             filteredEntries.map((entry) => (
               <div
                 key={entry.id}
-                className="flex justify-between items-center pl-6 pr-2 border-t-4 border-neutral h-20 cursor-pointer hover:bg-neutral"
-                onClick={() => navigateToJournal(entry.id)}
-              >
+                className="flex justify-between items-center pl-6 pr-2 border-t-2 border-b-2 border-neutral h-20 cursor-pointer hover:bg-neutral"
+                onClick={() => navigateToJournal(entry.id)}>
                 <div className="flex gap-8 items-center">
                   <div className="max-w-6 w-6 h-12 text-secondary flex flex-col items-center justify-center">
                     <p>{entry.date.split(' ')[0]}</p>
@@ -195,17 +191,15 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
                 </div>
 
                 <details className="dropdown dropdown-end">
-                  <summary
-                    className="btn btn-ghost m-1 text-3xl"
-                    onClick={preventPropagation}
-                  >
+                  <summary className="btn btn-ghost m-1 text-3xl" onClick={preventPropagation}>
                     <FaEllipsisVertical />
                   </summary>
                   <ul
                     className="menu dropdown-content bg-base-100 rounded-md z-[3] w-52 p-2 shadow max-w-24 font-semibold border"
-                    onClick={preventPropagation}
-                  >
-                    <li><a>Share</a></li>
+                    onClick={preventPropagation}>
+                    <li>
+                      <a>Share</a>
+                    </li>
                     <li className="text-red-500 active:text-red-500">
                       <a>Delete</a>
                     </li>
@@ -221,8 +215,7 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
 
       <button
         className="bg-base-100 fixed btn btn-outline btn-primary right-6 bottom-20 rounded-full w-14 h-14 shadow-md z-[5]"
-        onClick={() => navigateToJournal(`new-${Date.now()}`)}
-      >
+        onClick={() => navigateToJournal(`new-${Date.now()}`)}>
         <FaPlus size={32} />
       </button>
     </div>
