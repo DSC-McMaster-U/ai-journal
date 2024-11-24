@@ -1,3 +1,4 @@
+require("dotenv").config();
 const request = require("supertest");
 const app = require("../src/index");
 const { closeConnection } = require("../src/database");
