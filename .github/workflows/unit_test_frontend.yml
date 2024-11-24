@@ -6,9 +6,20 @@ on:
       - main
 
 jobs:
-  test:
+  frontend-test:
+    name: Frontend Test
     runs-on: ubuntu-latest
-
+    environment: main
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_USER_PASS: ${{ secrets.DB_USER_PASS }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      PORT: ${{ secrets.PORT }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       # Step 1: Check out the repository
       - name: Checkout code
