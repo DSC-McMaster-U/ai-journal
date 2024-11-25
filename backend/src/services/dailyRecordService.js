@@ -1,11 +1,12 @@
 // services/dailyRecordService.js
 const { connection } = require("../database");
 
-// Fetch all daily records
-const getAllDailyRecords = () => {
+// Fetch all daily records for the current user
+const getAllDailyRecords = (userId) => { 
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM `ai-journal`.`daily_records`",
+      "SELECT * FROM `ai-journal`.`daily_records` WHERE user_id = ?",
+      [userId],
       (error, results) => {
         if (error) {
           reject(error);
@@ -17,46 +18,12 @@ const getAllDailyRecords = () => {
   });
 };
 
-// Fetch daily record by ID
-const getDailyRecordById = (id) => {
+// Fetch the user's daily record for the current date
+const getDailyRecord = (userId) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM `ai-journal`.`daily_records` WHERE id = ?",
-      [id],
-      (error, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(results);
-        }
-      }
-    );
-  });
-};
-
-// Fetch daily record by user_id and date
-const getDailyRecordByIdAndDate = (id, date) => {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      "SELECT * FROM daily_records WHERE user_id = ? AND date = ?",
-      [id, date],
-      (error, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(results);
-        }
-      }
-    );
-  });
-};
-
-// Create daily record
-const createDailyRecord = (id) => {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      "INSERT INTO daily_records (date, user_id) VALUES (CURDATE(), ?);",
-      [id],
+      "SELECT * FROM `ai-journal`.`daily_records` WHERE user_id = ? AND date = CURDATE()",
+      [userId],
       (error, results) => {
         if (error) {
           reject(error);
@@ -70,7 +37,5 @@ const createDailyRecord = (id) => {
 
 module.exports = {
   getAllDailyRecords,
-  getDailyRecordById,
-  getDailyRecordByIdAndDate,
-  createDailyRecord,
+  getDailyRecord
 };

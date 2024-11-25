@@ -1,16 +1,16 @@
-// routes/dailyRecordRoutes.js
+// routes/dailyRecordRoute.js
 const express = require("express");
 const router = express.Router();
 const dailyRecordController = require("../controllers/dailyRecordController");
 
 /**
  * @swagger
- * /api/daily_records:
+ * /api/daily-records:
  *   get:
- *     summary: Get all daily records
+ *     summary: Get all the user's daily records
  *     responses:
  *       200:
- *         description: A list of daily records
+ *         description: A list of the user's daily records 
  *         content:
  *           application/json:
  *             schema:
@@ -21,30 +21,27 @@ const dailyRecordController = require("../controllers/dailyRecordController");
  *                   id:
  *                     type: int
  *                     example: 123123
- *                   userId:
+ *                   user_id:
  *                     type: string
  *                     example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
  *                   date:
  *                     type: string
  *                     example: "2024-11-14"
+ *       404: 
+ *          description: No daily records found 
+ *       500: 
+ *          description: Internal server error 
  */
 router.get("/", dailyRecordController.getAllDailyRecords);
 
 /**
  * @swagger
- * /api/daily_records/{id}:
+ * /api/daily-records/today:
  *   get:
- *     summary: Get a daily record by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The daily record ID
+ *     summary: Get a daily record for the current day and user 
  *     responses:
  *       200:
- *         description: A single daily record
+ *         description: A single daily record for the current day and user
  *         content:
  *           application/json:
  *             schema:
@@ -53,47 +50,6 @@ router.get("/", dailyRecordController.getAllDailyRecords);
  *                 id:
  *                   type: int
  *                   example: 123123
- *                 userId:
- *                   type: string
- *                   example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
- *                 date:
- *                   type: string
- *                   example: "2024-11-14"
- *       404:
- *         description: Daily record not found
- */
-router.get("/:id", dailyRecordController.getDailyRecordById);
-
-/**
- * @swagger
- * /api/daily_records/{user_id}/{date}:
- *   get:
- *     summary: Get a daily record by user ID and date
- *     parameters:
- *       - in: path
- *         name: user_id
- *         required: true
- *         schema:
- *           type: string
- *         description: The user ID
- *       - in: path
- *         name: date
- *         required: true
- *         schema:
- *           type: string
- *           format: date
- *         description: The date of the daily record (YYYY-MM-DD)
- *     responses:
- *       200:
- *         description: A daily record for the given user ID and date
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                   example: 123123
  *                 user_id:
  *                   type: string
  *                   example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
@@ -102,50 +58,9 @@ router.get("/:id", dailyRecordController.getDailyRecordById);
  *                   example: "2024-11-14"
  *       404:
  *         description: Daily record not found
+ *       500: 
+ *         description: Internal server error 
  */
-router.get("/:user-id/:date", dailyRecordController.getDailyRecordByIdAndDate);
-
-/**
- * @swagger
- * /api/daily_records:
- *   post:
- *     summary: Create a new daily record
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               user_id:
- *                 type: string
- *                 description: The user ID
- *                 example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
- *               date:
- *                 type: string
- *                 format: date
- *                 description: The date for the daily record (YYYY-MM-DD)
- *                 example: "2024-11-14"
- *     responses:
- *       201:
- *         description: Daily record created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                   example: 123123
- *                 user_id:
- *                   type: string
- *                   example: "a81bc81b-dead-4e5d-abff-90865d1e13b1"
- *                 date:
- *                   type: string
- *                   example: "2024-11-14"
- *       400:
- *         description: Invalid data provided
- */
-router.post("/", dailyRecordController.createDailyRecord);
+router.get("/today", dailyRecordController.getDailyRecord);
 
 module.exports = router;

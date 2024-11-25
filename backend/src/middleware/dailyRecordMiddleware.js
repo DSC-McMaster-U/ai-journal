@@ -1,28 +1,33 @@
 const dailyRecordService = require("../services/dailyRecordService");
+const { connection } = require("../database");
 
 const dailyRecordMiddleware = async (req, res, next) => {
   try {
-    const today = new Date().toISOString().split("T")[0];
-    const userId = "108188107816093538321";
+    const userId = "108188107816093538321"; // TODO replace
 
-    if (!userId) {
-      return res.status(401).json({ error: "User authentication required." });
-    }
-
-    // Check if a daily record exists for this user and date
-    let dailyRecord = await dailyRecordService.getDailyRecordByIdAndDate(
-      userId,
-      today
-    );
+    // Check if a daily record exists for this user and the current date
+    let dailyRecord = await dailyRecordService.getDailyRecord(userId);
 
     // Create the daily record if it doesn't exist
     if (!dailyRecord || dailyRecord.length === 0) {
-      dailyRecord = await dailyRecordService.createDailyRecord(userId);
+      await new Promise((resolve, reject) => {
+        connection.query(
+          "INSERT INTO daily_records (date, user_id) VALUES (CURDATE(), ?);",
+          [userId],
+          (error, results) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      });
+
+      dailyRecord = await dailyRecordService.getDailyRecord(userId);
     }
 
-    // Attach the daily record to the request object for later user
-    req.dailyRecord = dailyRecord[0];
-
+    req.dailyRecord = dailyRecord[0]; // Attach the daily record to the request object for later user
     next(); // pass control to the next middleware
   } catch (error) {
     console.log(error);
