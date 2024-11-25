@@ -3,6 +3,7 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
+const { log, warn, error } = require("./logger");
 
 // Body parser middleware
 const bodyParser = require("body-parser");
@@ -35,6 +36,6 @@ app.get("/api/status", (req, res) => res.send("Success."));
 // Set port based on environment
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
+    log(`Server is running on port ${PORT}`);
+    log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });

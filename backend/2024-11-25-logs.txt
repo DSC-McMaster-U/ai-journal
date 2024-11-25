@@ -1,0 +1,32 @@
+11:6:26 - LOG: Server is running on port 8080
+11:6:26 - LOG: Swagger docs available at http://localhost:8080/api-docs
+11:7:40 - LOG: Server is running on port 8080
+11:7:40 - LOG: Swagger docs available at http://localhost:8080/api-docs
+11:8:11 - LOG: Recieved Token: undefined from undefined
+11:8:11 - WARNING: Invalid authentication attempt made from: ::1 @ localhost
+11:8:11 - LOG: Recieved Token: undefined from undefined
+11:8:11 - WARNING: Invalid authentication attempt made from: ::1 @ localhost
+11:8:56 - LOG: id,displayName,name,emails
+11:8:56 - LOG: In database check for austin.bray77@gmail.com log in request
+11:8:56 - LOG: Selection request resulted in: [object Object]
+11:8:56 - LOG: Recieved Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiTm8gdXNlcm5hbWVzIDooIiwiZW1haWwiOiJhdXN0aW4uYnJheTc3QGdtYWlsLmNvbSIsIm5hbWUiOiJBdXN0aW4gQnJheSIsImlkIjoiMTA4MTg4MTA3ODE2MDkzNTM4MzIxIn0sImlhdCI6MTczMjU1MDkzNiwiZXhwIjoxNzMyNjM3MzM2fQ.-EDNtUOxQDzLIRLfdxEb_5CH7Sm-L_V-DaiQa9j_1pE from undefined
+11:8:56 - LOG: Recieved Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiTm8gdXNlcm5hbWVzIDooIiwiZW1haWwiOiJhdXN0aW4uYnJheTc3QGdtYWlsLmNvbSIsIm5hbWUiOiJBdXN0aW4gQnJheSIsImlkIjoiMTA4MTg4MTA3ODE2MDkzNTM4MzIxIn0sImlhdCI6MTczMjU1MDkzNiwiZXhwIjoxNzMyNjM3MzM2fQ.-EDNtUOxQDzLIRLfdxEb_5CH7Sm-L_V-DaiQa9j_1pE from undefined
+11:21:03 - LOG: Server is running on port 8080
+11:21:03 - LOG: Swagger docs available at http://localhost:8080/api-docs
+11:21:21 - LOG: Server is running on port 8080
+11:21:21 - LOG: Swagger docs available at http://localhost:8080/api-docs
+11:21:30 - LOG: Server is running on port 8080
+11:21:30 - LOG: Swagger docs available at http://localhost:8080/api-docs
+11:33:13 - LOG: Server is running on port 8080
+11:33:13 - LOG: Swagger docs available at http://localhost:8080/api-docs
+11:33:24 - LOG: Recieved Token: undefined from undefined
+11:33:24 - WARNING: Invalid authentication attempt made from: ::1 @ localhost
+11:33:24 - LOG: Recieved Token: undefined from undefined
+11:33:24 - WARNING: Invalid authentication attempt made from: ::1 @ localhost
+11:33:24 - LOG: id,displayName,name,emails
+11:33:24 - LOG: In database check for austin.bray77@gmail.com log in request
+11:33:24 - LOG: Selection request resulted in: [object Object]
+11:33:25 - LOG: Recieved Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiTm8gdXNlcm5hbWVzIDooIiwiZW1haWwiOiJhdXN0aW4uYnJheTc3QGdtYWlsLmNvbSIsIm5hbWUiOiJBdXN0aW4gQnJheSIsImlkIjoiMTA4MTg4MTA3ODE2MDkzNTM4MzIxIn0sImlhdCI6MTczMjU1MjQwNCwiZXhwIjoxNzMyNjM4ODA0fQ.Tx6IKo4bv2fiTT4qryjh07NV3GTbuCTUyCaLOiN-MC4 from undefined
+11:33:25 - LOG: Recieved Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiTm8gdXNlcm5hbWVzIDooIiwiZW1haWwiOiJhdXN0aW4uYnJheTc3QGdtYWlsLmNvbSIsIm5hbWUiOiJBdXN0aW4gQnJheSIsImlkIjoiMTA4MTg4MTA3ODE2MDkzNTM4MzIxIn0sImlhdCI6MTczMjU1MjQwNCwiZXhwIjoxNzMyNjM4ODA0fQ.Tx6IKo4bv2fiTT4qryjh07NV3GTbuCTUyCaLOiN-MC4 from undefined
+11:33:42 - LOG: Server is running on port 8080
+11:33:42 - LOG: Swagger docs available at http://localhost:8080/api-docs

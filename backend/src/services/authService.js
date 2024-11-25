@@ -74,6 +74,31 @@ const getUserByEmail = (email) => {
 };
 
 function initialize(passport) {
+    const verifyInDatabase = async (issuer, profile, cb) => {
+        log(Object.keys(profile));
+
+        log(
+            "In database check for " +
+                profile.emails[0].value +
+                " log in request"
+        );
+
+        let user = await getUserByEmail(profile.emails[0].value);
+
+        if (user == undefined) {
+            user = {
+                id: profile.id,
+                name: profile.displayName,
+                email: profile.emails[0].value,
+                username: generateUsername(profile),
+            };
+
+            addUser(user);
+        }
+
+        cb(null, user);
+    };
+
     passport.use(
         new GoogleStrategy(
             {
@@ -82,28 +107,7 @@ function initialize(passport) {
                 callbackURL: "/api/auth/callback",
                 scope: ["profile", "email"],
             },
-            async function dbCallback(issuer, profile, cb) {
-                log(
-                    "In database check for " +
-                        profile.emails[0].value +
-                        " log in request"
-                );
-
-                let user = await getUserByEmail(profile.emails[0].value);
-
-                if (user == undefined) {
-                    user = {
-                        id: profile.id,
-                        name: profile.displayName,
-                        email: profile.emails[0].value,
-                        username: generateUsername(profile),
-                    };
-
-                    addUser(user);
-                }
-
-                cb(null, user);
-            }
+            verifyInDatabase
         )
     );
 
