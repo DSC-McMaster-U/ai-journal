@@ -53,7 +53,7 @@ const getUserByEmail = (email) => {
             log("Selection request resulted in: " + results);
 
             if (results.length > 1) {
-                throw "Multiple users with same ID!!";
+                throw "Multiple users with same Email!!";
             }
 
             if (results.length == 0) {
@@ -168,7 +168,23 @@ const authProtect = (req, res, next) => {
     try {
         log("Recieved Token: " + jwtToken + " from " + req.id);
         const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET || "");
+
         req.token = decoded;
+
+        if (req.token.user == undefined) {
+            throw "Invalid token";
+        }
+
+        let userKeys = Object.keys(req.token.user).sort();
+        let expectedKeys = ["email", "id", "name", "username"];
+
+        if (userKeys.length == expectedKeys.length) {
+            throw "Invalid schema";
+        }
+
+        if (!userKeys.every((v, i) => v === expectedKeys[i])) {
+            throw "Invalid schema";
+        }
     } catch (_) {
         warnInvalidAuthenticationAttempt();
         res.status(401).send("Invalid authorization token").end();
