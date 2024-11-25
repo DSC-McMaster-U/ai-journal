@@ -73,6 +73,9 @@ const getUserByEmail = (email) => {
         });
 };
 
+/** Function used to intialize the passport instance for use with google oauth
+ *  @param { namespace } passport - Instance of passport to be initialized
+ */
 function initialize(passport) {
     const verifyInDatabase = async (issuer, profile, cb) => {
         log(Object.keys(profile));
@@ -129,12 +132,11 @@ function initialize(passport) {
     });
 }
 
-/*
-    Protects routes by verifying a valid JWT was sent with the request.
-    Passes to next with the decoded value placed into req.token
-    Sends response with code 400 if a missing or improperly formatted token is sent
-    Sends response with code 401 if a invalid token is sent
-*/
+/** Function used to protect routes via JWT sent with the request
+ *  @output - Puts the resulting user information in the req.token field
+ *  @error - Sends response with code 400 if a missing or improperly formatted token is sent
+ *  @error - Sends reponse with code 401 if an invalid token is sent
+ */
 const authProtect = (req, res, next) => {
     const warnInvalidAuthenticationAttempt = () => {
         warn(

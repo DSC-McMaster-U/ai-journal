@@ -22,13 +22,18 @@ async function requestBackendUser(onSuccess, onFailure) {
     onFailure();
   } else {
     let data = await response.json();
-    console.log(data);
-    //console.log(parsed);
+
     addUserToState(data.user);
     onSuccess();
   }
 }
 
+/** Hook used to protect a front-end route to only authticated users.
+ *  @param {() => void} onSuccess - function that runs on successful authentication verification
+ *  @param {() => void} onFailure - function that runs on failure to verify / unsuccessful verification
+ *  @param {[ any ]} dependencies - if present, the hook will only activate if the values in the list change
+ *  @other Side Effects: Places user in the state if it is not in the state but is verified by the JWT auth token
+ */
 function useAuthentication(onSuccess, onFailure, dependencies) {
   return useEffect(() => {
     if (userExistsInState()) {
