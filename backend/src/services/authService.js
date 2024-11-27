@@ -132,31 +132,106 @@ function initialize(passport) {
     });
 }
 
+//Assumes valid user or undefined is input
+const usersAreEqual = (userA, userB) => {
+    if (userA == undefined || userB == undefined) {
+        return false;
+    }
+
+    //Compares every value at the keys in userA
+    return Object.keys(userA).every((v, _) => userA[v] === userB[v]);
+};
+
+//Assumes valid user input
+const userExistsInDatabase = async (user) => {
+    const userInDB = await getUserByEmail(user.email);
+
+    return usersAreEqual(user, userInDB);
+};
+
+const tokenMatchesSchema = (token) => {
+    if (token.user == undefined) {
+        log("User not defined");
+        return false;
+    }
+
+    let userKeys = Object.keys(token.user).sort();
+    let expectedKeys = ["email", "id", "name", "username"];
+
+    if (userKeys.length != expectedKeys.length) {
+        log("Lengths not matching");
+        return false;
+    }
+
+    if (!userKeys.every((v, i) => v === expectedKeys[i])) {
+        log("Keys not matching");
+        return false;
+    }
+
+    return true;
+};
+
+const decodeToken = (token) => {
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "");
+
+        return decoded;
+    } catch (_) {
+        return undefined;
+    }
+};
+
+const validateToken = async (token) => {
+    if (token == undefined) {
+        throw "Invalid token";
+    }
+
+    const decoded = decodeToken(token);
+
+    if (decoded == undefined) {
+        throw "Invalid token";
+    }
+
+    if (!tokenMatchesSchema(decoded)) {
+        throw "Invalid token schema";
+    }
+
+    if (!(await userExistsInDatabase(decoded.user))) {
+        throw "Token user is not valid";
+    }
+
+    return decoded;
+};
+
 /** Function used to protect routes via JWT sent with the request
  *  @output - Puts the resulting user information in the req.token field
  *  @error - Sends response with code 400 if a missing or improperly formatted token is sent
  *  @error - Sends reponse with code 401 if an invalid token is sent
  */
 const authProtect = (req, res, next) => {
-    const warnInvalidAuthenticationAttempt = () => {
+    const warnInvalidAuthenticationAttempt = (err) => {
         warn(
             "Invalid authentication attempt made from: " +
                 req.ip +
                 " @ " +
-                req.hostname
+                req.hostname +
+                ". Error: " +
+                err
         );
     };
 
     const token = req.header("Authorization");
 
     if (!token) {
-        warnInvalidAuthenticationAttempt();
+        warnInvalidAuthenticationAttempt("Authorization token is missing");
         res.status(400).send("Authorization token is missing").end();
         return;
     }
 
-    if (token.startsWith("Bearer ") == false) {
-        warnInvalidAuthenticationAttempt();
+    if (!token.startsWith("Bearer ")) {
+        warnInvalidAuthenticationAttempt(
+            "Authorization token should start with Bearer"
+        );
         res.status(400)
             .send("Authorization token should start with Bearer")
             .end();
@@ -165,33 +240,17 @@ const authProtect = (req, res, next) => {
 
     const jwtToken = token.substring(7, token.length);
 
-    try {
-        log("Recieved Token: " + jwtToken + " from " + req.id);
-        const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET || "");
-
-        req.token = decoded;
-
-        if (req.token.user == undefined) {
-            throw "Invalid token";
-        }
-
-        let userKeys = Object.keys(req.token.user).sort();
-        let expectedKeys = ["email", "id", "name", "username"];
-
-        if (userKeys.length == expectedKeys.length) {
-            throw "Invalid schema";
-        }
-
-        if (!userKeys.every((v, i) => v === expectedKeys[i])) {
-            throw "Invalid schema";
-        }
-    } catch (_) {
-        warnInvalidAuthenticationAttempt();
-        res.status(401).send("Invalid authorization token").end();
-        return;
-    }
-
-    next();
+    log("Recieved Token: " + jwtToken + " from " + req.id);
+    validateToken(jwtToken)
+        .then((result) => {
+            req.token = result;
+            next();
+        })
+        .catch((err) => {
+            warnInvalidAuthenticationAttempt(err);
+            res.status(401).send("Invalid authorization token").end();
+            return;
+        });
 };
 
 module.exports = { initialize, authProtect };
