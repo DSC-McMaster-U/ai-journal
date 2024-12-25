@@ -10,9 +10,10 @@ export default function LandingPage() {
   const router = useRouter();
 
   return (
-    <div className="justify-center flex-col min-h-screen bg-foreground">
+    <div className="relative justify-center -z-20 flex-col min-h-screen bg-foreground overflow-x-hidden">
+      <div className="absolute w-[1000px] h-[95vh] bg-background top-00 left-0 -z-10"></div>
       <header className="text-center min-h-screen flex flex-col rounded-b-[50px] bg-background">
-        <h1 className="font-serif text-4xl font-light mt-4">Espressly</h1>
+        <h1 className="font-serif text-6xl font-light mt-16">Espressly</h1>
         <div className="flex-1 flex flex-col mb-2">
           <Image
             src="/images/espressly.png"
