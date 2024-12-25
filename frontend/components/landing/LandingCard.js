@@ -15,9 +15,9 @@ const LandingCard = ({ title, description, alignment = 'left', icon }) => {
       </div>
       <div
         className={cn(
-          'bg-secondary p-4 text-foreground rounded-xl rounded-bl-none',
+          'bg-secondary p-4 text-foreground rounded-3xl rounded-bl-none',
           'font-light flex gap-6 items-center',
-          alignment === 'right' && 'flex-row-reverse rounded-bl-xl rounded-br-none'
+          alignment === 'right' && 'flex-row-reverse rounded-bl-3xl rounded-br-none'
         )}>
         <p>{description}</p>
       </div>

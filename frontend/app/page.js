@@ -38,7 +38,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main className="flex-grow text-background mt-20">
+      <main className="flex-grow text-background mt-14">
         <h2 className="text-5xl font-serif mt-4 mb-8 text-center">Features</h2>
         <div className="flex flex-col gap-14">
           <LandingCard
@@ -65,7 +65,7 @@ export default function LandingPage() {
         </div>
       </main>
 
-      <footer className="text-center p-4 mt-16 text-background">
+      <footer className="text-center p-4 mt-8 text-background">
         <p className="text-sm">Made with ❤️ by the Espressly Team © {new Date().getFullYear()}</p>
       </footer>
     </div>
