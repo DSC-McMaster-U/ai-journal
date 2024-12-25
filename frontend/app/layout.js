@@ -1,15 +1,17 @@
+import { Rubik, Trirong } from 'next/font/google';
 import './globals.css';
 
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
+const serif = Trirong({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
+});
+
+const sans = Rubik({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  weight: ['300', '400', '500', '600', '700', '800', '900']
+});
 
 export const metadata = {
   title: 'Create Next App',
@@ -18,8 +20,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html data-theme="night" lang="en">
-      <body className={`antialiased`}>{children}</body>
+    <html data-theme="night" lang="en" className="dark">
+      <body className={`${serif.variable} ${sans.variable} font-sans antialiased`}>{children}</body>
     </html>
   );
 }

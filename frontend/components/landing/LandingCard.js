@@ -1,8 +1,24 @@
-const LandingCard = ({ title, description }) => {
+import { cn } from '@/lib/utils';
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { NotebookPen } from 'lucide-react';
+
+const LandingCard = ({ title, description, alignment = 'left', icon }) => {
   return (
-    <div className="card bg-neutral lg:card-side mt-2 shadow-xl">
-      <div className="card-body">
-        <h2 className="card-title text-primary">{title}</h2>
+    <div className={cn('mx-4 flex-col')}>
+      <div
+        className={cn(
+          'w-fit border px-4 py-1.5 rounded-full mb-4 rounded-bl-none',
+          alignment === 'right' && 'ml-auto rounded-bl-full rounded-br-none'
+        )}>
+        {title}
+      </div>
+      <div
+        className={cn(
+          'bg-secondary p-4 text-foreground rounded-xl rounded-bl-none',
+          'font-light flex gap-6 items-center',
+          alignment === 'right' && 'flex-row-reverse rounded-bl-xl rounded-br-none'
+        )}>
         <p>{description}</p>
       </div>
     </div>
