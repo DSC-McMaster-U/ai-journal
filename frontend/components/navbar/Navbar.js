@@ -57,13 +57,13 @@ export default function Navbar({ isSidebarOpen }) {
     //     </Link>
     //   ))}
     // </div>
-    <div className="fixed bottom-0 left-0 w-full flex justify-between px-12 items-center h-20 p-0 m-0 bg-accent z-[2]">
+    <div className="fixed bottom-0 left-0 w-full flex justify-evenly items-center h-20 p-0 m-0 bg-accent z-[2]">
       {routes.map((route) => (
         <Link
           className={cn(
             'transition ease-in-out duration-500 cursor-pointer flex flex-col items-center gap-2 p-3 rounded-lg',
-            currentPath !== route.path && 'hover:bg-primary/10',
-            currentPath === route.path ? 'bg-primary text-background' : 'text-primary/70'
+            !currentPath.startsWith(route.path) && 'hover:bg-primary/10',
+            currentPath.startsWith(route.path) ? 'bg-primary text-background' : 'text-primary/70'
           )}
           href={isLoggedIn ? route.path : '/login'}
           key={route.name}>

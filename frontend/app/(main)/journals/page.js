@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaEllipsisVertical, FaPlus } from 'react-icons/fa6';
 import Tabs from '@/components/journals/Tabs';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 export default function JournalsPage({ defaultTab = 'daily' }) {
   const [currentTab, setCurrentTab] = useState(defaultTab);
@@ -213,11 +215,12 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
         </div>
       </div>
 
-      <button
-        className="bg-base-100 fixed btn btn-outline btn-primary right-6 bottom-20 rounded-full w-14 h-14 shadow-md z-[5]"
-        onClick={() => navigateToJournal(`new-${Date.now()}`)}>
-        <FaPlus size={32} />
-      </button>
+      <Button
+        onClick={() => navigateToJournal(`new-${Date.now()}`)}
+        size="icon"
+        className="rounded-full p-6 fixed right-[20px] bottom-[100px] z-[5] transition-all hover:-translate-y-[2px]">
+        <Plus className="!w-8 !h-8" />
+      </Button>
     </div>
   );
 }
