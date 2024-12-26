@@ -1,20 +1,26 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaEllipsisVertical, FaPlus } from 'react-icons/fa6';
 import Tabs from '@/components/journals/Tabs';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { EllipsisVertical, Menu, Plus } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from '@/components/ui/sheet';
 
 export default function JournalsPage({ defaultTab = 'daily' }) {
   const [currentTab, setCurrentTab] = useState(defaultTab);
+  const router = useRouter();
 
-  // Update currentTab when defaultTab changes (from URL)
   useEffect(() => {
     setCurrentTab(defaultTab);
   }, [defaultTab]);
 
-  // Organized journal entries by tab with distinct data
   const [journalEntries] = useState([
     // Daily Journal Entries
     {
@@ -133,45 +139,17 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
     }
   ]);
 
-  const router = useRouter();
-
   const navigateToJournal = (id) => {
     router.push(`/journals/${currentTab}/${id}`);
   };
 
-  // Filter entries based on current tab
   const filteredEntries = journalEntries.filter((entry) => entry.tab === currentTab);
-
-  // Prevents drop down menu buttons from propagating click events
-  const preventPropagation = (e) => {
-    e.stopPropagation();
-  };
-
-  // Get tab-specific heading
-  const getTabHeading = () => {
-    switch (currentTab) {
-      case 'daily':
-        return 'Daily Journal';
-      case 'gratitude':
-        return 'Gratitude Journal';
-      case 'dreams':
-        return 'Dream Journal';
-      case 'goals':
-        return 'Goals Journal';
-      case 'creative':
-        return 'Creative Writing';
-      default:
-        return 'Journal';
-    }
-  };
 
   return (
     <div className="flex flex-col">
       <Tabs currentTab={currentTab} onTabChange={setCurrentTab} />
 
       <div className="flex-1 overflow-y-auto">
-        {/* <h1 className="text-4xl px-8 pt-8 pb-5 font-bold text-primary">{getTabHeading()}</h1> */}
-
         <div>
           {filteredEntries.length !== 0 ? (
             filteredEntries.map((entry) => (
@@ -193,12 +171,18 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
                 </div>
 
                 <details className="dropdown dropdown-end">
-                  <summary className="btn btn-ghost m-1 text-3xl" onClick={preventPropagation}>
-                    <FaEllipsisVertical />
+                  <summary
+                    className="btn btn-ghost m-1 text-3xl"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}>
+                    <EllipsisVertical />
                   </summary>
                   <ul
                     className="menu dropdown-content bg-base-100 rounded-md z-[3] w-52 p-2 shadow max-w-24 font-semibold border"
-                    onClick={preventPropagation}>
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}>
                     <li>
                       <a>Share</a>
                     </li>
@@ -215,11 +199,30 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
         </div>
       </div>
 
+      <Sheet>
+        <SheetTrigger>
+          <Button
+            size="icon"
+            className="rounded-full p-6 fixed right-[20px] bottom-[165px] z-[5] transition-all hover:-translate-y-[2px]">
+            <Menu className="!w-6 !h-6" strokeWidth={3} />
+          </Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader className="text-start">
+            <SheetTitle>Journal Categories</SheetTitle>
+            <SheetDescription>
+              Navigate and manage your journal entries by categories
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mt-4">Here are your categories!</div>
+        </SheetContent>
+      </Sheet>
+
       <Button
         onClick={() => navigateToJournal(`new-${Date.now()}`)}
         size="icon"
         className="rounded-full p-6 fixed right-[20px] bottom-[100px] z-[5] transition-all hover:-translate-y-[2px]">
-        <Plus className="!w-8 !h-8" />
+        <Plus className="!w-6 !h-6" strokeWidth={3} />
       </Button>
     </div>
   );
