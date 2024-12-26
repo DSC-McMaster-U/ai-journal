@@ -2,34 +2,35 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { FaBook, FaChartColumn, FaComment, FaGear, FaHouse } from 'react-icons/fa6';
+import { House, MessageSquare, Notebook, Settings } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function Navbar({ isSidebarOpen }) {
   const routes = [
     {
+      name: 'Dashboard',
+      path: '/dashboard',
+      icon: <House strokeWidth={2} size={26} />
+    },
+    {
       name: 'Journals',
       path: '/journals',
-      icon: <FaBook />
+      icon: <Notebook strokeWidth={2} size={26} />
     },
     {
       name: 'Chats',
       path: '/chats',
-      icon: <FaComment />
+      icon: <MessageSquare strokeWidth={2} size={26} />
     },
-    {
-      name: 'Dashboard',
-      path: '/dashboard',
-      icon: <FaHouse />
-    },
-    {
-      name: 'Stats',
-      path: '/stats',
-      icon: <FaChartColumn />
-    },
+    // {
+    //   name: 'Stats',
+    //   path: '/stats',
+    //   icon: <FaChartColumn strokeWidth={2} size={26} />
+    // },
     {
       name: 'Settings',
       path: '/settings',
-      icon: <FaGear />
+      icon: <Settings strokeWidth={2} size={26} />
     }
   ];
 
@@ -42,13 +43,28 @@ export default function Navbar({ isSidebarOpen }) {
   if (isSidebarOpen) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 w-full flex justify-evenly items-center h-16 p-0 m-0 bg-[#1e293b] border-t border-base-content/10 z-[2]">
+    // <div className="fixed bottom-0 left-0 w-full flex justify-between px-8 items-center h-20 p-0 m-0 bg-accent z-[2]">
+    //   {routes.map((route) => (
+    //     <Link
+    //       className={cn(
+    //         'transition ease-in-out duration-500 cursor-pointer flex flex-col items-center gap-2',
+    //         currentPath === route.path ? 'text-primary' : 'text-muted-foreground/50'
+    //       )}
+    //       href={isLoggedIn ? route.path : '/login'}
+    //       key={route.name}>
+    //       {route.icon}
+    //       <p className={cn('text-xs')}>{route.name}</p>
+    //     </Link>
+    //   ))}
+    // </div>
+    <div className="fixed bottom-0 left-0 w-full flex justify-between px-12 items-center h-20 p-0 m-0 bg-accent z-[2]">
       {routes.map((route) => (
         <Link
-          className={`${currentPath === route.path
-              ? 'text-primary'
-              : 'text-gray-400 hover:text-primary'
-            } transition ease-in-out duration-500 text-2xl cursor-pointer`}
+          className={cn(
+            'transition ease-in-out duration-500 cursor-pointer flex flex-col items-center gap-2 p-3 rounded-lg',
+            currentPath !== route.path && 'hover:bg-primary/10',
+            currentPath === route.path ? 'bg-primary text-background' : 'text-primary/70'
+          )}
           href={isLoggedIn ? route.path : '/login'}
           key={route.name}>
           {route.icon}

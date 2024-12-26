@@ -1,5 +1,6 @@
 import { Rubik, Trirong } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/ui/toaster';
 
 const serif = Trirong({
   subsets: ['latin'],
@@ -21,7 +22,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html data-theme="night" lang="en" className="dark">
-      <body className={`${serif.variable} ${sans.variable} font-sans antialiased`}>{children}</body>
+      <body className={`${serif.variable} ${sans.variable} font-sans antialiased`}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

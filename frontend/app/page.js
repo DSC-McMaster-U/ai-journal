@@ -10,9 +10,9 @@ export default function LandingPage() {
   const router = useRouter();
 
   return (
-    <div className="relative justify-center -z-20 flex-col min-h-screen bg-foreground overflow-x-hidden">
-      <div className="absolute w-[1000px] h-[95vh] bg-background top-00 left-0 -z-10"></div>
-      <header className="text-center min-h-screen flex flex-col rounded-b-[50px] bg-background">
+    <div className="relative justify-center z-10 flex-col min-h-screen bg-foreground overflow-x-hidden">
+      <div className="absolute w-[1000px] h-[95vh] bg-background top-00 left-0 -z-20"></div>
+      <header className="relative z-30 text-center min-h-screen flex flex-col rounded-b-[50px] bg-background">
         <h1 className="font-serif text-6xl font-light mt-16">Espressly</h1>
         <div className="flex-1 flex flex-col mb-2">
           <Image
@@ -32,7 +32,7 @@ export default function LandingPage() {
           <Button
             variant="secondary"
             className="w-[80%] text-lg font-bold rounded-full py-8 mb-[50px] mt-14 hover:-translate-y-1 transition-all"
-            onClick={() => router.push('/register')}>
+            onClick={() => router.push('/login')}>
             Get Started!
           </Button>
         </div>
