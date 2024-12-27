@@ -1,4 +1,5 @@
 import Navbar from '@/components/common/Navbar';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function MainLayout({ children }) {
   return (

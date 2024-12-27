@@ -1,21 +1,17 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Tabs from '@/components/journals/Tabs';
 import { Button } from '@/components/ui/button';
-import { EllipsisVertical, Menu, Plus } from 'lucide-react';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from '@/components/ui/sheet';
+import { EllipsisVertical, Plus } from 'lucide-react';
+import JournalTabs from '@/components/journals/JournalTabs';
 
 export default function JournalsPage({ defaultTab = 'daily' }) {
   const [currentTab, setCurrentTab] = useState(defaultTab);
   const router = useRouter();
+  const pathName = usePathname();
+
+  const currentPathJournalId = pathName.split('/').pop();
 
   useEffect(() => {
     setCurrentTab(defaultTab);
@@ -147,7 +143,9 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
 
   return (
     <div className="flex flex-col">
-      <Tabs currentTab={currentTab} onTabChange={setCurrentTab} />
+      {/* <Tabs currentTab={currentTab} onTabChange={setCurrentTab} /> */}
+
+      <h1 className="p-4 text-2xl capitalize">Current Path ID: {currentPathJournalId}</h1>
 
       <div className="flex-1 overflow-y-auto">
         <div>
@@ -194,30 +192,12 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
               </div>
             ))
           ) : (
-            <div className="text-center p-8">No entries in your {getTabHeading()} yet.</div>
+            <div className="text-center p-8">No entries in this journal yet.</div>
           )}
         </div>
       </div>
 
-      <Sheet>
-        <SheetTrigger>
-          <Button
-            size="icon"
-            className="rounded-full p-6 fixed right-[20px] bottom-[165px] z-[5] transition-all hover:-translate-y-[2px]">
-            <Menu className="!w-6 !h-6" strokeWidth={3} />
-          </Button>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader className="text-start">
-            <SheetTitle>Journal Categories</SheetTitle>
-            <SheetDescription>
-              Navigate and manage your journal entries by categories
-            </SheetDescription>
-          </SheetHeader>
-          <div className="mt-4">Here are your categories!</div>
-        </SheetContent>
-      </Sheet>
-
+      <JournalTabs />
       <Button
         onClick={() => navigateToJournal(`new-${Date.now()}`)}
         size="icon"
