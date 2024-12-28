@@ -2,23 +2,41 @@
 
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { JOURNAL_ENTRIES } from '@/lib/constants';
+import { ChevronLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function JournalEntryPage() {
-    const params = useParams();
+  const params = useParams();
 
-    return (
-        <div className="p-8">
-            <h1 className="text-2xl font-bold mb-4">
-                Journal Entry in {params.tab} tab
-            </h1>
-            <div>
-                This is journal {params.journalId}
-            </div>
-            <div className="mt-4">
-                <Link href={`/journals/${params.tab}`} className="btn btn-primary">
-                    Back to {params.tab} journals
-                </Link>
-            </div>
+  const { id, date, title, description, tab, content } = JOURNAL_ENTRIES.find(
+    (entry) => entry.id === params.journalId
+  );
+
+  // TODO: show the actual date
+  const formattedDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  return (
+    <div className="p-6">
+      <div className="flex gap-4 items-center">
+        <Link href={`/journals/${params.tab}`} className="block">
+          <Button size="icon" className="rounded-full" variant="secondary">
+            <ChevronLeft />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold">{title}</h1>
+          <p className="text-muted">{formattedDate}</p>
+          <p className="text-muted">{tab}</p>
         </div>
-    );
+      </div>
+
+      <div className="mt-4"></div>
+    </div>
+  );
 }

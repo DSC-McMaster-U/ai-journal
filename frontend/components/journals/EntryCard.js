@@ -16,10 +16,10 @@ function EntryCard({ entry, currentTab }) {
   return (
     <div
       key={id}
-      className="flex justify-between items-center pl-6 pr-2 border-t-2 border-b-2 border-neutral h-20 cursor-pointer"
+      className="flex justify-between items-center pl-6 pr-2 border-b-2 border-neutral h-20 cursor-pointer hover:bg-accent/30 transition-all"
       onClick={() => router.push(`/journals/${currentTab}/${id}`)}>
       <div className="flex gap-8 items-center">
-        <div className="max-w-6 w-6 h-12 flex flex-col items-center justify-center">
+        <div className="max-w-6 w-6 h-12 flex flex-col items-center justify-center text-secondary-foreground">
           <p>{date.split(' ')[0]}</p>
           <p>{date.split(' ')[1]}</p>
         </div>

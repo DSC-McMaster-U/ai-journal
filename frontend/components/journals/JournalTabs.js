@@ -18,7 +18,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
-import Modal from '../common/Modal';
 import { DialogFooter } from '../ui/dialog';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -29,7 +28,7 @@ import { useRouter } from 'next/navigation';
 
 const DEFAULT_COLOR = '#8f4000';
 
-function JournalTabs() {
+function JournalTabs({ tabs, setTabs }) {
   const { toast } = useToast();
   const router = useRouter();
 
@@ -40,12 +39,6 @@ function JournalTabs() {
 
   const [name, setName] = useState('');
   const [color, setColor] = useState(DEFAULT_COLOR);
-
-  const [tabs, setTabs] = useState([
-    { id: 'daily', name: 'Daily Journal', color: '#FF0000' },
-    { id: 'gratitude', name: 'Gratitude Journal', color: '#00FF00' },
-    { id: 'dreams', name: 'Dream Journal', color: '#0000FF' }
-  ]);
 
   useEffect(() => {
     if (!openEdit && !openDelete && !openCreate) {
