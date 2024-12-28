@@ -78,6 +78,27 @@ body {
   }
 }
 
+@layer base {
+  .no-tailwindcss-base {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: revert;
+      font-weight: revert;
+    }
+
+    ol,
+    ul {
+      list-style: revert;
+      margin: revert;
+      padding: revert;
+    }
+  }
+}
+
 ::-webkit-scrollbar {
   @apply w-2.5 h-2.5;
 }

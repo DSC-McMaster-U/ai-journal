@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { JOURNAL_ENTRIES } from '@/lib/constants';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import JournalEditor from '@/components/journals/JournalEditor';
 
 export default function JournalEntryPage() {
   const params = useParams();
 
-  const { id, date, title, description, tab, content } = JOURNAL_ENTRIES.find(
-    (entry) => entry.id === params.journalId
-  );
+  const entry = JOURNAL_ENTRIES.find((entry) => entry.id === params.journalId);
+
+  const { id, date, title, description, tab, content } = entry;
 
   // TODO: show the actual date
   const formattedDate = new Date().toLocaleDateString('en-US', {
@@ -36,7 +37,9 @@ export default function JournalEntryPage() {
         </div>
       </div>
 
-      <div className="mt-4"></div>
+      <div className="mt-4 no-tailwindcss-base">
+        <JournalEditor entry={entry} />
+      </div>
     </div>
   );
 }
