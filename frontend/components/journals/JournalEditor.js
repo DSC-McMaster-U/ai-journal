@@ -31,7 +31,7 @@ const MenuBar = () => {
   }
 
   return (
-    <div className="fixed bottom-20 left-0 bg-background z-30 overflow-x-auto p-2 border-t w-screen">
+    <div className="fixed bottom-16 left-0 bg-background z-30 overflow-x-auto p-2 border-t w-screen">
       <div className="grid grid-cols-9 gap-2 auto-rows-auto">
         <Button
           onClick={() => editor.chain().focus().toggleBold().run()}

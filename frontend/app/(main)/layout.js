@@ -11,7 +11,7 @@ export default function MainLayout({ children }) {
     <div className="min-h-screen justify-between pb-16 bg-base-100">
       <div
         className={`overflow-y-auto ${
-          isJournalDetail ? 'h-[calc(100vh-177px)]' : 'h-[calc(100vh-5rem)]'
+          isJournalDetail ? 'h-[calc(100vh-161px)]' : 'h-[calc(100vh-4rem)]'
         }`}>
         {children}
       </div>

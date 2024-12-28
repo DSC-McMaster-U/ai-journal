@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { House, MessageSquare, Notebook, Settings } from 'lucide-react';
+import { House, MessageSquare, Notebook, Settings, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Navbar({ isSidebarOpen }) {
@@ -10,17 +10,17 @@ export default function Navbar({ isSidebarOpen }) {
     {
       name: 'Dashboard',
       path: '/dashboard',
-      icon: <House strokeWidth={2} size={26} />
+      icon: <House strokeWidth={2} size={22} />
     },
     {
       name: 'Journals',
       path: '/journals',
-      icon: <Notebook strokeWidth={2} size={26} />
+      icon: <Notebook strokeWidth={2} size={22} />
     },
     {
       name: 'Chats',
       path: '/chats',
-      icon: <MessageSquare strokeWidth={2} size={26} />
+      icon: <MessageSquare strokeWidth={2} size={22} />
     },
     // {
     //   name: 'Stats',
@@ -30,7 +30,7 @@ export default function Navbar({ isSidebarOpen }) {
     {
       name: 'Settings',
       path: '/settings',
-      icon: <Settings strokeWidth={2} size={26} />
+      icon: <User strokeWidth={2} size={22} />
     }
   ];
 
@@ -57,7 +57,7 @@ export default function Navbar({ isSidebarOpen }) {
     //     </Link>
     //   ))}
     // </div>
-    <div className="fixed bottom-0 left-0 w-full flex justify-evenly items-center h-20 p-0 m-0 bg-accent z-[2]">
+    <div className="fixed bottom-0 left-0 w-full flex justify-evenly items-center h-16 p-0 m-0 bg-accent z-[2]">
       {routes.map((route) => (
         <Link
           className={cn(
