@@ -37,7 +37,7 @@ export default function JournalEntryPage() {
         </div>
       </div>
 
-      <div className="mt-4 no-tailwindcss-base">
+      <div className="mt-4 no-tailwindcss-base relative !z-20">
         <JournalEditor entry={entry} />
       </div>
     </div>

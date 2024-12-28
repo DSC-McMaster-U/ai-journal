@@ -9,6 +9,19 @@ import { BubbleMenu, EditorProvider, FloatingMenu, useCurrentEditor } from '@tip
 import StarterKit from '@tiptap/starter-kit';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
+import {
+  Bold,
+  Code,
+  Eraser,
+  Italic,
+  List,
+  ListOrdered,
+  Minus,
+  Quote,
+  Redo2,
+  Strikethrough,
+  Undo2
+} from 'lucide-react';
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor();
@@ -19,34 +32,139 @@ const MenuBar = () => {
 
   return (
     <div className="fixed bottom-20 left-0 bg-background z-30 overflow-x-auto p-2 border-t w-screen">
-      <div className="flex gap-2">
+      <div className="grid grid-cols-10 gap-2 auto-rows-auto">
         <Button
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!editor.can().chain().focus().toggleBold().run()}
           variant={editor.isActive('bold') ? 'default' : 'outline'}
-          className="p-3">
-          Bold
+          size="icon"
+          className="p-2">
+          <Bold />
         </Button>
         <Button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={!editor.can().chain().focus().toggleItalic().run()}
           variant={editor.isActive('italic') ? 'default' : 'outline'}
+          size="icon"
           className="p-3">
-          Italic
+          <Italic />
         </Button>
         <Button
           onClick={() => editor.chain().focus().toggleStrike().run()}
           disabled={!editor.can().chain().focus().toggleStrike().run()}
           variant={editor.isActive('strike') ? 'default' : 'outline'}
+          size="icon"
           className="p-3">
-          Strike
+          <Strikethrough />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().setParagraph().run()}
+          variant={editor.isActive('paragraph') ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          P
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          variant={editor.isActive('heading', { level: 1 }) ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          H1
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          variant={editor.isActive('heading', { level: 2 }) ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          H2
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          variant={editor.isActive('heading', { level: 3 }) ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          H3
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
+          variant={editor.isActive('heading', { level: 4 }) ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          H4
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
+          variant={editor.isActive('heading', { level: 5 }) ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          H5
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
+          variant={editor.isActive('heading', { level: 6 }) ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          H6
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          variant={editor.isActive('bulletList') ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          <List />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          variant={editor.isActive('orderedList') ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          <ListOrdered />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          variant={editor.isActive('blockquote') ? 'default' : 'outline'}
+          size="icon"
+          className="p-3">
+          <Quote />
         </Button>
         <Button
           onClick={() => editor.chain().focus().toggleCode().run()}
           disabled={!editor.can().chain().focus().toggleCode().run()}
           variant={editor.isActive('code') ? 'default' : 'outline'}
+          size="icon"
+          className="p-2 text-red-600">
+          <div className="px-1 rounded-sm">C</div>
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          variant={editor.isActive('codeBlock') ? 'default' : 'outline'}
+          size="icon"
           className="p-3">
-          Code
+          <Code />
+        </Button>
+
+        <Button
+          onClick={() => editor.chain().focus().setHorizontalRule().run()}
+          className="p-3"
+          size="icon"
+          variant="secondary">
+          <Minus />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().undo().run()}
+          disabled={!editor.can().chain().focus().undo().run()}
+          className="p-3"
+          size="icon"
+          variant="secondary">
+          <Undo2 />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().redo().run()}
+          disabled={!editor.can().chain().focus().redo().run()}
+          className="p-3"
+          size="icon"
+          variant="secondary">
+          <Redo2 />
         </Button>
         <Button
           onClick={() => {
@@ -54,94 +172,9 @@ const MenuBar = () => {
             editor.chain().focus().clearNodes().run();
           }}
           className="p-3"
+          size="icon"
           variant="secondary">
-          Clear
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().setParagraph().run()}
-          variant={editor.isActive('paragraph') ? 'default' : 'outline'}
-          className="p-3">
-          Paragraph
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          variant={editor.isActive('heading', { level: 1 }) ? 'default' : 'outline'}
-          className="p-3">
-          H1
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          variant={editor.isActive('heading', { level: 2 }) ? 'default' : 'outline'}
-          className="p-3">
-          H2
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          variant={editor.isActive('heading', { level: 3 }) ? 'default' : 'outline'}
-          className="p-3">
-          H3
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
-          variant={editor.isActive('heading', { level: 4 }) ? 'default' : 'outline'}
-          className="p-3">
-          H4
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
-          variant={editor.isActive('heading', { level: 5 }) ? 'default' : 'outline'}
-          className="p-3">
-          H5
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
-          variant={editor.isActive('heading', { level: 6 }) ? 'default' : 'outline'}
-          className="p-3">
-          H6
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          variant={editor.isActive('bulletList') ? 'default' : 'outline'}
-          className="p-3">
-          Bullet list
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          variant={editor.isActive('orderedList') ? 'default' : 'outline'}
-          className="p-3">
-          Ordered list
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          variant={editor.isActive('codeBlock') ? 'default' : 'outline'}
-          className="p-3">
-          Code block
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          variant={editor.isActive('blockquote') ? 'default' : 'outline'}
-          className="p-3">
-          Blockquote
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          className="p-3"
-          variant="secondary">
-          Horizontal rule
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().chain().focus().undo().run()}
-          className="p-3"
-          variant="secondary">
-          Undo
-        </Button>
-        <Button
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().chain().focus().redo().run()}
-          className="p-3"
-          variant="secondary">
-          Redo
+          <Eraser />
         </Button>
         {/* <Button
           onClick={() => editor.chain().focus().setColor('#958DF1').run()}
@@ -163,7 +196,7 @@ const BubbleBar = () => {
 
   return (
     <BubbleMenu
-      className="bg-background border border-foreground/25 rounded-lg flex font-medium shadow-lg"
+      className="bg-background border border-foreground/25 rounded-lg flex font-medium shadow-lg relative z-20"
       tippyOptions={{ duration: 100 }}
       editor={editor}>
       <Button
@@ -267,8 +300,7 @@ const content = `
 const JournalEditor = () => {
   return (
     <EditorProvider
-      slotBefore={<MenuBar />}
-      slotAfter={[<BubbleBar />, <FloatingBar />]}
+      slotAfter={[<BubbleBar />, <FloatingBar />, <MenuBar />]}
       extensions={extensions}
       content={content}></EditorProvider>
   );

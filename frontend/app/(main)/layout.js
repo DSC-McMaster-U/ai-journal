@@ -1,10 +1,20 @@
+'use client';
 import Navbar from '@/components/common/Navbar';
-import { Toaster } from '@/components/ui/toaster';
+import { usePathname } from 'next/navigation';
 
 export default function MainLayout({ children }) {
+  const pathname = usePathname();
+
+  const isJournalDetail = /^\/journals\/[^/]+\/[^/]+$/.test(pathname);
+
   return (
     <div className="min-h-screen justify-between pb-16 bg-base-100">
-      <div className="overflow-y-auto h-[calc(100vh-4rem)]">{children}</div>
+      <div
+        className={`overflow-y-auto ${
+          isJournalDetail ? 'h-[calc(100vh-11rem)]' : 'h-[calc(100vh-5rem)]'
+        }`}>
+        {children}
+      </div>
       <Navbar />
     </div>
   );
