@@ -32,7 +32,7 @@ const MenuBar = () => {
 
   return (
     <div className="fixed bottom-20 left-0 bg-background z-30 overflow-x-auto p-2 border-t w-screen">
-      <div className="grid grid-cols-10 gap-2 auto-rows-auto">
+      <div className="grid grid-cols-9 gap-2 auto-rows-auto">
         <Button
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!editor.can().chain().focus().toggleBold().run()}
@@ -92,7 +92,9 @@ const MenuBar = () => {
           className="p-3">
           H4
         </Button>
-        <Button
+        <div></div>
+
+        {/* <Button
           onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
           variant={editor.isActive('heading', { level: 5 }) ? 'default' : 'outline'}
           size="icon"
@@ -105,7 +107,7 @@ const MenuBar = () => {
           size="icon"
           className="p-3">
           H6
-        </Button>
+        </Button> */}
         <Button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           variant={editor.isActive('bulletList') ? 'default' : 'outline'}

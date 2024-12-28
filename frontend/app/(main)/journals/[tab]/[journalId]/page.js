@@ -33,7 +33,6 @@ export default function JournalEntryPage() {
         <div>
           <h1 className="text-2xl font-bold">{title}</h1>
           <p className="text-muted">{formattedDate}</p>
-          <p className="text-muted">{tab}</p>
         </div>
       </div>
 
