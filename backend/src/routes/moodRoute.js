@@ -1,7 +1,7 @@
 // import express.js framework and moodController
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const moodController = require("../controllers/moodController");
+const moodController = require('../controllers/moodController');
 
 /**
  * @swagger
@@ -40,7 +40,7 @@ const moodController = require("../controllers/moodController");
  *                     format: date-time
  *                     example: "2024-11-24T12:30:00Z"
  */
-router.get("/", moodController.getMoodEntries);
+router.get('/', moodController.getMoodEntries);
 
 /**
  * @swagger
@@ -67,7 +67,7 @@ router.get("/", moodController.getMoodEntries);
  *       201:
  *         description: Mood entry created successfully
  */
-router.post("/", moodController.createMoodEntry);
+router.post('/', moodController.createMoodEntry);
 
 /**
  * @swagger
@@ -103,7 +103,7 @@ router.post("/", moodController.createMoodEntry);
  *       404:
  *         description: Mood entry not found
  */
-router.put("/:id", moodController.editMoodEntry);
+router.put('/:id', moodController.editMoodEntry);
 
 /**
  * @swagger
@@ -123,6 +123,6 @@ router.put("/:id", moodController.editMoodEntry);
  *       404:
  *         description: Mood entry not found
  */
-router.delete("/:id", moodController.deleteMoodEntry);
+router.delete('/:id', moodController.deleteMoodEntry);
 
 module.exports = router;

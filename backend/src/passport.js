@@ -1,11 +1,11 @@
-const session = require("express-session");
-const passport = require("passport");
-const auth = require("./services/authService");
+const session = require('express-session');
+const passport = require('passport');
+const auth = require('./services/authService');
 
 function setupPassport(app) {
   app.use(
     session({
-      secret: "Test Secret ",
+      secret: 'Test Secret ',
       resave: false,
       saveUninitialized: true,
     })

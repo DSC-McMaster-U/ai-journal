@@ -4,9 +4,10 @@
   "description": "Backend For AI Journal",
   "main": "index.js",
   "scripts": {
-    "start": "node --env-file=.env src/index.js",
-    "dev": "nodemon --env-file=.env src/index.js",
-    "test": "jest --detectOpenHandles"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest --detectOpenHandles",
+    "format": "prettier --write ."
   },
   "author": "",
   "license": "ISC",

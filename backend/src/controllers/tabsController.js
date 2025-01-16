@@ -1,56 +1,57 @@
-const tabsService = require("../services/tabsService");
+const tabsService = require('../services/tabsService');
 
-// Controller for fetching all tabs
 const getAllTabs = async (req, res) => {
+  // TODO make this return only tabs for this user
   try {
     const tabs = await tabsService.getAllTabs();
     res.json(tabs);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch tabs" });
+    res.status(500).json({ error: 'Failed to fetch tabs' });
   }
 };
 
-// Controller for fetching a tab by ID
 const getTabById = async (req, res) => {
+  // TODO make this return only tabs for this user
   try {
     const tab = await tabsService.getTabById(req.params.id);
     res.json(tab);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch tab" });
+    res.status(500).json({ error: 'Failed to fetch tab' });
   }
 };
 
-// Controller for creating a new tab
 const createTab = async (req, res) => {
-  console.log(req.token);
+  // TODO remove the need to pass userid in the body, use the middleware
   try {
     const { name, user_id } = req.body;
 
     await tabsService.createTab(name, user_id);
-    res.json({ message: "Tab created successfully" });
+
+    // TODO return the created tab
+    res.json({ message: 'Tab created successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create tab" });
+    res.status(500).json({ error: 'Failed to create tab' });
   }
 };
 
-// Controller for updating a tab by ID
 const updateTab = async (req, res) => {
   try {
     const { name } = req.body;
     await tabsService.updateTab(req.params.id, name);
-    res.json({ message: "Tab updated successfully" });
+
+    // TODO return the updated tab
+    res.json({ message: 'Tab updated successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update tab" });
+    res.status(500).json({ error: 'Failed to update tab' });
   }
 };
 
-// Controller for deleting a tab by ID
 const deleteTab = async (req, res) => {
   try {
     await tabsService.deleteTab(req.params.id);
-    res.json({ message: "Tab deleted successfully" });
+    res.json({ message: 'Tab deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete tab" });
+    res.status(500).json({ error: 'Failed to delete tab' });
   }
 };
 

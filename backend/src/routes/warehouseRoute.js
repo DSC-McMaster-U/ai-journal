@@ -1,10 +1,6 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const dailyRecordMiddleware = require("../middleware/dailyRecordMiddleware");
-const warehouseController = require("../controllers/warehouseController");
-
-// apply the middleware 
-router.use(dailyRecordMiddleware);
+const warehouseController = require('../controllers/warehouseController');
 
 /**
  * @swagger
@@ -31,7 +27,7 @@ router.use(dailyRecordMiddleware);
  *                     type: string
  *                     example: "123 Warehouse St."
  */
-router.get("/", warehouseController.getAllWarehouses);
+router.get('/', warehouseController.getAllWarehouses);
 
 /**
  * @swagger
@@ -65,6 +61,6 @@ router.get("/", warehouseController.getAllWarehouses);
  *       404:
  *         description: Warehouse not found
  */
-router.get("/:id", warehouseController.getWarehouseById);
+router.get('/:id', warehouseController.getWarehouseById);
 
 module.exports = router;

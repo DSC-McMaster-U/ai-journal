@@ -1,5 +1,4 @@
-// connect to the database for this apis purpose - reading and writing to user_moods
-const { connection } = require("../database");
+const { connection } = require('../database');
 
 const getMoodEntries = () => {
   return new Promise((resolve, reject) => {
@@ -27,7 +26,7 @@ const createMoodEntry = (userId, moodId, dailyRecordId) => {
       [userId, moodId, dailyRecordId],
       (error, results) => {
         if (error) {
-          console.error("database error: ", error);
+          console.error('database error: ', error);
           reject(error);
         } else {
           resolve(results);
@@ -69,7 +68,6 @@ const deleteMoodEntry = (id) => {
   });
 };
 
-// export functions for use
 module.exports = {
   getMoodEntries,
   createMoodEntry,
