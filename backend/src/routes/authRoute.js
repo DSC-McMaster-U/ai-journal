@@ -1,9 +1,9 @@
-const express = require("express");
-const passport = require("passport");
+const express = require('express');
+const passport = require('passport');
 const router = express.Router();
-const cors = require("cors");
-const jwt = require("jsonwebtoken");
-const { authProtect } = require("../services/authService");
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const { authProtect } = require('../services/authService');
 
 /**
  * @swagger
@@ -14,7 +14,7 @@ const { authProtect } = require("../services/authService");
  *       200:
  *         description: Redirects user to google authentication page
  */
-router.get("/", passport.authenticate("google"));
+router.get('/', passport.authenticate('google'));
 
 //building o-auth requests based on googles documentation:
 //https://developers.google.com/identity/protocols/oauth2/web-server#node.js
@@ -32,22 +32,18 @@ router.get("/", passport.authenticate("google"));
  *         description: Error with creating or handling the user has occurred
  */
 router.get(
-    "/callback",
-    passport.authenticate("google", {
-        failureRedirect: "http://localhost:3000/login",
-        failureMessage: true,
-    }),
-    function (req, res) {
-        const token = jwt.sign(
-            { user: req.user },
-            process.env.JWT_SECRET || "",
-            {
-                expiresIn: "24h",
-            }
-        );
-        res.cookie("jwtToken", token);
-        res.redirect("http://localhost:3000/login?method=o-auth-google");
-    }
+  '/callback',
+  passport.authenticate('google', {
+    failureRedirect: 'http://localhost:3000/login',
+    failureMessage: true,
+  }),
+  function (req, res) {
+    const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET || '', {
+      expiresIn: '24h',
+    });
+    res.cookie('jwtToken', token);
+    res.redirect('http://localhost:3000/login?method=o-auth-google');
+  }
 );
 
 /**
@@ -81,21 +77,22 @@ router.get(
  *       400:
  *         description: Returns an error as there is no user in the current session
  */
-router.options("/get-session-user", cors({ origin: true }));
+router.options('/get-session-user', cors({ origin: true }));
 router.get(
-    "/get-session-user",
-    cors({ origin: true }),
-    authProtect,
-    function (req, res) {
-        if (req.token == undefined) {
-            res.status(400).end();
-        }
-
-        res.setHeader("Content-Type", "application/json");
-        res.send(JSON.stringify({ user: req.token.user }))
-            .status(200)
-            .end();
+  '/get-session-user',
+  cors({ origin: true }),
+  authProtect,
+  function (req, res) {
+    if (req.token == undefined) {
+      res.status(400).end();
     }
+
+    res.setHeader('Content-Type', 'application/json');
+    res
+      .send(JSON.stringify({ user: req.token.user }))
+      .status(200)
+      .end();
+  }
 );
 
 module.exports = router;

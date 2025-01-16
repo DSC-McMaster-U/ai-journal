@@ -1,11 +1,11 @@
 // services/warehouseService.js
-const connection = require("../database");
+const { connection } = require('../database');
 
 // Fetch all warehouses
 const getAllWarehouses = () => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM `ai-journal`.`warehouses`",
+      'SELECT * FROM `ai-journal`.`warehouses`',
       (error, results) => {
         if (error) {
           reject(error);
@@ -21,7 +21,7 @@ const getAllWarehouses = () => {
 const getWarehouseById = (id) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM `ai-journal`.`warehouses` WHERE id = ?",
+      'SELECT * FROM `ai-journal`.`warehouses` WHERE id = ?',
       [id],
       (error, results) => {
         if (error) {
