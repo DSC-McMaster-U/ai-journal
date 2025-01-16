@@ -5,9 +5,15 @@ function initializeLogger() {
 }
 
 function getFilename() {
+  const dir = './logs';
+
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+
   let currentDate = new Date();
   return (
-    './' +
+    './logs/' +
     currentDate.getFullYear() +
     '-' +
     (currentDate.getMonth() + 1) +

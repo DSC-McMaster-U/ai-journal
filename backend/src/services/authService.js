@@ -1,6 +1,6 @@
 const GoogleStrategy = require('passport-google-oidc');
 const jwt = require('jsonwebtoken');
-const connection = require('../database.js');
+const { connection } = require('../database.js');
 const { log, warn, error } = require('../logger.js');
 
 const generateUsername = (profile) => {
@@ -82,7 +82,6 @@ function initialize(passport) {
 
     log('In database check for ' + profile.emails[0].value + ' log in request');
 
-    let user = await getUserByEmail(profile.emails[0].value);
     let user = await getUserByEmail(profile.emails[0].value);
 
     if (user == undefined) {

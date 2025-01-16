@@ -20,6 +20,10 @@ setupSwagger(app);
 // Middleware
 const dailyRecordMiddleware = require('./middleware/dailyRecordMiddleware');
 
+// CORS
+const cors = require('cors');
+app.use(cors());
+
 // Route setup
 const authRoute = require('./routes/authRoute');
 const dailyRecordRoutes = require('./routes/dailyRecordRoute');
@@ -28,7 +32,7 @@ const warehouseRoutes = require('./routes/warehouseRoute');
 const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
 
-app.use('/api/warehouses', dailyRecordMiddleware, warehouseRoutes);
+app.use('/api/warehouses', authProtect, dailyRecordMiddleware, warehouseRoutes);
 app.use('/api/daily-records', dailyRecordMiddleware, dailyRecordRoutes);
 app.use('/api/auth', authRoute);
 app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
@@ -44,6 +48,7 @@ app.get('/api/status', (req, res) => res.send('Success.'));
 
 // Test sum endpoint
 app.get('/api/sum', (req, res) => {
+  log('GET /api/sum');
   const { a, b } = req.query;
 
   // Validate query parameters
