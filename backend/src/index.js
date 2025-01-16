@@ -26,7 +26,7 @@ const warehouseRoutes = require('./routes/warehouseRoute');
 const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
 
-app.use('/api/warehouses', warehouseRoutes);
+app.use('/api/warehouses', dailyRecordMiddleware, warehouseRoutes);
 app.use('/api/daily-records', dailyRecordMiddleware, dailyRecordRoutes);
 app.use('/api/auth', authRoute);
 app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
