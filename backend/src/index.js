@@ -16,18 +16,31 @@ setupPassport(app);
 const setupSwagger = require('./swagger');
 setupSwagger(app);
 
+// Middleware
+const dailyRecordMiddleware = require('./middleware/dailyRecordMiddleware');
+
 // Route setup
 const authRoute = require('./routes/authRoute');
+const dailyRecordRoutes = require('./routes/dailyRecordRoute');
 const warehouseRoutes = require('./routes/warehouseRoute');
 const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
 
-app.use('/api/warehouses', warehouseRoutes);
+app.use('/api/warehouses', dailyRecordMiddleware, warehouseRoutes);
+app.use('/api/daily-records', dailyRecordMiddleware, dailyRecordRoutes);
 app.use('/api/auth', authRoute);
-app.use('/api/moods', moodRoutes);
-app.use('/api/tabs', tabRoutes);
+app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
+app.use('/api/tabs', dailyRecordMiddleware, tabRoutes);
 
-// TODO remove this and setup tests for the other endpoints
+// Default route
+app.get('/api', (req, res) =>
+  res.send('Try: /api/status, /api/warehouses, or /api/warehouses/:id')
+);
+
+// Status endpoint
+app.get('/api/status', (req, res) => res.send('Success.'));
+
+// Test sum endpoint
 app.get('/api/sum', (req, res) => {
   const { a, b } = req.query;
 
