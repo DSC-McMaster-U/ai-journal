@@ -1,5 +1,6 @@
 const dailyRecordService = require('../services/dailyRecordService');
 const { connection } = require('../database');
+const { log } = require('../logger');
 
 const dailyRecordMiddleware = async (req, res, next) => {
   try {

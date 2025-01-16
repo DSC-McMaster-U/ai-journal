@@ -31,7 +31,9 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
       <div className="flex-1 overflow-y-auto">
         <div>
           {filteredEntries.length !== 0 ? (
-            filteredEntries.map((entry) => <EntryCard entry={entry} currentTab={currentTab} />)
+            filteredEntries.map((entry) => (
+              <EntryCard entry={entry} currentTab={currentTab} key={entry.id} />
+            ))
           ) : (
             <div className="text-center p-8">No entries in this journal yet.</div>
           )}

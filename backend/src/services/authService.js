@@ -1,7 +1,7 @@
 const GoogleStrategy = require('passport-google-oidc');
 const jwt = require('jsonwebtoken');
 const { connection } = require('../database.js');
-const { log, error } = require('../logger.js');
+const { log, warn, error } = require('../logger.js');
 
 const generateUsername = (profile) => {
   let username = profile.displayName ?? '';
@@ -53,7 +53,7 @@ const getUserByEmail = (email) => {
       log('Selection request resulted in: ' + results);
 
       if (results.length > 1) {
-        throw 'Multiple users with same ID!!';
+        throw 'Multiple users with same Email!!';
       }
 
       if (results.length == 0) {
@@ -73,7 +73,31 @@ const getUserByEmail = (email) => {
     });
 };
 
+/** Function used to intialize the passport instance for use with google oauth
+ *  @param { namespace } passport - Instance of passport to be initialized
+ */
 function initialize(passport) {
+  const verifyInDatabase = async (issuer, profile, cb) => {
+    log(Object.keys(profile));
+
+    log('In database check for ' + profile.emails[0].value + ' log in request');
+
+    let user = await getUserByEmail(profile.emails[0].value);
+
+    if (user == undefined) {
+      user = {
+        id: profile.id,
+        name: profile.displayName,
+        email: profile.emails[0].value,
+        username: generateUsername(profile),
+      };
+
+      addUser(user);
+    }
+
+    cb(null, user);
+  };
+
   passport.use(
     new GoogleStrategy(
       {
@@ -82,26 +106,7 @@ function initialize(passport) {
         callbackURL: '/api/auth/callback',
         scope: ['profile', 'email'],
       },
-      async function dbCallback(issuer, profile, cb) {
-        log(
-          'In database check for ' + profile.emails[0].value + ' log in request'
-        );
-
-        let user = await getUserByEmail(profile.emails[0].value);
-
-        if (user == undefined) {
-          user = {
-            id: profile.id,
-            name: profile.displayName,
-            email: profile.emails[0].value,
-            username: generateUsername(profile),
-          };
-
-          addUser(user);
-        }
-
-        cb(null, user);
-      }
+      verifyInDatabase
     )
   );
 
@@ -123,24 +128,123 @@ function initialize(passport) {
   });
 }
 
-const jwtAuth = (req, res, next) => {
-  const token = req.header('Authorization');
-  if (!token) {
-    throw new Error('Authorization token is missing');
-  }
-  if (token.startsWith('Bearer ') == false) {
-    throw new Error('Authorization token should start with Bearer');
-  }
-  const jwtToken = token.substring(7, token.length);
-  try {
-    log('Recieved Token: ' + jwtToken);
-    const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET || '');
-    req.token = decoded;
-  } catch (err) {
-    throw new Error('Invalid token');
+//Assumes valid user or undefined is input
+const usersAreEqual = (userA, userB) => {
+  if (userA == undefined || userB == undefined) {
+    return false;
   }
 
-  next();
+  //Compares every value at the keys in userA
+  return Object.keys(userA).every((v, _) => userA[v] === userB[v]);
 };
 
-module.exports = { initialize, jwtAuth };
+//Assumes valid user input
+const userExistsInDatabase = async (user) => {
+  const userInDB = await getUserByEmail(user.email);
+
+  return usersAreEqual(user, userInDB);
+};
+
+const tokenMatchesSchema = (token) => {
+  if (token.user == undefined) {
+    log('User not defined');
+    return false;
+  }
+
+  let userKeys = Object.keys(token.user).sort();
+  let expectedKeys = ['email', 'id', 'name', 'username'];
+
+  if (userKeys.length != expectedKeys.length) {
+    log('Lengths not matching');
+    return false;
+  }
+
+  if (!userKeys.every((v, i) => v === expectedKeys[i])) {
+    log('Keys not matching');
+    return false;
+  }
+
+  return true;
+};
+
+const decodeToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || '');
+
+    return decoded;
+  } catch (_) {
+    return undefined;
+  }
+};
+
+const validateToken = async (token) => {
+  if (token == undefined) {
+    throw 'Invalid token';
+  }
+
+  const decoded = decodeToken(token);
+
+  if (decoded == undefined) {
+    throw 'Invalid token';
+  }
+
+  if (!tokenMatchesSchema(decoded)) {
+    throw 'Invalid token schema';
+  }
+
+  if (!(await userExistsInDatabase(decoded.user))) {
+    throw 'Token user is not valid';
+  }
+
+  return decoded;
+};
+
+/** Function used to protect routes via JWT sent with the request
+ *  @output - Puts the resulting user information in the req.token field
+ *  @error - Sends response with code 400 if a missing or improperly formatted token is sent
+ *  @error - Sends reponse with code 401 if an invalid token is sent
+ */
+const authProtect = (req, res, next) => {
+  const warnInvalidAuthenticationAttempt = (err) => {
+    warn(
+      'Invalid authentication attempt made from: ' +
+        req.ip +
+        ' @ ' +
+        req.hostname +
+        '. Error: ' +
+        err
+    );
+  };
+
+  const token = req.header('Authorization');
+
+  if (!token) {
+    warnInvalidAuthenticationAttempt('Authorization token is missing');
+    res.status(400).send('Authorization token is missing').end();
+    return;
+  }
+
+  if (!token.startsWith('Bearer ')) {
+    warnInvalidAuthenticationAttempt(
+      'Authorization token should start with Bearer'
+    );
+    res.status(400).send('Authorization token should start with Bearer').end();
+    return;
+  }
+
+  const jwtToken = token.substring(7, token.length);
+
+  log('Recieved Token: ' + jwtToken + ' from ' + req.id);
+  validateToken(jwtToken)
+    .then((result) => {
+      req.token = result;
+      next();
+    })
+    .catch((err) => {
+      warnInvalidAuthenticationAttempt(err);
+      res.status(401).send('Invalid authorization token').end();
+      return;
+    });
+};
+
+module.exports = { initialize, authProtect };

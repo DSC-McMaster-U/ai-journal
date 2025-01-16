@@ -1,7 +1,12 @@
+const { log } = require('../logger');
 const warehouseService = require('../services/warehouseService');
 
 const getAllWarehouses = async (req, res) => {
   try {
+    log(
+      'Daily record middleware from warehouse: ' +
+        JSON.stringify(req.dailyRecord)
+    );
     const warehouses = await warehouseService.getAllWarehouses();
     res.json(warehouses);
   } catch (error) {

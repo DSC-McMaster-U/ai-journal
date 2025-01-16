@@ -302,7 +302,7 @@ const content = `
 const JournalEditor = () => {
   return (
     <EditorProvider
-      slotAfter={[<BubbleBar />, <FloatingBar />, <MenuBar />]}
+      slotAfter={[<BubbleBar key={0} />, <FloatingBar key={1} />, <MenuBar key={2} />]}
       extensions={extensions}
       content={content}></EditorProvider>
   );

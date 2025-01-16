@@ -1,23 +1,67 @@
+const fs = require('fs');
+
 function initializeLogger() {
   //Do some initialization stuff
 }
 
-async function log(message) {
+function getFilename() {
+  const dir = './logs';
+
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+
+  let currentDate = new Date();
+  return (
+    './logs/' +
+    currentDate.getFullYear() +
+    '-' +
+    (currentDate.getMonth() + 1) +
+    '-' +
+    currentDate.getDate() +
+    '-logs.txt'
+  );
+}
+
+function getTime() {
+  let currentDate = new Date();
+  let seconds = currentDate.getSeconds();
+  return (
+    currentDate.getHours() +
+    ':' +
+    currentDate.getMinutes() +
+    ':' +
+    (seconds < 10 ? '0' : '') +
+    seconds
+  );
+}
+
+function writeToLogFile(message, level) {
+  fs.appendFile(
+    getFilename(),
+    getTime() + ' - ' + level + ': ' + message + '\n',
+    (err) => {
+      if (err) console.err('Logging error encountered: ' + err);
+    }
+  );
+}
+
+function log(message) {
   console.log(message);
 
-  //Write log to file
+  writeToLogFile(message, 'LOG');
 }
 
-async function warn(message) {
+function warn(message) {
   console.warn(message);
 
-  //Write warning to file
+  writeToLogFile(message, 'WARNING');
 }
 
-async function error(message) {
+function error(message) {
   console.error(message);
 
-  //Write error to file
+  writeToLogFile(message, 'ERROR');
 }
 
 module.exports = { initializeLogger, log, warn, error };
