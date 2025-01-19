@@ -1,6 +1,10 @@
 // index.js
 require('dotenv').config();
 
+
+// Journal routes
+const journalRoutes = require('./routes/journalRoute');
+
 const express = require('express');
 const app = express();
 const { log, warn, error } = require('./logger');
@@ -32,6 +36,8 @@ const warehouseRoutes = require('./routes/warehouseRoute');
 const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
 
+// Route middleware
+app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
 app.use('/api/warehouses', authProtect, dailyRecordMiddleware, warehouseRoutes);
 app.use('/api/daily-records', dailyRecordMiddleware, dailyRecordRoutes);
 app.use('/api/auth', authRoute);
