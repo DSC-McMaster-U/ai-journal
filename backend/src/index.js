@@ -1,8 +1,13 @@
 // index.js
 require('dotenv').config();
 
+
+// Journal routes
+const journalRoutes = require('./routes/journalRoute');
+
 const express = require('express');
 const app = express();
+const { log, warn, error } = require('./logger');
 const { log, warn, error } = require('./logger');
 
 // Body parser middleware
@@ -24,9 +29,14 @@ const dailyRecordMiddleware = require('./middleware/dailyRecordMiddleware');
 const cors = require('cors');
 app.use(cors());
 
+// CORS
+const cors = require('cors');
+app.use(cors());
+
 // Route setup
 const authRoute = require('./routes/authRoute');
 const dailyRecordRoutes = require('./routes/dailyRecordRoute');
+const { authProtect } = require('./services/authService');
 const { authProtect } = require('./services/authService');
 const warehouseRoutes = require('./routes/warehouseRoute');
 const moodRoutes = require('./routes/moodRoute');
@@ -48,6 +58,7 @@ app.get('/api/status', (req, res) => res.send('Success.'));
 
 // Test sum endpoint
 app.get('/api/sum', (req, res) => {
+  log('GET /api/sum');
   log('GET /api/sum');
   const { a, b } = req.query;
 
