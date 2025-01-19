@@ -3,7 +3,7 @@ const passport = require('passport');
 const router = express.Router();
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const { jwtAuth } = require('../services/authService');
+const { authProtect } = require('../services/authService');
 
 /**
  * @swagger
@@ -39,7 +39,7 @@ router.get(
   }),
   function (req, res) {
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET || '', {
-      expiresIn: '1h',
+      expiresIn: '24h',
     });
     res.cookie('jwtToken', token);
     res.redirect('http://localhost:3000/login?method=o-auth-google');
@@ -81,7 +81,7 @@ router.options('/get-session-user', cors({ origin: true }));
 router.get(
   '/get-session-user',
   cors({ origin: true }),
-  jwtAuth,
+  authProtect,
   function (req, res) {
     if (req.token == undefined) {
       res.status(400).end();
