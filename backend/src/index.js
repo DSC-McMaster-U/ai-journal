@@ -1,18 +1,17 @@
 // index.js
 require('dotenv').config();
 
-
-// Journal routes
-const journalRoutes = require('./routes/journalRoute');
-
 const express = require('express');
 const app = express();
-const { log, warn, error } = require('./logger');
 const { log, warn, error } = require('./logger');
 
 // Body parser middleware
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
+
+// CORS
+const cors = require('cors');
+app.use(cors());
 
 //Passport Auth Setup
 const setupPassport = require('./passport');
@@ -24,24 +23,18 @@ setupSwagger(app);
 
 // Middleware
 const dailyRecordMiddleware = require('./middleware/dailyRecordMiddleware');
-
-// CORS
-const cors = require('cors');
-app.use(cors());
-
-// CORS
-const cors = require('cors');
-app.use(cors());
+const { authProtect } = require('./services/authService');
 
 // Route setup
 const authRoute = require('./routes/authRoute');
 const dailyRecordRoutes = require('./routes/dailyRecordRoute');
-const { authProtect } = require('./services/authService');
-const { authProtect } = require('./services/authService');
 const warehouseRoutes = require('./routes/warehouseRoute');
 const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
+const journalRoutes = require('./routes/journalRoute');
 
+// Route middleware
+app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
 app.use('/api/warehouses', authProtect, dailyRecordMiddleware, warehouseRoutes);
 app.use('/api/daily-records', dailyRecordMiddleware, dailyRecordRoutes);
 app.use('/api/auth', authRoute);
