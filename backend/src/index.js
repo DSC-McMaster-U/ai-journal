@@ -9,6 +9,10 @@ const { log, warn, error } = require('./logger');
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
+// CORS
+const cors = require('cors');
+app.use(cors());
+
 //Passport Auth Setup
 const setupPassport = require('./passport');
 setupPassport(app);
@@ -19,24 +23,31 @@ setupSwagger(app);
 
 // Middleware
 const dailyRecordMiddleware = require('./middleware/dailyRecordMiddleware');
-
-// CORS
-const cors = require('cors');
-app.use(cors());
+const { authProtect } = require('./services/authService');
 
 // Route setup
 const authRoute = require('./routes/authRoute');
 const dailyRecordRoutes = require('./routes/dailyRecordRoute');
-const { authProtect } = require('./services/authService');
 const warehouseRoutes = require('./routes/warehouseRoute');
 const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
+const journalRoutes = require('./routes/journalRoute');
 
+// Route middleware
 app.use('/api/warehouses', authProtect, dailyRecordMiddleware, warehouseRoutes);
-app.use('/api/daily-records', dailyRecordMiddleware, dailyRecordRoutes);
+
 app.use('/api/auth', authRoute);
-app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
-app.use('/api/tabs', dailyRecordMiddleware, tabRoutes);
+app.use(
+  '/api/daily-records',
+  authProtect,
+  dailyRecordMiddleware,
+  dailyRecordRoutes
+);
+
+app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
+app.use('/api/tabs', authProtect, dailyRecordMiddleware, tabRoutes);
+
+// app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
 
 // Default route
 app.get('/api', (req, res) =>
