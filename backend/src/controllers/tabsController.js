@@ -43,7 +43,7 @@ const updateTab = async (req, res) => {
 
     res.json(response);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update tab' });
+    res.status(500).json({ error });
   }
 };
 
@@ -53,7 +53,7 @@ const deleteTab = async (req, res) => {
     await tabsService.deleteTab(req.params.id, userId);
     res.json({ message: 'Tab deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete tab' });
+    res.status(500).json({ error });
   }
 };
 

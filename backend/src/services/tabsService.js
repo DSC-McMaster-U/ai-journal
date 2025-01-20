@@ -58,7 +58,11 @@ const updateTab = (id, name, userId) => {
         if (error) {
           reject(error);
         } else {
-          resolve({ id, name, user_id: userId });
+          if (results.affectedRows === 0) {
+            reject({ message: 'Tab not found' });
+          }
+
+          resolve({ id: +id, name, user_id: userId });
         }
       }
     );
@@ -74,6 +78,10 @@ const deleteTab = (id, userId) => {
         if (error) {
           reject(error);
         } else {
+          if (results.affectedRows === 0) {
+            reject({ message: 'Tab not found' });
+          }
+
           resolve(results);
         }
       }
