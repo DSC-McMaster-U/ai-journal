@@ -1,9 +1,9 @@
 const tabsService = require('../services/tabsService');
 
 const getAllTabs = async (req, res) => {
-  // TODO make this return only tabs for this user
   try {
-    const tabs = await tabsService.getAllTabs();
+    const userId = req.token.user.id;
+    const tabs = await tabsService.getAllTabs(userId);
     res.json(tabs);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch tabs' });
@@ -11,9 +11,9 @@ const getAllTabs = async (req, res) => {
 };
 
 const getTabById = async (req, res) => {
-  // TODO make this return only tabs for this user
   try {
-    const tab = await tabsService.getTabById(req.params.id);
+    const userId = req.token.user.id;
+    const tab = await tabsService.getTabById(req.params.id, userId);
     res.json(tab);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch tab' });
@@ -21,14 +21,13 @@ const getTabById = async (req, res) => {
 };
 
 const createTab = async (req, res) => {
-  // TODO remove the need to pass userid in the body, use the middleware
   try {
-    const { name, user_id } = req.body;
+    const { name } = req.body;
+    const userId = req.token.user.id;
 
-    await tabsService.createTab(name, user_id);
+    const response = await tabsService.createTab(name, userId);
 
-    // TODO return the created tab
-    res.json({ message: 'Tab created successfully' });
+    res.json(response);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create tab' });
   }
@@ -37,10 +36,11 @@ const createTab = async (req, res) => {
 const updateTab = async (req, res) => {
   try {
     const { name } = req.body;
-    await tabsService.updateTab(req.params.id, name);
+    const userId = req.token.user.id;
 
-    // TODO return the updated tab
-    res.json({ message: 'Tab updated successfully' });
+    const response = await tabsService.updateTab(req.params.id, name, userId);
+
+    res.json(response);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update tab' });
   }
@@ -48,7 +48,8 @@ const updateTab = async (req, res) => {
 
 const deleteTab = async (req, res) => {
   try {
-    await tabsService.deleteTab(req.params.id);
+    const userId = req.token.user.id;
+    await tabsService.deleteTab(req.params.id, userId);
     res.json({ message: 'Tab deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete tab' });
