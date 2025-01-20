@@ -34,12 +34,20 @@ const tabRoutes = require('./routes/tabsRoute');
 const journalRoutes = require('./routes/journalRoute');
 
 // Route middleware
-app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
 app.use('/api/warehouses', authProtect, dailyRecordMiddleware, warehouseRoutes);
-app.use('/api/daily-records', dailyRecordMiddleware, dailyRecordRoutes);
+
 app.use('/api/auth', authRoute);
-app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
-app.use('/api/tabs', dailyRecordMiddleware, tabRoutes);
+app.use(
+  '/api/daily-records',
+  authProtect,
+  dailyRecordMiddleware,
+  dailyRecordRoutes
+);
+
+app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
+app.use('/api/tabs', authProtect, dailyRecordMiddleware, tabRoutes);
+
+// app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
 
 // Default route
 app.get('/api', (req, res) =>
@@ -51,7 +59,6 @@ app.get('/api/status', (req, res) => res.send('Success.'));
 
 // Test sum endpoint
 app.get('/api/sum', (req, res) => {
-  log('GET /api/sum');
   log('GET /api/sum');
   const { a, b } = req.query;
 
