@@ -28,8 +28,11 @@ const dailyRecordMiddleware = async (req, res, next) => {
       dailyRecord = await dailyRecordService.getDailyRecord(userId);
     }
 
-    req.dailyRecord = dailyRecord[0]; // Attach the daily record to the request object for later user
-    next(); // pass control to the next middleware
+    req.dailyRecord = dailyRecord[0];
+
+    log('DailyRecord middleware: ' + JSON.stringify(req.dailyRecord));
+    log('User auth middleware: ' + JSON.stringify(req.token));
+    next();
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: 'Error processing daily record.' });
