@@ -33,27 +33,27 @@ const getTabById = (id, userId) => {
   });
 };
 
-const createTab = (name, userId) => {
+const createTab = (name, userId, color) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      'INSERT INTO `ai-journal`.`tabs` (name, user_id) VALUES (?, ?)',
-      [name, userId],
+      'INSERT INTO `ai-journal`.`tabs` (name, user_id, color) VALUES (?, ?, ?)',
+      [name, userId, color],
       (error, results) => {
         if (error) {
           reject(error);
         } else {
-          resolve({ id: results.insertId, name, user_id: userId });
+          resolve({ id: results.insertId, name, user_id: userId, color });
         }
       }
     );
   });
 };
 
-const updateTab = (id, name, userId) => {
+const updateTab = (id, name, userId, color) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      'UPDATE `ai-journal`.`tabs` SET name = ? WHERE id = ? AND user_id = ?',
-      [name, id, userId],
+      'UPDATE `ai-journal`.`tabs` SET name = ?, color = ? WHERE id = ? AND user_id = ?',
+      [name, color, id, userId],
       (error, results) => {
         if (error) {
           reject(error);
@@ -62,7 +62,7 @@ const updateTab = (id, name, userId) => {
             reject({ message: 'Tab not found' });
           }
 
-          resolve({ id: +id, name, user_id: userId });
+          resolve({ id: +id, name, user_id: userId, color });
         }
       }
     );

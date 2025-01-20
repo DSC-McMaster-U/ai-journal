@@ -23,10 +23,10 @@ const getTabById = async (req, res) => {
 
 const createTab = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, color } = req.body;
     const userId = req.token.user.id;
 
-    const response = await tabsService.createTab(name, userId);
+    const response = await tabsService.createTab(name, userId, color);
 
     res.json(response);
   } catch (error) {
@@ -36,10 +36,15 @@ const createTab = async (req, res) => {
 
 const updateTab = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, color } = req.body;
     const userId = req.token.user.id;
 
-    const response = await tabsService.updateTab(req.params.id, name, userId);
+    const response = await tabsService.updateTab(
+      req.params.id,
+      name,
+      userId,
+      color
+    );
 
     res.json(response);
   } catch (error) {

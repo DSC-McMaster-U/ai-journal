@@ -14,6 +14,11 @@ export function useGetAllTabs() {
       const response = await customFetch('/tabs', { method: 'GET' });
       const result = await response.json();
       console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       setData(result);
     } catch (err) {
       setError(err);
@@ -25,17 +30,22 @@ export function useGetAllTabs() {
   return { data, loading, error, getAllTabs };
 }
 
-export function useGetTabById(tabId) {
+export function useGetTabById() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getTabById = async () => {
+  const getTabById = async (tabId) => {
     setLoading(true);
     try {
       const response = await customFetch(`/tabs/${tabId}`, { method: 'GET' });
       const result = await response.json();
       console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       setData(result);
     } catch (err) {
       setError(err);
@@ -60,6 +70,11 @@ export function useCreateTab() {
       });
       const result = await response.json();
       console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       return result;
     } catch (err) {
       setError(err);
@@ -71,11 +86,11 @@ export function useCreateTab() {
   return { createTab, loading, error };
 }
 
-export function useUpdateTab(tabId) {
+export function useUpdateTab() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const updateTab = async (updatedData) => {
+  const updateTab = async (tabId, updatedData) => {
     setLoading(true);
     try {
       const response = await customFetch(`/tabs/${tabId}`, {
@@ -84,6 +99,11 @@ export function useUpdateTab(tabId) {
       });
       const result = await response.json();
       console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       return result;
     } catch (err) {
       setError(err);
@@ -95,16 +115,21 @@ export function useUpdateTab(tabId) {
   return { updateTab, loading, error };
 }
 
-export function useDeleteTab(tabId) {
+export function useDeleteTab() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const deleteTab = async () => {
+  const deleteTab = async (tabId) => {
     setLoading(true);
     try {
       const response = await customFetch(`/tabs/${tabId}`, { method: 'DELETE' });
       const result = await response.json();
       console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       return result;
     } catch (err) {
       setError(err);

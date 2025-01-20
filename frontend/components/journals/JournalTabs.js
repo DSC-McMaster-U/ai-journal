@@ -25,17 +25,27 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import AlertModal from '../common/AlertModal';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { useCreateTab, useDeleteTab, useGetAllTabs, useUpdateTab } from '@/hooks/useTabs';
 
 const DEFAULT_COLOR = '#8f4000';
 
-function JournalTabs({ tabs, setTabs }) {
+function JournalTabs() {
+  const { getAllTabs, data: allTabs } = useGetAllTabs();
+  const { createTab, error: errorCreate } = useCreateTab();
+  const { updateTab, error: errorUpdate } = useUpdateTab();
+  const { deleteTab, error: errorDelete } = useDeleteTab();
+
+  useEffect(() => {
+    getAllTabs();
+  }, []);
+
   const { toast } = useToast();
   const router = useRouter();
 
   const [openCreate, setOpenCreate] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [selectedModal, setSelectedModal] = useState(null);
+  const [selectedModalID, setSelectedModalID] = useState(null);
 
   const [name, setName] = useState('');
   const [color, setColor] = useState(DEFAULT_COLOR);
@@ -43,7 +53,7 @@ function JournalTabs({ tabs, setTabs }) {
   useEffect(() => {
     if (!openEdit && !openDelete && !openCreate) {
       setTimeout(() => {
-        setSelectedModal(null);
+        setSelectedModalID(null);
         setName('');
         setColor(DEFAULT_COLOR);
       }, 500);
@@ -54,7 +64,7 @@ function JournalTabs({ tabs, setTabs }) {
     router.push(`/journals/${tabId}`);
   };
 
-  const createFolderHandler = () => {
+  const createFolderHandler = async () => {
     if (!name) {
       toast({
         title: 'Invalid Name',
@@ -63,23 +73,28 @@ function JournalTabs({ tabs, setTabs }) {
       return;
     }
 
-    toast({
-      title: 'Folder Created',
-      description: `Folder ${name} has been created successfully with color ${color}.`
-    });
-    setTabs((prev) => [
-      ...prev,
-      {
-        id: name.toLowerCase().replace(' ', '-'),
-        name,
-        color
-      }
-    ]);
+    await createTab({ name, color });
+    getAllTabs();
+
+    console.log(errorCreate);
+
+    if (errorCreate) {
+      toast({
+        title: 'Error',
+        description: 'An error occurred while creating the folder.'
+      });
+    } else {
+      toast({
+        title: 'Folder Created',
+        description: `Folder ${name} has been created successfully.`
+      });
+    }
+
     setOpenCreate(false);
   };
 
-  const editFolderHandler = () => {
-    if (!name) {
+  const editFolderHandler = async () => {
+    if (!name || !selectedModalID) {
       toast({
         title: 'Invalid Name',
         description: 'Please enter a valid name for the folder.'
@@ -87,32 +102,26 @@ function JournalTabs({ tabs, setTabs }) {
       return;
     }
 
+    await updateTab(selectedModalID, { name, color });
+    getAllTabs();
+
     toast({
       title: 'Folder Edited',
-      description: `Folder ${name} has been edited successfully with color ${color}.`
-    });
-
-    setTabs((prev) => {
-      const index = prev.findIndex((tab) => tab.name === selectedModal);
-      const newTabs = [...prev];
-      newTabs[index] = {
-        ...newTabs[index],
-        name,
-        color
-      };
-      return newTabs;
+      description: `Folder ${name} has been edited successfully.`
     });
 
     setOpenEdit(false);
   };
 
-  const deleteFolderHandler = () => {
+  const deleteFolderHandler = async () => {
+    await deleteTab(selectedModalID);
+    getAllTabs();
+
     toast({
       title: 'Folder Deleted',
-      description: `Folder ${selectedModal} has been deleted successfully.`
+      description: `Folder ${name} has been deleted successfully.`
     });
 
-    setTabs((prev) => prev.filter((tab) => tab.name !== selectedModal));
     setOpenDelete(false);
   };
 
@@ -147,45 +156,50 @@ function JournalTabs({ tabs, setTabs }) {
               </Button>
             </div>
             <div className="mt-2 space-y-2">
-              {tabs.map((tab) => (
-                <Button
-                  className="w-full justify-start px-2 font-normal flex gap-4"
-                  variant="ghost"
-                  onClick={() => tabClickHandler(tab.id)}
-                  key={tab.id}>
-                  <div
-                    className={cn('w-4 h-4 rounded-md')}
-                    style={{ backgroundColor: tab.color }}
-                  />
-                  <p>{tab.name}</p>
+              {allTabs &&
+                allTabs.map((tab) => (
+                  <Button
+                    className="w-full justify-start px-2 font-normal flex gap-4"
+                    variant="ghost"
+                    onClick={() => tabClickHandler(tab.id)}
+                    key={tab.id}>
+                    <div
+                      className={cn('w-4 h-4 rounded-md')}
+                      style={{ backgroundColor: tab.color }}
+                    />
+                    <p>{tab.name}</p>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="ml-auto">
-                      <EllipsisVertical />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setSelectedModal(tab.name);
-                          setColor(tab.color);
-                          setName(tab.name);
-                          setOpenEdit(true);
-                        }}
-                        className="cursor-pointer">
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setSelectedModal(tab.name);
-                          setOpenDelete(true);
-                        }}
-                        className="cursor-pointer">
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </Button>
-              ))}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="ml-auto">
+                        <EllipsisVertical />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedModalID(tab.id);
+                            setColor(tab.color);
+                            setName(tab.name);
+                            setOpenEdit(true);
+                          }}
+                          className="cursor-pointer">
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedModalID(tab.id);
+                            setColor(tab.color);
+                            setName(tab.name);
+                            setOpenDelete(true);
+                          }}
+                          className="cursor-pointer">
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </Button>
+                ))}
             </div>
           </div>
         </SheetContent>
@@ -255,7 +269,7 @@ function JournalTabs({ tabs, setTabs }) {
       {/* EDIT MODAL WINDOW */}
       <AlertModal
         title="Edit Folder"
-        description={`Edit the folder name and color for ${selectedModal}.`}
+        description={`Edit the folder name and color for ${name}.`}
         open={openEdit}
         setOpen={setOpenEdit}>
         <div>
@@ -317,13 +331,13 @@ function JournalTabs({ tabs, setTabs }) {
       {/* DELETE MODAL WINDOW */}
       <AlertModal
         title="Delete Folder"
-        description={`Deleting folder ${selectedModal}.`}
+        description={`Deleting folder ${name}.`}
         open={openDelete}
         setOpen={setOpenDelete}>
         <div>
           <p>
-            Are you sure you want to delete {selectedModal}? This will delete all of the journal
-            entries inside. This action is NOT recoverable.
+            Are you sure you want to delete {name}? This will delete all of the journal entries
+            inside. This action is NOT recoverable.
           </p>
           <DialogFooter>
             <div className="flex gap-2 mt-6">
