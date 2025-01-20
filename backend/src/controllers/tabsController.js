@@ -1,3 +1,4 @@
+const { log } = require('../logger');
 const tabsService = require('../services/tabsService');
 
 const getAllTabs = async (req, res) => {

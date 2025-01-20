@@ -1,4 +1,5 @@
 const { connection } = require('../database');
+const { log } = require('../logger');
 
 const getAllTabs = (userId) => {
   return new Promise((resolve, reject) => {
@@ -41,7 +42,7 @@ const createTab = (name, userId) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results);
+          resolve({ id: results.insertId, name, user_id: userId });
         }
       }
     );
@@ -57,7 +58,7 @@ const updateTab = (id, name, userId) => {
         if (error) {
           reject(error);
         } else {
-          resolve(results);
+          resolve({ id, name, user_id: userId });
         }
       }
     );
