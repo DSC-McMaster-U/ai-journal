@@ -239,7 +239,7 @@ const authProtect = (req, res, next) => {
     })
     .catch((err) => {
       warnInvalidAuthenticationAttempt(err);
-      res.status(401).send('Invalid authorization token').end();
+      res.status(401).send({ error: 'Invalid authorization token' }).end();
       return;
     });
 };

@@ -30,8 +30,11 @@ const dailyRecordMiddleware = async (req, res, next) => {
 
     req.dailyRecord = dailyRecord[0];
 
-    log('DailyRecord middleware: ' + JSON.stringify(req.dailyRecord));
-    log('User auth middleware: ' + JSON.stringify(req.token));
+    log(
+      'DailyRecord middleware: ' +
+        JSON.stringify(req.dailyRecord) +
+        JSON.stringify(req.token)
+    );
     next();
   } catch (error) {
     console.log(error);
