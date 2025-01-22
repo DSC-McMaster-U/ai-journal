@@ -26,7 +26,6 @@ const addUser = (user) => {
     );
   })
     .then((res) => {
-      log('Insertion request resulted in: ' + res);
       return true;
     })
     .catch((err) => {
@@ -50,8 +49,6 @@ const getUserByEmail = (email) => {
     );
   })
     .then((results) => {
-      log('Selection request resulted in: ' + results);
-
       if (results.length > 1) {
         throw 'Multiple users with same Email!!';
       }
@@ -78,9 +75,9 @@ const getUserByEmail = (email) => {
  */
 function initialize(passport) {
   const verifyInDatabase = async (issuer, profile, cb) => {
-    log(Object.keys(profile));
+    // log(Object.keys(profile));
 
-    log('In database check for ' + profile.emails[0].value + ' log in request');
+    // log('In database check for ' + profile.emails[0].value + ' log in request');
 
     let user = await getUserByEmail(profile.emails[0].value);
 
@@ -147,7 +144,7 @@ const userExistsInDatabase = async (user) => {
 
 const tokenMatchesSchema = (token) => {
   if (token.user == undefined) {
-    log('User not defined');
+    // log('User not defined');
     return false;
   }
 
@@ -155,12 +152,12 @@ const tokenMatchesSchema = (token) => {
   let expectedKeys = ['email', 'id', 'name', 'username'];
 
   if (userKeys.length != expectedKeys.length) {
-    log('Lengths not matching');
+    // log('Lengths not matching');
     return false;
   }
 
   if (!userKeys.every((v, i) => v === expectedKeys[i])) {
-    log('Keys not matching');
+    // log('Keys not matching');
     return false;
   }
 
@@ -234,10 +231,10 @@ const authProtect = (req, res, next) => {
 
   const jwtToken = token.substring(7, token.length);
 
-  log('Recieved Token: ' + jwtToken + ' from ' + req.id);
   validateToken(jwtToken)
     .then((result) => {
       req.token = result;
+      log(`Valid token received, logged in user: ${result.user.email}`);
       next();
     })
     .catch((err) => {
