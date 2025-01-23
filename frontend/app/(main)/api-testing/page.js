@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   useGetAllTabs,
   useGetTabById,
@@ -8,8 +9,10 @@ import {
   useUpdateTab,
   useDeleteTab
 } from '@/hooks/useTabs';
+import { useState } from 'react';
 
 export default function APITesting() {
+  const [tabId, setTabId] = useState(0);
   const { getAllTabs, data: allTabs, loading: loadingAll, error: errorAll } = useGetAllTabs();
   const { getTabById, data: tab, loading: loadingTab, error: errorTab } = useGetTabById();
   const { createTab, loading: creating, error: errorCreate } = useCreateTab();
@@ -19,12 +22,24 @@ export default function APITesting() {
   return (
     <div>
       <div className="flex flex-col space-y-4 mx-8 mt-8">
+        <h1 className="text-lg text-center">TABS</h1>
+        <div className="flex items-center gap-2">
+          <label htmlFor="tabId" className="basis-20">
+            Tab ID
+          </label>
+          <Input
+            id="tabId"
+            type="number"
+            value={tabId}
+            onChange={(e) => setTabId(e.target.value)}
+          />
+        </div>
         <Button onClick={getAllTabs} className="bg-blue-500" disabled={loadingAll}>
           Get All Tabs
         </Button>
         <Button
           onClick={() => {
-            getTabById(18);
+            getTabById(tabId);
           }}
           className="bg-blue-500"
           disabled={loadingTab}>
@@ -37,14 +52,14 @@ export default function APITesting() {
           Create a New Tab
         </Button>
         <Button
-          onClick={() => updateTab(22, { name: 'Updated Tab Name', color: '#462837' })}
+          onClick={() => updateTab(tabId, { name: 'Updated Tab Name', color: '#462837' })}
           className="bg-orange-500"
           disabled={updating}>
           Update an Existing Tab
         </Button>
         <Button
           onClick={() => {
-            deleteTab(18);
+            deleteTab(tabId);
           }}
           className="bg-red-500"
           disabled={deleting}>

@@ -17,8 +17,6 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
     getTabById(currentPathJournalId);
   }, [currentTab]);
 
-  console.log(tab);
-
   const currentPathJournalId = pathName.split('/').pop();
 
   useEffect(() => {
@@ -29,7 +27,7 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
 
   return (
     <div className="flex flex-col">
-      <h1 className="p-4 text-2xl capitalize border-b-[6px]">Path ID: {tab && tab[0].name}</h1>
+      <h1 className="p-4 text-2xl capitalize border-b-[6px]">{tab && tab.data.name}</h1>
 
       <div className="flex-1 overflow-y-auto">
         <div>

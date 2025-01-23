@@ -76,8 +76,6 @@ function JournalTabs() {
     await createTab({ name, color });
     getAllTabs();
 
-    console.log(errorCreate);
-
     if (errorCreate) {
       toast({
         title: 'Error',
@@ -157,7 +155,7 @@ function JournalTabs() {
             </div>
             <div className="mt-2 space-y-2">
               {allTabs &&
-                allTabs.map((tab) => (
+                allTabs.data.map((tab) => (
                   <Button
                     className="w-full justify-start px-2 font-normal flex gap-4"
                     variant="ghost"
