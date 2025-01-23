@@ -64,4 +64,10 @@ function error(message) {
   writeToLogFile(message, 'ERROR');
 }
 
-module.exports = { initializeLogger, log, warn, error };
+function fetching(message, body = {}) {
+  console.log(message, JSON.stringify(body));
+
+  writeToLogFile(message + '\nBODY: ' + JSON.stringify(body), 'FETCHING');
+}
+
+module.exports = { initializeLogger, log, warn, error, fetching };

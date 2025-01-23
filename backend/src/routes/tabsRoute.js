@@ -23,13 +23,11 @@ const tabsController = require('../controllers/tabsController');
  *                   name:
  *                     type: string
  *                     example: "Tab 1"
- *                   createdAt:
- *                     type: timestamp
- *                     format: date-time
- *                     example: "2021-09-21T21:00:00.000Z"
  *                   user_id:
- *                     type: string
- *                     example: "1"
+ *                     type: integer
+ *                     example: 1
+ *       500:
+ *         description: Failed to fetch tabs
  */
 router.get('/', tabsController.getAllTabs);
 
@@ -43,8 +41,8 @@ router.get('/', tabsController.getAllTabs);
  *         name: id
  *         required: true
  *         schema:
- *           type: string
- *         description: The tab ID
+ *           type: integer
+ *         description: The ID of the tab to fetch
  *     responses:
  *       200:
  *         description: A single tab
@@ -59,15 +57,13 @@ router.get('/', tabsController.getAllTabs);
  *                 name:
  *                   type: string
  *                   example: "Tab 1"
- *                 createdAt:
- *                   type: timestamp
- *                   format: date-time
- *                   example: "2021-09-21T21:00:00.000Z"
  *                 user_id:
- *                   type: string
- *                   example: "1"
+ *                   type: integer
+ *                   example: 1
  *       404:
  *         description: Tab not found
+ *       500:
+ *         description: Failed to fetch tab
  */
 router.get('/:id', tabsController.getTabById);
 
@@ -83,18 +79,26 @@ router.get('/:id', tabsController.getTabById);
  *           schema:
  *             type: object
  *             properties:
- *               id:
- *                 type: integer
- *                 example: 1
  *               name:
  *                 type: string
  *                 example: "New Tab"
- *               user_id:
- *                 type: string
- *                 example: "user123"
  *     responses:
- *       201:
+ *       200:
  *         description: Tab created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "New Tab"
+ *                 user_id:
+ *                   type: integer
+ *                   example: 1
  *       500:
  *         description: Failed to create tab
  */
@@ -110,8 +114,8 @@ router.post('/', tabsController.createTab);
  *         name: id
  *         required: true
  *         schema:
- *           type: string
- *         description: The tab ID
+ *           type: integer
+ *         description: The ID of the tab to update
  *     requestBody:
  *       required: true
  *       content:
@@ -125,6 +129,20 @@ router.post('/', tabsController.createTab);
  *     responses:
  *       200:
  *         description: Tab updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Updated Tab Name"
+ *                 user_id:
+ *                   type: integer
+ *                   example: 1
  *       500:
  *         description: Failed to update tab
  */
@@ -140,8 +158,8 @@ router.put('/:id', tabsController.updateTab);
  *         name: id
  *         required: true
  *         schema:
- *           type: string
- *         description: The tab ID
+ *           type: integer
+ *         description: The ID of the tab to delete
  *     responses:
  *       200:
  *         description: Tab deleted successfully
