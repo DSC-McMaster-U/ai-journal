@@ -3,6 +3,15 @@ import { Button } from '@/components/ui/button';
 import { logout, useAuthentication } from '@/hooks/authentication';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
+  AlertDialogTitle,
+  AlertDialogHeader,
+  AlertDialogAction,
+  AlertDialogFooter
+} from '@/components/ui/alert-dialog';
 
 async function getProfilePhoto(user) {
   await fetch(
@@ -37,6 +46,24 @@ function ProfilePhoto(props) {
   );
 }
 
+function LogoutDialog(props) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button onClick={logout}>Logout</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>You are now logged out.</AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogAction onClick={props.onConfirm}>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
 export default function SettingsPage() {
   const router = useRouter();
   const [user, setUser] = useState(undefined);
@@ -50,8 +77,7 @@ export default function SettingsPage() {
     }
   );
 
-  const onLogout = () => {
-    logout();
+  const onLogoutConfirm = () => {
     router.push('/login');
   };
 
@@ -73,7 +99,7 @@ export default function SettingsPage() {
       </div>
       <h1 className="flex justify-center m-5 text-xl">{user.email}</h1>
       <div className="flex justify-center m-5 text-xl">
-        <Button onClick={onLogout}>Logout</Button>
+        <LogoutDialog onConfirm={onLogoutConfirm} />
       </div>
     </div>
   );
