@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const mysql = require('mysql');
 
 var config = {
@@ -16,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // When running from localhost, get the config from .env
 else {
-  console.log('Running from localhost. Connecting to DB directly.');
+  console.log('Running from localhost. Connecting to DB directly. ' + process.env.DB_HOST);
   config.host = process.env.DB_HOST;
 }
 
