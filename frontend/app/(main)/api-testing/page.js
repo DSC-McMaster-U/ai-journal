@@ -10,6 +10,7 @@ import {
   useDeleteTab
 } from '@/hooks/useTabs';
 import { useState } from 'react';
+import { customFetch } from '@/lib/customFetch';
 import { create } from 'react-test-renderer';
 
 export default function APITesting() {
@@ -24,7 +25,6 @@ export default function APITesting() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [moodId, setMoodId] = useState(0);
-  const [dailyRecordId, setDailyRecordId] = useState(0);
   // get all moods
   const getAllMoods = async () => {
     setLoading(true);
@@ -189,17 +189,6 @@ export default function APITesting() {
             onChange={(e) => setMoodId(e.target.value)}
           />
         </div>
-        <div className="flex items-center gap-2">
-          <label htmlFor="dailyRecordId" className="basis-20">
-            Daily Record ID
-          </label>
-          <Input
-            id="dailyRecordId"
-            type="number"
-            value={dailyRecordId}
-            onChange={(e) => setDailyRecordId(e.target.value)}
-          />
-        </div>
         <Button onClick={getAllMoods} className="bg-blue-500" disabled={loading}>
           Get All Moods
         </Button>
@@ -212,7 +201,7 @@ export default function APITesting() {
           Get Mood by ID
         </Button>
         <Button
-          onClick={() => createMood({ name: 'New Mood', dailyRecordId: dailyRecordId })}
+          onClick={() => createMood({ moodId: moodId, name: 'New Mood' })}
           className="bg-green-500"
           disabled={loading}>
           Create a New Mood
