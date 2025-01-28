@@ -21,8 +21,6 @@ const createMoodEntry = async (req, res) => {
     const dailyRecordId = req.dailyRecord.id;
     const { moodId } = req.body;
 
-    // log(`userId: ${userId}, moodId: ${moodId}, dailyRecordId: ${dailyRecordId}`);
-
     if (!userId || !moodId || !dailyRecordId) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
@@ -30,7 +28,7 @@ const createMoodEntry = async (req, res) => {
     fetching('POST /moods', { userId, moodId, dailyRecordId });
 
     const result = await moodService.createMoodEntry(userId, moodId, dailyRecordId);
-    log(`Mood entry created: ${result}`);
+
     res.status(201).json({ 
       data: {
         id: result.insertId,

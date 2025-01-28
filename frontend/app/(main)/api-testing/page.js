@@ -11,7 +11,6 @@ import {
 } from '@/hooks/useTabs';
 import { useState } from 'react';
 import { customFetch } from '@/lib/customFetch';
-import { create } from 'react-test-renderer';
 
 export default function APITesting() {
   const [tabId, setTabId] = useState(0);
@@ -21,14 +20,15 @@ export default function APITesting() {
   const { updateTab, loading: updating, error: errorUpdate } = useUpdateTab();
   const { deleteTab, loading: deleting, error: errorDelete } = useDeleteTab();
 
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [moodData, setMoodData] = useState(null);
+  const [moodLoading, setMoodLoading] = useState(false);
+  const [moodError, setMoodError] = useState(null);
   const [moodId, setMoodId] = useState(0);
   const [userMoodId, setUserMoodId] = useState(0);
-  // get all moods
+  // Functions to test the moods API
+  // TODO: Maybe move these to a custom hook
   const getAllMoods = async () => {
-    setLoading(true);
+    setMoodLoading(true);
     try {
       const response = await customFetch('/moods', { method: 'GET' });
       const result = await response.json();
@@ -38,16 +38,16 @@ export default function APITesting() {
         throw new Error(result.error);
       }
 
-      setData(result);
+      setMoodData(result);
     } catch (err) {
-      setError(err);
+      setMoodError(err);
     } finally {
-      setLoading(false);
+      setMoodLoading(false);
     }
   };
-  // create mood
+
   const createMood = async (mood) => {
-    setLoading(true);
+    setMoodLoading(true);
     try {
       const response = await customFetch('/moods', {
         method: 'POST',
@@ -62,14 +62,14 @@ export default function APITesting() {
 
       return result;
     } catch (err) {
-      setError(err);
+      setMoodError(err);
     } finally {
-      setLoading(false);
+      setMoodLoading(false);
     }
   };
-  // update mood
+
   const updateMood = async (userMoodId, moodId) => {
-    setLoading(true);
+    setMoodLoading(true);
     try {
       const response = await customFetch(`/moods/${userMoodId}`, {
         method: 'PUT',
@@ -84,14 +84,14 @@ export default function APITesting() {
 
       return result;
     } catch (err) {
-      setError(err);
+      setMoodError(err);
     } finally {
-      setLoading(false);
+      setMoodLoading(false);
     }
   };
-  // delete mood
+
   const deleteMood = async (userMoodId) => {
-    setLoading(true);
+    setMoodLoading(true);
     try {
       const response = await customFetch(`/moods/${userMoodId}`, { method: 'DELETE' });
       const result = await response.json();
@@ -103,15 +103,14 @@ export default function APITesting() {
 
       return result;
     } catch (err) {
-      setError(err);
+      setMoodError(err);
     } finally {
-      setLoading(false);
+      setMoodLoading(false);
     }
   };
 
   return (
     <div>
-      {/* Testing api for tabs */}
       <div className="flex flex-col space-y-4 mx-8 mt-8">
         <h1 className="text-lg text-center">TABS</h1>
         <div className="flex items-center gap-2">
@@ -157,7 +156,6 @@ export default function APITesting() {
           Delete a Tab
         </Button>
       </div>
-      {/* Testing api for moods */}
       <div className="flex flex-col space-y-4 mx-8 mt-8">
         <h1 className="text-lg text-center">MOODS</h1>
         <div className="flex items-center gap-2">
@@ -182,19 +180,19 @@ export default function APITesting() {
             onChange={(e) => setMoodId(e.target.value)}
           />
         </div>
-        <Button onClick={getAllMoods} className="bg-blue-500" disabled={loading}>
+        <Button onClick={getAllMoods} className="bg-blue-500" disabled={moodLoading}>
           Get All Moods
         </Button>
         <Button
           onClick={() => createMood({ moodId: moodId, name: 'New Mood' })}
           className="bg-green-500"
-          disabled={loading}>
+          disabled={moodLoading}>
           Create a New Mood
         </Button>
         <Button
           onClick={() => updateMood(userMoodId, { moodId: moodId })}
           className="bg-orange-500"
-          disabled={loading}>
+          disabled={moodLoading}>
           Update an Existing Mood
         </Button>
         <Button
@@ -202,7 +200,7 @@ export default function APITesting() {
             deleteMood(userMoodId);
           }}
           className="bg-red-500"
-          disabled={loading}>
+          disabled={moodLoading}>
           Delete a Mood
         </Button>
       </div>
