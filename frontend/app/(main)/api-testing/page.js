@@ -25,30 +25,12 @@ export default function APITesting() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [moodId, setMoodId] = useState(0);
+  const [userMoodId, setUserMoodId] = useState(0);
   // get all moods
   const getAllMoods = async () => {
     setLoading(true);
     try {
       const response = await customFetch('/moods', { method: 'GET' });
-      const result = await response.json();
-      console.log(result);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      setData(result);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  // get mood by id
-  const getMoodById = async (moodId) => {
-    setLoading(true);
-    try {
-      const response = await customFetch(`/moods/${moodId}`, { method: 'GET' });
       const result = await response.json();
       console.log(result);
 
@@ -86,12 +68,12 @@ export default function APITesting() {
     }
   };
   // update mood
-  const updateMood = async (moodId, mood) => {
+  const updateMood = async (userMoodId, moodId) => {
     setLoading(true);
     try {
-      const response = await customFetch(`/moods/${moodId}`, {
+      const response = await customFetch(`/moods/${userMoodId}`, {
         method: 'PUT',
-        body: JSON.stringify(mood)
+        body: JSON.stringify(moodId)
       });
       const result = await response.json();
       console.log(result);
@@ -108,10 +90,10 @@ export default function APITesting() {
     }
   };
   // delete mood
-  const deleteMood = async (moodId) => {
+  const deleteMood = async (userMoodId) => {
     setLoading(true);
     try {
-      const response = await customFetch(`/moods/${moodId}`, { method: 'DELETE' });
+      const response = await customFetch(`/moods/${userMoodId}`, { method: 'DELETE' });
       const result = await response.json();
       console.log(result);
 
@@ -179,6 +161,17 @@ export default function APITesting() {
       <div className="flex flex-col space-y-4 mx-8 mt-8">
         <h1 className="text-lg text-center">MOODS</h1>
         <div className="flex items-center gap-2">
+          <label htmlFor="userMoodId" className="basis-20">
+            User Mood ID
+          </label>
+          <Input
+            id="userMoodID"
+            type="number"
+            value={userMoodId}
+            onChange={(e) => setUserMoodId(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center gap-2">
           <label htmlFor="moodId" className="basis-20">
             Mood ID
           </label>
@@ -193,28 +186,20 @@ export default function APITesting() {
           Get All Moods
         </Button>
         <Button
-          onClick={() => {
-            getMoodById(moodId);
-          }}
-          className="bg-blue-500"
-          disabled={loading}>
-          Get Mood by ID
-        </Button>
-        <Button
           onClick={() => createMood({ moodId: moodId, name: 'New Mood' })}
           className="bg-green-500"
           disabled={loading}>
           Create a New Mood
         </Button>
         <Button
-          onClick={() => updateMood(moodId, { moodId: 2 })}
+          onClick={() => updateMood(userMoodId, { moodId: moodId })}
           className="bg-orange-500"
           disabled={loading}>
           Update an Existing Mood
         </Button>
         <Button
           onClick={() => {
-            deleteMood(moodId);
+            deleteMood(userMoodId);
           }}
           className="bg-red-500"
           disabled={loading}>
