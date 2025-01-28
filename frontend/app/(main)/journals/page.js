@@ -6,15 +6,16 @@ import { Plus } from 'lucide-react';
 import JournalTabs from '@/components/journals/JournalTabs';
 import EntryCard from '@/components/journals/EntryCard';
 import { JOURNAL_ENTRIES } from '@/lib/constants';
+import { useGetTabById } from '@/hooks/useTabs';
 
 export default function JournalsPage({ defaultTab = 'daily' }) {
   const [currentTab, setCurrentTab] = useState(defaultTab);
-  const [tabs, setTabs] = useState([
-    { id: 'daily', name: 'Daily Journal', color: '#FF0000' },
-    { id: 'gratitude', name: 'Gratitude Journal', color: '#00FF00' },
-    { id: 'dreams', name: 'Dream Journal', color: '#0000FF' }
-  ]);
   const pathName = usePathname();
+  const { getTabById, data: tab } = useGetTabById();
+
+  useEffect(() => {
+    getTabById(currentPathJournalId);
+  }, [currentTab]);
 
   const currentPathJournalId = pathName.split('/').pop();
 
@@ -26,7 +27,7 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
 
   return (
     <div className="flex flex-col">
-      <h1 className="p-4 text-2xl capitalize border-b-[6px]">Path ID: {currentPathJournalId}</h1>
+      <h1 className="p-4 text-2xl capitalize border-b-[6px]">{tab && tab.data.name}</h1>
 
       <div className="flex-1 overflow-y-auto">
         <div>
@@ -40,7 +41,7 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
         </div>
       </div>
 
-      <JournalTabs tabs={tabs} setTabs={setTabs} />
+      <JournalTabs />
       <Button
         onClick={() => navigateToJournal(`new-${Date.now()}`)}
         size="icon"

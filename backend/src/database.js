@@ -1,9 +1,13 @@
+require('dotenv').config();
+
 const mysql = require('mysql');
 
 var config = {
   user: process.env.DB_USER,
   database: process.env.DB_NAME,
   password: process.env.DB_USER_PASS,
+  charset: 'utf8mb4',
+  collation: 'utf8mb4_unicode_ci',
 };
 
 // Later on when running from Google Cloud, env variables will be passed in container cloud connection config
@@ -14,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // When running from localhost, get the config from .env
 else {
-  console.log('Running from localhost. Connecting to DB directly.');
+  console.log('Running from localhost. Connecting to DB directly. ' + process.env.DB_HOST);
   config.host = process.env.DB_HOST;
 }
 

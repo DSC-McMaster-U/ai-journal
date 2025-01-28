@@ -1,0 +1,71 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  useGetAllTabs,
+  useGetTabById,
+  useCreateTab,
+  useUpdateTab,
+  useDeleteTab
+} from '@/hooks/useTabs';
+import { useState } from 'react';
+
+export default function APITesting() {
+  const [tabId, setTabId] = useState(0);
+  const { getAllTabs, data: allTabs, loading: loadingAll, error: errorAll } = useGetAllTabs();
+  const { getTabById, data: tab, loading: loadingTab, error: errorTab } = useGetTabById();
+  const { createTab, loading: creating, error: errorCreate } = useCreateTab();
+  const { updateTab, loading: updating, error: errorUpdate } = useUpdateTab();
+  const { deleteTab, loading: deleting, error: errorDelete } = useDeleteTab();
+
+  return (
+    <div>
+      <div className="flex flex-col space-y-4 mx-8 mt-8">
+        <h1 className="text-lg text-center">TABS</h1>
+        <div className="flex items-center gap-2">
+          <label htmlFor="tabId" className="basis-20">
+            Tab ID
+          </label>
+          <Input
+            id="tabId"
+            type="number"
+            value={tabId}
+            onChange={(e) => setTabId(e.target.value)}
+          />
+        </div>
+        <Button onClick={getAllTabs} className="bg-blue-500" disabled={loadingAll}>
+          Get All Tabs
+        </Button>
+        <Button
+          onClick={() => {
+            getTabById(tabId);
+          }}
+          className="bg-blue-500"
+          disabled={loadingTab}>
+          Get Tab by ID
+        </Button>
+        <Button
+          onClick={() => createTab({ name: 'New Tab', color: '#462837' })}
+          className="bg-green-500"
+          disabled={creating}>
+          Create a New Tab
+        </Button>
+        <Button
+          onClick={() => updateTab(tabId, { name: 'Updated Tab Name', color: '#462837' })}
+          className="bg-orange-500"
+          disabled={updating}>
+          Update an Existing Tab
+        </Button>
+        <Button
+          onClick={() => {
+            deleteTab(tabId);
+          }}
+          className="bg-red-500"
+          disabled={deleting}>
+          Delete a Tab
+        </Button>
+      </div>
+    </div>
+  );
+}
