@@ -1,58 +1,94 @@
+const { log, fetching } = require('../logger');
 const moodService = require('../services/moodService');
 
 const getMoodEntries = async (req, res) => {
-  //TODO: Get the moods for the specific user
   try {
-    const result = await moodService.getMoodEntries();
-    res.status(201).json({ data: result });
+    const userId = req.token.user.id;
+    const result = await moodService.getMoodEntries(userId);
+
+    fetching('GET /moods', { userId });
+
+    res.status(200).json({ data: result }); 
   } catch (error) {
+    log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to retrieve mood entries' });
   }
 };
 
-// TODO: get moods for specific user for this current dailyrecord
-
 const createMoodEntry = async (req, res) => {
-  //TODO: get userid and dailyrecordid from middleware in the future
-  const { userId, moodId, dailyRecordId } = req.body;
-
-  if (!userId || !moodId || !dailyRecordId) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-
-  // TODO: Make result return the created mood entry
   try {
-    const result = await moodService.createMoodEntry(
-      userId,
-      moodId,
-      dailyRecordId
-    );
-    res.status(201).json({ message: 'Mood entry created successfully' });
+    const userId = req.token.user.id;
+    const dailyRecordId = req.dailyRecord.id;
+    const { moodId } = req.body;
+
+    // log(`userId: ${userId}, moodId: ${moodId}, dailyRecordId: ${dailyRecordId}`);
+
+    if (!userId || !moodId || !dailyRecordId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    fetching('POST /moods', { userId, moodId, dailyRecordId });
+
+    const result = await moodService.createMoodEntry(userId, moodId, dailyRecordId);
+    log(`Mood entry created: ${result}`);
+    res.status(201).json({ 
+      data: {
+        id: result.insertId,
+        mood_id: moodId,
+        daily_record_id: dailyRecordId,
+        user_id: userId,
+      } 
+    });
+
   } catch (error) {
+    log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to create mood entry' });
   }
 };
 
 const editMoodEntry = async (req, res) => {
-  const { id } = req.params;
-  const { moodId } = req.body;
-  // TODO check if userid matches the user id of the mood entry
-
-  // TODO: Make result return the edited mood entry
   try {
-    const result = await moodService.editMoodEntry(id, moodId);
-    res.status(200).json({ message: 'Mood entry updated successfully' });
+    const { id } = req.params;
+    const { moodId } = req.body;
+    const userId = req.token.user.id;
+
+    fetching('PUT /moods/:id', { id, moodId, userId });
+
+    const result = await moodService.editMoodEntry(id, moodId, userId);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Mood entry not found' });
+    }
+
+    res.status(200).json({
+      data: {
+        id,
+        mood_id: moodId,
+        user_id: userId,
+      },
+    });
   } catch (error) {
+    log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to update mood entry' });
   }
 };
 
 const deleteMoodEntry = async (req, res) => {
-  const { id } = req.params;
   try {
-    const result = await moodService.deleteMoodEntry(id);
+    const { id } = req.params;
+    const userId = req.token.user.id;
+
+    fetching('DELETE /moods/:id', { id, userId });
+
+    const result = await moodService.deleteMoodEntry(id, userId);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Mood entry not found' });
+    }
+
     res.status(200).json({ message: 'Mood entry deleted successfully' });
   } catch (error) {
+    log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to delete mood entry' });
   }
 };
