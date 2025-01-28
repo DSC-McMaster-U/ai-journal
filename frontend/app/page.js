@@ -2,7 +2,7 @@
 
 import LandingCard from '@/components/landing/LandingCard';
 import { Button } from '@/components/ui/button';
-import { BookHeart, BotMessageSquare, Coffee, NotebookPen, Sticker } from 'lucide-react';
+//import { BookHeart, BotMessageSquare, Coffee, NotebookPen, Sticker } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
