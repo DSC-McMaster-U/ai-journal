@@ -32,6 +32,7 @@ const warehouseRoutes = require('./routes/warehouseRoute');
 const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
 const journalRoutes = require('./routes/journalRoute');
+const chatbotRoute = require('./routes/chatbotRoute');
 
 // Route middleware
 app.use('/api/warehouses', authProtect, dailyRecordMiddleware, warehouseRoutes);
@@ -46,6 +47,8 @@ app.use(
 
 app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
 app.use('/api/tabs', authProtect, dailyRecordMiddleware, tabRoutes);
+
+app.use('/api/chatbot', chatbotRoute);
 
 // app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
 
