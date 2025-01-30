@@ -4,7 +4,7 @@ const { log } = require('../logger');
 
 const dailyRecordMiddleware = async (req, res, next) => {
   try {
-    const userId = '108188107816093538321'; // TODO replace
+    const userId = req.token.user.id;
 
     // Check if a daily record exists for this user and the current date
     let dailyRecord = await dailyRecordService.getDailyRecord(userId);

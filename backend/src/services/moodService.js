@@ -1,71 +1,24 @@
-const { connection } = require('../database');
+const { executeQuery } = require('../utils/query');
 
-const getMoodEntries = () => {
-  return new Promise((resolve, reject) => {
-    const query = `
-            SELECT * FROM user_moods
-        `;
-    connection.query(query, (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
+const getMoodEntries = (userId) => {
+  const query = 'SELECT * FROM `ai-journal`.`user_moods` WHERE user_id = ?';
+  return executeQuery(query, [userId]);
 };
 
-const createMoodEntry = (userId, moodId, dailyRecordId) => {
-  return new Promise((resolve, reject) => {
-    const query = `
-            INSERT INTO user_moods (user_id, mood_id, daily_record_id)
-            VALUES (?, ?, ?)
-        `;
-    connection.query(
-      query,
-      [userId, moodId, dailyRecordId],
-      (error, results) => {
-        if (error) {
-          console.error('database error: ', error);
-          reject(error);
-        } else {
-          resolve(results);
-        }
-      }
-    );
-  });
+const createMoodEntry = (userId, name, dailyRecordId) => {
+  const query = 
+    'INSERT INTO `ai-journal`.`user_moods` (user_id, mood_id, daily_record_id) VALUES (?, ?, ?)';
+  return executeQuery(query, [userId, name, dailyRecordId]);
 };
 
-const editMoodEntry = (id, moodId) => {
-  return new Promise((resolve, reject) => {
-    const query = `
-            UPDATE user_moods
-            SET mood_id = ?
-            WHERE id = ?
-        `;
-    connection.query(query, [moodId, id], (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
+const editMoodEntry = (id, moodId, userId) => {
+  const query = 'UPDATE `ai-journal`.`user_moods` SET mood_id = ? WHERE id = ? AND user_id = ?';
+  return executeQuery(query, [moodId, id, userId]);
 };
 
-const deleteMoodEntry = (id) => {
-  return new Promise((resolve, reject) => {
-    const query = `
-            DELETE FROM user_moods WHERE id = ?
-        `;
-    connection.query(query, [id], (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
+const deleteMoodEntry = (id, userId) => {
+  const query = 'DELETE FROM `ai-journal`.`user_moods` WHERE id = ? AND user_id = ?';
+  return executeQuery(query, [id, userId]);
 };
 
 module.exports = {

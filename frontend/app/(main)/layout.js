@@ -1,11 +1,28 @@
 'use client';
 import Navbar from '@/components/common/Navbar';
-import { usePathname } from 'next/navigation';
+import { useAuthentication } from '@/hooks/authentication';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function MainLayout({ children }) {
   const pathname = usePathname();
+  const [user, setUser] = useState(undefined);
+  const router = useRouter();
 
   const isJournalDetail = /^\/journals\/[^/]+\/[^/]+$/.test(pathname);
+
+  useAuthentication(
+    (user) => {
+      setUser(user);
+    },
+    () => {
+      router.push('/login');
+    }
+  );
+
+  if (user == undefined) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className="min-h-screen justify-between pb-16 bg-base-100">

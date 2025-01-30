@@ -1,3 +1,4 @@
+const { log, fetching } = require('../logger');
 const journalService = require('../services/journalService');
 
 const createDailyJournal = async (req, res) => {
@@ -5,6 +6,8 @@ const createDailyJournal = async (req, res) => {
     const { title, content } = req.body;
     const userId = req.token.user.id;
     const dailyRecordId = req.dailyRecord.id;
+
+    fetching('POST /journals/daily', { userId, dailyRecordId, title });
 
     if (!title || !content) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -17,18 +20,19 @@ const createDailyJournal = async (req, res) => {
       content
     );
 
-    const response = {
-      id: journal.id,
-      title: journal.title,
-      content: journal.content,
-      userId: journal.user_id,
-      dailyRecordId: journal.daily_record_id,
-      createdAt: journal.created_at,
-      updatedAt: journal.updated_at,
-    };
-
-    res.status(201).json(response);
+    res.status(201).json({
+      data: {
+        id: journal.id,
+        title: journal.title,
+        content: journal.content,
+        userId: journal.user_id,
+        dailyRecordId: journal.daily_record_id,
+        createdAt: journal.created_at,
+        updatedAt: journal.updated_at,
+      }
+    });
   } catch (error) {
+    log(`Controller Error: ${error.message}`);
     if (error.message === 'A daily journal already exists for this record') {
       res.status(409).json({ error: error.message });
     } else {
