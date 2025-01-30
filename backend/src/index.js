@@ -47,7 +47,7 @@ app.use(
 app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
 app.use('/api/tabs', authProtect, dailyRecordMiddleware, tabRoutes);
 
-// app.use('/api/moods', dailyRecordMiddleware, moodRoutes);
+app.use('/api/moods', authProtect, dailyRecordMiddleware, moodRoutes);
 
 // Default route
 app.get('/api', (req, res) =>
