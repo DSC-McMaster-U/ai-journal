@@ -30,11 +30,8 @@ const dailyRecordMiddleware = async (req, res, next) => {
 
     req.dailyRecord = dailyRecord[0];
 
-    log(
-      'DailyRecord middleware: ' +
-        JSON.stringify(req.dailyRecord) +
-        JSON.stringify(req.token)
-    );
+    log('============== DAILY RECORD ==================');
+    log(JSON.stringify(req.dailyRecord));
     next();
   } catch (error) {
     console.log(error);

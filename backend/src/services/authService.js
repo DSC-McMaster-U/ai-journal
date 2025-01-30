@@ -234,10 +234,12 @@ const authProtect = (req, res, next) => {
   validateToken(jwtToken)
     .then((result) => {
       req.token = result;
-      log(`Valid token received, logged in user: ${result.user.email}`);
+      log('============== AUTH PROTECT: SUCCESS ==================');
+      log(JSON.stringify(req.token));
       next();
     })
     .catch((err) => {
+      log('============== AUTH PROTECT: FAILURE ==================');
       warnInvalidAuthenticationAttempt(err);
       res.status(401).send({ error: 'Invalid authorization token' }).end();
       return;

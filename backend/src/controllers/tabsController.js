@@ -1,12 +1,10 @@
-const { log, fetching } = require('../logger');
+const { log } = require('../logger');
 const tabsService = require('../services/tabsService');
 
 const getAllTabs = async (req, res) => {
   try {
     const userId = req.token.user.id;
     const tabs = await tabsService.getAllTabs(userId);
-
-    fetching('GET /tabs', { userId });
 
     res.status(200).json({ data: tabs });
   } catch (error) {
@@ -19,8 +17,6 @@ const getTabById = async (req, res) => {
   try {
     const userId = req.token.user.id;
     const tabId = req.params.id;
-
-    fetching('GET /tabs/:id', { tabId, userId });
 
     const tab = await tabsService.getTabById(tabId, userId);
 
@@ -39,8 +35,6 @@ const createTab = async (req, res) => {
   try {
     const { name, color } = req.body;
     const userId = req.token.user.id;
-
-    fetching('POST /tabs', { name, userId, color });
 
     const response = await tabsService.createTab(name, userId, color);
 
@@ -63,8 +57,6 @@ const updateTab = async (req, res) => {
     const { name, color } = req.body;
     const tabId = req.params.id;
     const userId = req.token.user.id;
-
-    fetching('PUT /tabs/:id', { tabId, name, userId, color });
 
     const response = await tabsService.updateTab(tabId, name, userId, color);
 
@@ -90,8 +82,6 @@ const deleteTab = async (req, res) => {
   try {
     const tabId = req.params.id;
     const userId = req.token.user.id;
-
-    fetching('DELETE /tabs/:id', { tabId, userId });
 
     const response = await tabsService.deleteTab(tabId, userId);
 

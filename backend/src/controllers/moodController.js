@@ -1,4 +1,4 @@
-const { log, fetching } = require('../logger');
+const { log } = require('../logger');
 const moodService = require('../services/moodService');
 
 const getMoodEntries = async (req, res) => {
@@ -6,9 +6,7 @@ const getMoodEntries = async (req, res) => {
     const userId = req.token.user.id;
     const result = await moodService.getMoodEntries(userId);
 
-    fetching('GET /moods', { userId });
-
-    res.status(200).json({ data: result }); 
+    res.status(200).json({ data: result });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to retrieve mood entries' });
@@ -25,19 +23,20 @@ const createMoodEntry = async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    fetching('POST /moods', { userId, moodId, dailyRecordId });
+    const result = await moodService.createMoodEntry(
+      userId,
+      moodId,
+      dailyRecordId
+    );
 
-    const result = await moodService.createMoodEntry(userId, moodId, dailyRecordId);
-
-    res.status(201).json({ 
+    res.status(201).json({
       data: {
         id: result.insertId,
         mood_id: moodId,
         daily_record_id: dailyRecordId,
         user_id: userId,
-      } 
+      },
     });
-
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to create mood entry' });
@@ -49,8 +48,6 @@ const editMoodEntry = async (req, res) => {
     const { id } = req.params;
     const { moodId } = req.body;
     const userId = req.token.user.id;
-
-    fetching('PUT /moods/:id', { id, moodId, userId });
 
     const result = await moodService.editMoodEntry(id, moodId, userId);
 
@@ -75,8 +72,6 @@ const deleteMoodEntry = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.token.user.id;
-
-    fetching('DELETE /moods/:id', { id, userId });
 
     const result = await moodService.deleteMoodEntry(id, userId);
 

@@ -33,6 +33,9 @@ const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
 const journalRoutes = require('./routes/journalRoute');
 const chatbotRoute = require('./routes/chatbotRoute');
+const requestLogger = require('./middleware/requestLogger');
+
+app.use(requestLogger);
 
 // Route middleware
 app.use('/api/warehouses', authProtect, dailyRecordMiddleware, warehouseRoutes);

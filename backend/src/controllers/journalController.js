@@ -1,4 +1,4 @@
-const { log, fetching } = require('../logger');
+const { log } = require('../logger');
 const journalService = require('../services/journalService');
 
 const createDailyJournal = async (req, res) => {
@@ -6,8 +6,6 @@ const createDailyJournal = async (req, res) => {
     const { title, content } = req.body;
     const userId = req.token.user.id;
     const dailyRecordId = req.dailyRecord.id;
-
-    fetching('POST /journals/daily', { userId, dailyRecordId, title });
 
     if (!title || !content) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -29,7 +27,7 @@ const createDailyJournal = async (req, res) => {
         dailyRecordId: journal.daily_record_id,
         createdAt: journal.created_at,
         updatedAt: journal.updated_at,
-      }
+      },
     });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
