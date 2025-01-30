@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { NotebookPen } from 'lucide-react';
+//import { NotebookPen } from 'lucide-react';
 
 const LandingCard = ({ title, description, alignment = 'left', icon }) => {
   return (
