@@ -54,8 +54,8 @@ app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
 app.use('/api/tabs', authProtect, dailyRecordMiddleware, tabRoutes);
 app.use('/api/moods', authProtect, dailyRecordMiddleware, moodRoutes);
 app.use('/api/chats', authProtect, chatsRoutes);
-app.use('/api/chat-logs', chatLogsRoute);
-app.use('/api/chatbot', chatbotRoute);
+app.use('/api/chat-logs', authProtect, chatLogsRoute);
+// app.use('/api/chatbot', chatbotRoute);
 
 // Default route
 app.get('/api', (req, res) =>

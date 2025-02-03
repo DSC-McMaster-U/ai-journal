@@ -3,7 +3,7 @@ const chatLogsService = require('../services/chatLogsService');
 
 const getChatLogsByInstanceId = async (req, res) => {
   try {
-    const userId = '102072085857574424342';
+    const userId = req.token.user.id;
     const chatLogInstanceId = req.params.id;
 
     const chatLogs = await chatLogsService.getChatLogsByInstanceId(
@@ -22,7 +22,7 @@ const createChatLogForInstance = async (req, res) => {
   try {
     const { isUser, content } = req.body;
     const chatLogInstanceId = req.params.id;
-    const userId = '102072085857574424342';
+    const userId = req.token.user.id;
 
     const response = await chatLogsService.createChatLog(
       chatLogInstanceId,
