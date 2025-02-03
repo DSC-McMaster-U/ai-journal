@@ -1,17 +1,31 @@
 import React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Smile, Frown, Meh, HeartOff } from 'lucide-react';
+import { Smile, Frown, Meh, Ghost, HeartOff, Snowflake, Laugh, Annoyed, Angry, Activity } from 'lucide-react';
 
 const moods = [
-    { name: 'Happy', icon: <Smile size={24} /> },
-    { name: 'Sad', icon: <Frown size={24} /> },
-    { name: 'Neutral', icon: <Meh size={24} /> },
-    { name: 'Heartbroken', icon: <HeartOff size={24} /> }
+    { name: 'heartsick', icon: <HeartOff size={24} /> },
+    { name: 'joy', icon: <Smile size={24} /> },
+    { name: 'sad', icon: <Frown size={24} /> },
+    { name: 'empty', icon: <Meh size={24} /> },
+    { name: 'lonely', icon: <Ghost size={24} /> },
+    { name: 'excited', icon: <Laugh size={24} /> },
+    // { name: 'chill', icon: <Snowflake size={24} /> },
+    { name: 'mad', icon: <Angry size={24} /> },
+    { name: 'annoyed', icon: <Annoyed size={24} /> },
+    { name: 'anxious', icon: <Activity size={24} /> },
 ];
 
 export const MoodSelector = () => {
-    const [selectedMood, setSelectedMood] = React.useState(null);
+    const [selectedMoods, setSelectedMoods] = React.useState([]);
+
+    const toggleMood = (moodName) => {
+        setSelectedMoods((prevMoods) =>
+            prevMoods.includes(moodName)
+                ? prevMoods.filter((mood) => mood !== moodName) // Remove if already selected
+                : [...prevMoods, moodName] // Add if not selected
+        );
+    };
 
     return (
         <Popover>
@@ -20,21 +34,28 @@ export const MoodSelector = () => {
             </PopoverTrigger>
 
             <PopoverContent>
-                <h3>Select Your Mood</h3>
-                <div className="flex justify-center gap-4">
-                    {moods.map((mood) => (
-                        <button
-                            key={mood.name}
-                            onClick={() => setSelectedMood(mood.name)}
-                            className={`p-2 rounded-lg transition ${selectedMood === mood.name ? 'bg-primary text-background' : 'text-muted-foreground hover:bg-primary/10'}`}
-                        >
-                            {mood.icon}
-                        </button>
-                    ))}
+                <div className="relative w-64 h-64 flex items-center justify-center">
+                    {moods.map((mood, index) => {
+                        const angle = (index / moods.length) * 360;
+                        return (
+                            <button
+                                key={mood.name}
+                                onClick={() => toggleMood(mood.name)}
+                                className={`absolute p-2 flex flex-col items-center justify-center rounded-full transition ${selectedMoods.includes(mood.name) ? 'bg-primary text-background' : 'text-muted-foreground hover:bg-primary/10'}`}
+                                style={{
+                                    transform: `rotate(${angle}deg) translate(100px) rotate(-${angle}deg)`,
+                                }}
+                            >
+                                {mood.icon}
+                                <span className="text-sm">{mood.name}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
+
                 <div className="mt-4">
-                    <p>Selected Mood: {selectedMood || 'None'}</p>
+                    {/* <p>Selected Mood: {selectedMood || 'None'}</p> */}
                 </div>
             </PopoverContent>
         </Popover>
