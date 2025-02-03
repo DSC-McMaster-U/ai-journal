@@ -33,6 +33,7 @@ const moodRoutes = require('./routes/moodRoute');
 const tabRoutes = require('./routes/tabsRoute');
 const journalRoutes = require('./routes/journalRoute');
 const chatbotRoute = require('./routes/chatbotRoute');
+const chatsRoutes = require('./routes/chatsRoute')
 const requestLogger = require('./middleware/requestLogger');
 
 app.use(requestLogger);
@@ -51,7 +52,7 @@ app.use(
 app.use('/api/journals', authProtect, dailyRecordMiddleware, journalRoutes);
 app.use('/api/tabs', authProtect, dailyRecordMiddleware, tabRoutes);
 app.use('/api/moods', authProtect, dailyRecordMiddleware, moodRoutes);
-
+app.use('/api/chats', authProtect, chatsRoutes)
 app.use('/api/chatbot', chatbotRoute);
 
 // Default route
