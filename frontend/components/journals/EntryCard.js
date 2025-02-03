@@ -1,17 +1,42 @@
-import { EllipsisVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { useJournals } from '@/hooks/useJournals';
+import { EllipsisVertical } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '../ui/dropdown-menu';
-import { useToast } from '@/hooks/use-toast';
+} from '@/components/ui/dropdown-menu';
 
-function EntryCard({ entry, currentTab }) {
+function EntryCard({ entry, currentTab, onDelete }) {
   const router = useRouter();
   const { toast } = useToast();
-  const { id, date, title, description } = entry;
+  const { deleteJournal } = useJournals();
+  const { id, created_at, title, content } = entry;
+
+  const formattedDate = new Date(created_at).toLocaleDateString('en-US', {
+    weekday: 'short',
+    day: 'numeric'
+  });
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    try {
+      await deleteJournal(id);
+      toast({
+        title: 'Success',
+        description: 'Journal entry deleted successfully'
+      });
+      onDelete?.();
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete journal entry',
+        variant: 'destructive'
+      });
+    }
+  };
 
   return (
     <div
@@ -20,12 +45,14 @@ function EntryCard({ entry, currentTab }) {
       onClick={() => router.push(`/journals/${currentTab}/${id}`)}>
       <div className="flex gap-8 items-center">
         <div className="max-w-6 w-6 h-12 flex flex-col items-center justify-center text-secondary-foreground">
-          <p>{date.split(' ')[0]}</p>
-          <p>{date.split(' ')[1]}</p>
+          <p>{formattedDate.split(' ')[0]}</p>
+          <p>{formattedDate.split(' ')[1]}</p>
         </div>
         <div className="text-xl">
           <h2 className="font-semibold">{title}</h2>
-          <p className="text-sm overflow-hidden truncate w-[180px] text-muted">{description}</p>
+          <p className="text-sm overflow-hidden truncate w-[180px] text-muted">
+            {content ? JSON.parse(content).content : 'Empty entry'}
+          </p>
         </div>
       </div>
 
@@ -36,26 +63,15 @@ function EntryCard({ entry, currentTab }) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             onClick={(e) => {
-              toast({
-                title: 'Edit Entry',
-                description: 'This feature is not implemented yet.'
-              });
-
               e.stopPropagation();
+              router.push(`/journals/${currentTab}/${id}`);
             }}
             className="cursor-pointer">
             Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={(e) => {
-              toast({
-                title: 'Delete Entry',
-                description: 'This feature is not implemented yet.'
-              });
-
-              e.stopPropagation();
-            }}
-            className="cursor-pointer">
+            onClick={handleDelete}
+            className="cursor-pointer text-destructive">
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
