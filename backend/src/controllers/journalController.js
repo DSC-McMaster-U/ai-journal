@@ -92,9 +92,11 @@ const getJournalById = async (req, res) => {
 
 const updateJournalInfo = async (req, res) => {
   try {
-    const { title, tabId } = req.body;
+    const { title, tabId, content } = req.body;
     const { id } = req.params;
     const userId = req.token.user.id;
+
+    console.log(content);
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
@@ -104,25 +106,25 @@ const updateJournalInfo = async (req, res) => {
       id,
       userId,
       title,
-      tabId
+      tabId,
+      content
     );
 
     const response = {
       id: journal.id,
       title: journal.title,
       tabId: journal.tab_id,
+      content: journal.content ?? undefined,
       updatedAt: journal.updated_at,
     };
 
     res.status(200).json(response);
   } catch (error) {
-    if (error.message === 'Cannot modify tab of a daily record journal') {
-      res.status(400).json({ error: error.message });
-    } else if (error.message === 'Journal not found') {
-      res.status(404).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: 'Failed to update journal' });
+    if (error.message === 'Journal not found') {
+      return res.status(404).json({ error: error.message });
     }
+
+    res.status(500).json({ error: 'Failed to update journal' });
   }
 };
 

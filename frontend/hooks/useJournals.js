@@ -120,3 +120,36 @@ export function useCreateJournal() {
 
   return { createJournal, loading, error };
 }
+
+export function useUpdateJournal() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const updateJournal = async ({ id, title, tabId = null, content = undefined }) => {
+    setLoading(true);
+    try {
+      const body = JSON.stringify({ title, tabId, content });
+
+      const response = await customFetch(`/journals/${id}`, {
+        method: 'PUT',
+        body,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      return result;
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { updateJournal, loading, error };
+}

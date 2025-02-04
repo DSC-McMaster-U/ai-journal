@@ -31,7 +31,7 @@ import {
   Strikethrough,
   Undo2
 } from 'lucide-react';
-import { useState } from 'react';
+import { debounce } from 'lodash';
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor();
@@ -278,17 +278,24 @@ const extensions = [
   Typography
 ];
 
-const JournalEditor = ({ journal }) => {
-  const [content, setContent] = useState(journal.content || '');
+const JournalEditor = ({ journal, updateJournal }) => {
+  const debouncedSave = debounce(async (newContent) => {
+    await updateJournal({
+      id: journal.id,
+      title: journal.title,
+      tabId: journal.tab_id,
+      content: newContent
+    });
 
-  console.log(content);
+    console.log('Saved');
+  }, 2000);
 
   return (
     <EditorProvider
       extensions={extensions}
-      content={content}
+      content={journal.content}
       onUpdate={({ editor }) => {
-        setContent(editor.getJSON());
+        debouncedSave(editor.getJSON());
       }}
       slotAfter={[<BubbleBar key={0} />, <FloatingBar key={1} />, <MenuBar key={2} />]}
     />

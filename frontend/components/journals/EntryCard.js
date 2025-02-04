@@ -32,7 +32,7 @@ function EntryCard({ entry }) {
         <div className="text-xl">
           <h2 className="font-semibold">{title}</h2>
           <p className="text-sm overflow-hidden truncate w-[180px] text-muted">
-            {content ? JSON.parse(content).content : 'Empty entry'}
+            {/* {content ? JSON.parse(content).content : 'Empty entry'} */}
           </p>
         </div>
       </div>

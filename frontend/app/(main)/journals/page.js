@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import JournalTabs from '@/components/journals/JournalTabs';
@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input';
 
 export default function JournalsPage({ currentTab = '' }) {
   const { toast } = useToast();
+  const router = useRouter();
 
   const [journalName, setJournalName] = useState('Untitled Journal');
   const [journalTabSelected, setJournalTabSelected] = useState(currentTab);
@@ -68,10 +69,10 @@ export default function JournalsPage({ currentTab = '' }) {
 
       router.push(`/journals/entries/${newJournal.id}`);
     } catch (err) {
+      console.log(err);
       toast({
         title: 'Error',
-        description: 'Failed to create new journal entry',
-        variant: 'destructive'
+        description: 'Failed to create new journal entry'
       });
     }
   };
@@ -79,8 +80,6 @@ export default function JournalsPage({ currentTab = '' }) {
   if (loadingDaily || loadingJournals || loadingTab) {
     return <LoadingSpinner />;
   }
-
-  console.log('entries', entries);
 
   return (
     <div className="flex flex-col">

@@ -121,7 +121,7 @@ const createTabJournal = async (
   };
 };
 
-const updateJournalInfo = async (journalId, userId, title, tabId) => {
+const updateJournalInfo = async (journalId, userId, title, tabId, content) => {
   const journal = await executeQuery(
     'SELECT daily_record_id FROM journals WHERE id = ? AND user_id = ?',
     [journalId, userId]
@@ -131,27 +131,33 @@ const updateJournalInfo = async (journalId, userId, title, tabId) => {
     throw new Error('Journal not found');
   }
 
-  if (journal[0].daily_record_id && tabId) {
-    throw new Error('Cannot modify tab of a daily record journal');
+  let updateQuery = 'UPDATE journals SET title = ?';
+  let params = [title];
+
+  if (tabId) {
+    updateQuery += ', tab_id = ?';
+    params.push(tabId);
   }
 
-  const updateQuery = tabId
-    ? 'UPDATE journals SET title = ?, tab_id = ? WHERE id = ? AND user_id = ?'
-    : 'UPDATE journals SET title = ? WHERE id = ? AND user_id = ?';
-  const params = tabId
-    ? [title, tabId, journalId, userId]
-    : [title, journalId, userId];
+  if (content !== undefined) {
+    updateQuery += ', content = ?';
+    params.push(JSON.stringify(content)); // ✅ Convert JSON to string
+  }
+
+  updateQuery += ' WHERE id = ? AND user_id = ?';
+  params.push(journalId, userId);
 
   const result = await executeQuery(updateQuery, params);
 
   if (result.affectedRows === 0) {
-    throw new Error('Journal not found');
+    throw new Error('Journal not found or no changes made');
   }
 
   return {
     id: journalId,
     title,
-    tab_id: tabId,
+    tab_id: tabId ?? null,
+    content: content ?? undefined,
     updated_at: new Date(),
   };
 };
