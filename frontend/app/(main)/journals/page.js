@@ -1,39 +1,120 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import JournalTabs from '@/components/journals/JournalTabs';
 import EntryCard from '@/components/journals/EntryCard';
-import { JOURNAL_ENTRIES } from '@/lib/constants';
 import { useGetTabById } from '@/hooks/useTabs';
+import {
+  useCreateJournal,
+  useDeleteJournal,
+  useGetDailyJournals,
+  useGetJournals,
+  useJournals,
+  useUpdateJournal
+} from '@/hooks/useJournals';
+import { useToast } from '@/hooks/use-toast';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import Modal from '@/components/common/Modal';
+import { DialogClose } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
-export default function JournalsPage({ defaultTab = 'daily' }) {
-  const [currentTab, setCurrentTab] = useState(defaultTab);
-  const pathName = usePathname();
-  const { getTabById, data: tab } = useGetTabById();
+export default function JournalsPage({ currentTab = '' }) {
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const [journalName, setJournalName] = useState('Untitled Journal');
+  const [journalTabSelected, setJournalTabSelected] = useState(currentTab);
+  const [entries, setEntries] = useState([]);
+
+  const { getTabById, loading: loadingTab, data: tab } = useGetTabById();
+
+  const { loading: loadingDaily, getDailyJournals } = useGetDailyJournals();
+  const { loading: loadingJournals, getJournals } = useGetJournals();
+  const { createJournal } = useCreateJournal();
+  const { updateJournal } = useUpdateJournal();
+  const { deleteJournal } = useDeleteJournal();
 
   useEffect(() => {
-    getTabById(currentPathJournalId);
+    getTabById(currentTab);
+    fetchJournals();
   }, [currentTab]);
 
-  const currentPathJournalId = pathName.split('/').pop();
+  const fetchJournals = async () => {
+    try {
+      if (currentTab === '') {
+        const res = await getDailyJournals();
+        setEntries(res);
+      } else {
+        const res = await getJournals(currentTab);
+        setEntries(res);
+      }
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch journal entries'
+      });
+    }
+  };
 
-  useEffect(() => {
-    setCurrentTab(defaultTab);
-  }, [defaultTab]);
+  const handleCreateJournal = async () => {
+    try {
+      const newJournal = await createJournal({
+        title: journalName,
+        content: '',
+        tabId: journalTabSelected
+      });
 
-  const filteredEntries = JOURNAL_ENTRIES.filter((entry) => entry.tab === currentTab);
+      router.push(`/journals/entries/${newJournal.id}`);
+    } catch (err) {
+      console.log(err);
+      toast({
+        title: 'Error',
+        description: 'Failed to create new journal entry'
+      });
+    }
+  };
+
+  if (loadingDaily || loadingJournals || loadingTab) {
+    return <LoadingSpinner />;
+  }
+
+  const handleDeleteJournal = async (id) => {
+    try {
+      await deleteJournal(id);
+      await fetchJournals();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const editJournalHandler = async (id, name) => {
+    try {
+      await updateJournal({ id, title: name });
+      await fetchJournals();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="flex flex-col">
-      <h1 className="p-4 text-2xl capitalize border-b-[6px]">{tab && tab.data.name}</h1>
+      <h1 className="p-4 text-2xl capitalize border-b-[6px]">
+        {currentTab === '' ? 'Daily Journals' : tab && tab.data.name}
+      </h1>
 
       <div className="flex-1 overflow-y-auto">
         <div>
-          {filteredEntries.length !== 0 ? (
-            filteredEntries.map((entry) => (
-              <EntryCard entry={entry} currentTab={currentTab} key={entry.id} />
+          {entries.length > 0 ? (
+            entries.map((entry) => (
+              <EntryCard
+                key={entry.id}
+                entry={entry}
+                handleDeleteJournal={handleDeleteJournal}
+                editJournalHandler={editJournalHandler}
+              />
             ))
           ) : (
             <div className="text-center p-8">No entries in this journal yet.</div>
@@ -42,12 +123,36 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
       </div>
 
       <JournalTabs />
-      <Button
-        onClick={() => navigateToJournal(`new-${Date.now()}`)}
-        size="icon"
-        className="rounded-full p-6 fixed right-[20px] bottom-[100px] z-[5] transition-all hover:-translate-y-[2px]">
-        <Plus className="!w-6 !h-6" strokeWidth={3} />
-      </Button>
+      <Modal
+        title={'Create a New Journal Entry'}
+        trigger={
+          <Button
+            size="icon"
+            className="rounded-full p-6 fixed right-[20px] bottom-[100px] z-[5] transition-all hover:-translate-y-[2px]">
+            <Plus className="!w-6 !h-6" strokeWidth={3} />
+          </Button>
+        }>
+        <div>
+          <Label htmlFor="journal-name" className="text-right">
+            Journal Name
+          </Label>
+          <Input
+            value={journalName}
+            onChange={(e) => setJournalName(e.target.value)}
+            id="journal-name"
+            placeholder="Enter journal name"
+            className="col-span-3"
+          />
+        </div>
+        <div className="flex gap-2 mt-6">
+          <DialogClose className="flex-1" asChild>
+            <Button onClick={handleCreateJournal}>Create Journal</Button>
+          </DialogClose>
+          <DialogClose className="flex-1" asChild>
+            <Button variant="secondary">Cancel</Button>
+          </DialogClose>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -154,6 +154,15 @@ function JournalTabs() {
               </Button>
             </div>
             <div className="mt-2 space-y-2">
+              <Button
+                className="w-full justify-start px-2 font-normal flex gap-4"
+                variant="ghost"
+                onClick={() => {
+                  router.push(`/journals`);
+                }}>
+                <div className={cn('w-4 h-4 rounded-md bg-primary')} />
+                <p>Daily Journals</p>
+              </Button>
               {allTabs &&
                 allTabs.data.map((tab) => (
                   <Button
@@ -249,15 +258,15 @@ function JournalTabs() {
           </div>
           <DialogFooter>
             <div className="flex gap-2 mt-6">
+              <Button className="flex-1" onClick={createFolderHandler}>
+                Create Folder
+              </Button>
               <Button
                 className="flex-1"
                 type="button"
                 variant="secondary"
                 onClick={() => setOpenCreate(false)}>
                 Cancel
-              </Button>
-              <Button className="flex-1" onClick={createFolderHandler}>
-                Create Folder
               </Button>
             </div>
           </DialogFooter>
@@ -311,15 +320,15 @@ function JournalTabs() {
           </div>
           <DialogFooter>
             <div className="flex gap-2 mt-6">
+              <Button className="flex-1" onClick={editFolderHandler}>
+                Edit
+              </Button>
               <Button
                 className="flex-1"
                 type="button"
                 variant="secondary"
                 onClick={() => setOpenEdit(false)}>
                 Cancel
-              </Button>
-              <Button className="flex-1" onClick={editFolderHandler}>
-                Edit
               </Button>
             </div>
           </DialogFooter>
@@ -339,15 +348,15 @@ function JournalTabs() {
           </p>
           <DialogFooter>
             <div className="flex gap-2 mt-6">
+              <Button variant="destructive" className="flex-1" onClick={deleteFolderHandler}>
+                Delete
+              </Button>
               <Button
                 className="flex-1"
                 type="button"
                 variant="secondary"
                 onClick={() => setOpenDelete(false)}>
                 Cancel
-              </Button>
-              <Button variant="destructive" className="flex-1" onClick={deleteFolderHandler}>
-                Delete
               </Button>
             </div>
           </DialogFooter>

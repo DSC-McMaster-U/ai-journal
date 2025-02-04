@@ -6,5 +6,5 @@ import JournalsPage from '../page';
 export default function TabPage() {
   const params = useParams();
 
-  return <JournalsPage defaultTab={params.tab} />;
+  return <JournalsPage currentTab={params.tab} />;
 }
