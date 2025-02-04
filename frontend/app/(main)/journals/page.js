@@ -8,9 +8,11 @@ import EntryCard from '@/components/journals/EntryCard';
 import { useGetTabById } from '@/hooks/useTabs';
 import {
   useCreateJournal,
+  useDeleteJournal,
   useGetDailyJournals,
   useGetJournals,
-  useJournals
+  useJournals,
+  useUpdateJournal
 } from '@/hooks/useJournals';
 import { useToast } from '@/hooks/use-toast';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
@@ -31,11 +33,9 @@ export default function JournalsPage({ currentTab = '' }) {
 
   const { loading: loadingDaily, getDailyJournals } = useGetDailyJournals();
   const { loading: loadingJournals, getJournals } = useGetJournals();
-  const {
-    createJournal,
-    loading: loadingCreatingJournal,
-    error: errorCreateJournal
-  } = useCreateJournal();
+  const { createJournal } = useCreateJournal();
+  const { updateJournal } = useUpdateJournal();
+  const { deleteJournal } = useDeleteJournal();
 
   useEffect(() => {
     getTabById(currentTab);
@@ -81,6 +81,24 @@ export default function JournalsPage({ currentTab = '' }) {
     return <LoadingSpinner />;
   }
 
+  const handleDeleteJournal = async (id) => {
+    try {
+      await deleteJournal(id);
+      await fetchJournals();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const editJournalHandler = async (id, name) => {
+    try {
+      await updateJournal({ id, title: name });
+      await fetchJournals();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <h1 className="p-4 text-2xl capitalize border-b-[6px]">
@@ -90,7 +108,14 @@ export default function JournalsPage({ currentTab = '' }) {
       <div className="flex-1 overflow-y-auto">
         <div>
           {entries.length > 0 ? (
-            entries.map((entry) => <EntryCard key={entry.id} entry={entry} />)
+            entries.map((entry) => (
+              <EntryCard
+                key={entry.id}
+                entry={entry}
+                handleDeleteJournal={handleDeleteJournal}
+                editJournalHandler={editJournalHandler}
+              />
+            ))
           ) : (
             <div className="text-center p-8">No entries in this journal yet.</div>
           )}

@@ -153,3 +153,33 @@ export function useUpdateJournal() {
 
   return { updateJournal, loading, error };
 }
+
+export function useDeleteJournal() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const deleteJournal = async (id) => {
+    setLoading(true);
+    try {
+      const response = await customFetch(`/journals/${id}`, {
+        method: 'DELETE'
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      return result;
+    } catch (err) {
+      setError(err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { deleteJournal, loading, error };
+}
