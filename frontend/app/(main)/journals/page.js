@@ -6,43 +6,61 @@ import { Plus } from 'lucide-react';
 import JournalTabs from '@/components/journals/JournalTabs';
 import EntryCard from '@/components/journals/EntryCard';
 import { useGetTabById } from '@/hooks/useTabs';
-import { useJournals } from '@/hooks/useJournals';
+import {
+  useCreateJournal,
+  useGetDailyJournals,
+  useGetJournals,
+  useJournals
+} from '@/hooks/useJournals';
 import { useToast } from '@/hooks/use-toast';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 
-export default function JournalsPage({ defaultTab = 'daily' }) {
-  const [currentTab, setCurrentTab] = useState(defaultTab);
-  const [entries, setEntries] = useState([]);
+export default function JournalsPage({ defaultTab = '' }) {
   const pathName = usePathname();
   const router = useRouter();
   const { toast } = useToast();
 
-  const { getTabById, data: tab } = useGetTabById();
-  const { getAllJournals, createJournal, loading, error } = useJournals();
+  const [currentTab, setCurrentTab] = useState(defaultTab);
+  const [entries, setEntries] = useState([]);
 
-  const currentPathJournalId = pathName.split('/').pop();
+  const { getTabById, loading: loadingTab, data: tab } = useGetTabById();
+
+  const {
+    data: dailyJournals,
+    loading: loadingDaily,
+    error: errorDaily,
+    getDailyJournals
+  } = useGetDailyJournals();
+  const {
+    data: journals,
+    loading: loadingJournals,
+    error: errorJournals,
+    getJournals
+  } = useGetJournals();
+  const { createJournal, loading: creatingJournal, error: errorCreateJournal } = useCreateJournal();
 
   useEffect(() => {
-    getTabById(currentPathJournalId);
-  }, [currentTab]);
-
-  useEffect(() => {
-    setCurrentTab(defaultTab);
-  }, [defaultTab]);
-
-  useEffect(() => {
+    getTabById(currentTab);
     fetchJournals();
   }, [currentTab]);
 
+  // useEffect(() => {
+  //   setCurrentTab(defaultTab);
+  // }, [defaultTab]);
+
   const fetchJournals = async () => {
     try {
-      const result = await getAllJournals(currentTab);
-      setEntries(result.data || []);
+      if (currentTab === '') {
+        const res = await getDailyJournals();
+        setEntries(res);
+      } else {
+        const res = await getJournals(currentTab);
+        setEntries(res);
+      }
     } catch (err) {
       toast({
         title: 'Error',
-        description: 'Failed to fetch journal entries',
-        variant: 'destructive'
+        description: 'Failed to fetch journal entries'
       });
     }
   };
@@ -52,10 +70,10 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
       const newJournal = await createJournal({
         title: 'Untitled Entry',
         content: '',
-        tabId: currentTab !== 'daily' ? currentTab : undefined
+        tabId: currentTab !== '' ? currentTab : null
       });
 
-      router.push(`/journals/${currentTab}/${newJournal.data.id}`);
+      // router.push(`/journals/${currentTab}/${newJournal.id}`);
     } catch (err) {
       toast({
         title: 'Error',
@@ -65,24 +83,32 @@ export default function JournalsPage({ defaultTab = 'daily' }) {
     }
   };
 
-  if (loading) {
+  if (loadingDaily || loadingJournals || loadingTab) {
     return <LoadingSpinner />;
   }
 
+  console.log('entries', entries);
+
   return (
     <div className="flex flex-col">
-      <h1 className="p-4 text-2xl capitalize border-b-[6px]">{tab && tab.data.name}</h1>
+      <h1 className="p-4 text-2xl capitalize border-b-[6px]">
+        {currentTab === '' ? 'Daily Journals' : tab && tab.data.name}
+      </h1>
 
       <div className="flex-1 overflow-y-auto">
         <div>
           {entries.length > 0 ? (
             entries.map((entry) => (
-              <EntryCard
-                key={entry.id}
-                entry={entry}
-                currentTab={currentTab}
-                onDelete={fetchJournals}
-              />
+              <div key={entry.id} className="p-4 border-b-[1px]">
+                <h2 className="text-lg">{entry.title}</h2>
+                <p>{entry.content}</p>
+              </div>
+              // <EntryCard
+              //   key={entry.id}
+              //   entry={entry}
+              //   currentTab={currentTab}
+              //   onDelete={fetchJournals}
+              // />
             ))
           ) : (
             <div className="text-center p-8">No entries in this journal yet.</div>

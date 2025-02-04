@@ -1,98 +1,155 @@
 const { executeQuery } = require('../utils/query');
+const { getTabById } = require('./tabsService');
 
-const createDailyJournal = async (userId, dailyRecordId, title, content) => {
-    // Check if journal exists for this daily record
-    const existingJournal = await executeQuery(
-        'SELECT id FROM journals WHERE daily_record_id = ?',
-        [dailyRecordId]
-    );
+const getDailyJournals = async (userId) => {
+  const journals = await executeQuery(
+    `SELECT * FROM journals 
+       WHERE user_id = ? 
+       AND tab_id IS NULL`,
+    [userId]
+  );
 
-    if (existingJournal.length > 0) {
-        throw new Error('A daily journal already exists for this record');
-    }
-
-    const result = await executeQuery(
-        'INSERT INTO journals (title, content, user_id, daily_record_id) VALUES (?, ?, ?, ?)',
-        [title, JSON.stringify(content), userId, dailyRecordId]
-    );
-
-    return {
-        id: result.insertId,
-        title,
-        content,
-        user_id: userId,
-        daily_record_id: dailyRecordId,
-        created_at: new Date(),
-        updated_at: new Date()
-    };
+  return journals.map((journal) => ({
+    id: journal.id,
+    title: journal.title,
+    content: JSON.parse(journal.content),
+    tab_id: journal.tab_id,
+    created_at: journal.created_at,
+    updated_at: journal.updated_at,
+  }));
 };
 
-const createTabJournal = async (userId, tabId, title, content) => {
-    const result = await executeQuery(
-        'INSERT INTO journals (title, content, user_id, tab_id) VALUES (?, ?, ?, ?)',
-        [title, JSON.stringify(content), userId, tabId]
-    );
+const getTabJournals = async (userId, tabId) => {
+  const journals = await executeQuery(
+    `SELECT * FROM journals 
+       WHERE user_id = ? 
+       AND tab_id = ?`,
+    [userId, tabId]
+  );
 
-    return {
-        id: result.insertId,
-        title,
-        content,
-        user_id: userId,
-        tab_id: tabId,
-        created_at: new Date(),
-        updated_at: new Date()
-    };
+  return journals.map((journal) => ({
+    id: journal.id,
+    title: journal.title,
+    content: JSON.parse(journal.content),
+    tab_id: journal.tab_id,
+    created_at: journal.created_at,
+    updated_at: journal.updated_at,
+  }));
+};
+
+const createDailyJournal = async (userId, dailyRecordId, title, content) => {
+  const existingJournal = await executeQuery(
+    'SELECT id FROM journals WHERE user_id = ? AND daily_record_id = ? AND tab_id IS NULL',
+    [userId, dailyRecordId]
+  );
+
+  if (existingJournal.length > 0) {
+    throw new Error('A daily journal already exists for this record');
+  }
+
+  const result = await executeQuery(
+    `INSERT INTO journals (title, content, user_id, daily_record_id) 
+       VALUES (?, ?, ?, ?)`,
+    [title, JSON.stringify(content), userId, dailyRecordId]
+  );
+
+  return {
+    id: result.insertId,
+    title,
+    content,
+    user_id: userId,
+    daily_record_id: dailyRecordId,
+    tab_id: null,
+    created_at: new Date(),
+    updated_at: new Date(),
+  };
+};
+
+const createTabJournal = async (
+  userId,
+  dailyRecordId,
+  tabId,
+  title,
+  content
+) => {
+  const tab = await getTabById(tabId, userId);
+  if (tab.length === 0) {
+    throw new Error(
+      'Unauthorized: Tab does not belong to the user or does not exist'
+    );
+  }
+
+  const result = await executeQuery(
+    `INSERT INTO journals (title, content, user_id, daily_record_id, tab_id) 
+       VALUES (?, ?, ?, ?, ?)`,
+    [title, JSON.stringify(content), userId, dailyRecordId, tabId]
+  );
+
+  return {
+    id: result.insertId,
+    title,
+    content,
+    user_id: userId,
+    daily_record_id: dailyRecordId,
+    tab_id: tabId,
+    created_at: new Date(),
+    updated_at: new Date(),
+  };
 };
 
 const updateJournalInfo = async (journalId, userId, title, tabId) => {
-    const journal = await executeQuery(
-        'SELECT daily_record_id FROM journals WHERE id = ? AND user_id = ?',
-        [journalId, userId]
-    );
+  const journal = await executeQuery(
+    'SELECT daily_record_id FROM journals WHERE id = ? AND user_id = ?',
+    [journalId, userId]
+  );
 
-    if (journal.length === 0) {
-        throw new Error('Journal not found');
-    }
+  if (journal.length === 0) {
+    throw new Error('Journal not found');
+  }
 
-    if (journal[0].daily_record_id && tabId) {
-        throw new Error('Cannot modify tab of a daily record journal');
-    }
+  if (journal[0].daily_record_id && tabId) {
+    throw new Error('Cannot modify tab of a daily record journal');
+  }
 
-    const updateQuery = tabId
-        ? 'UPDATE journals SET title = ?, tab_id = ? WHERE id = ? AND user_id = ?'
-        : 'UPDATE journals SET title = ? WHERE id = ? AND user_id = ?';
-    const params = tabId ? [title, tabId, journalId, userId] : [title, journalId, userId];
+  const updateQuery = tabId
+    ? 'UPDATE journals SET title = ?, tab_id = ? WHERE id = ? AND user_id = ?'
+    : 'UPDATE journals SET title = ? WHERE id = ? AND user_id = ?';
+  const params = tabId
+    ? [title, tabId, journalId, userId]
+    : [title, journalId, userId];
 
-    const result = await executeQuery(updateQuery, params);
+  const result = await executeQuery(updateQuery, params);
 
-    if (result.affectedRows === 0) {
-        throw new Error('Journal not found');
-    }
+  if (result.affectedRows === 0) {
+    throw new Error('Journal not found');
+  }
 
-    return {
-        id: journalId,
-        title,
-        tab_id: tabId,
-        updated_at: new Date()
-    };
+  return {
+    id: journalId,
+    title,
+    tab_id: tabId,
+    updated_at: new Date(),
+  };
 };
 
 const deleteJournal = async (journalId, userId) => {
-    const result = await executeQuery(
-        'DELETE FROM journals WHERE id = ? AND user_id = ?',
-        [journalId, userId]
-    );
+  const result = await executeQuery(
+    'DELETE FROM journals WHERE id = ? AND user_id = ?',
+    [journalId, userId]
+  );
 
-    if (result.affectedRows === 0) {
-        throw new Error('Journal not found or unauthorized');
-    }
+  if (result.affectedRows === 0) {
+    throw new Error('Journal not found or unauthorized');
+  }
 
-    return { id: journalId };
+  return { id: journalId };
 };
 
 module.exports = {
-    createDailyJournal,
-    createTabJournal,
-    updateJournalInfo,
-    deleteJournal
+  getDailyJournals,
+  getTabJournals,
+  createDailyJournal,
+  createTabJournal,
+  updateJournalInfo,
+  deleteJournal,
 };

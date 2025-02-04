@@ -1,102 +1,94 @@
+'use client';
+
 import { useState } from 'react';
 import { customFetch } from '@/lib/customFetch';
 
-export const useJournals = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+export function useGetDailyJournals() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const getAllJournals = async (tabId) => {
-        setLoading(true);
-        try {
-            const response = await customFetch(`/journals${tabId ? `?tabId=${tabId}` : ''}`, {
-                method: 'GET'
-            });
-            const result = await response.json();
+  const getDailyJournals = async () => {
+    setLoading(true);
+    try {
+      const response = await customFetch('/journals', { method: 'GET' });
+      const result = await response.json();
+      console.log(result);
 
-            if (result.error) {
-                throw new Error(result.error);
-            }
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
-            return result;
-        } catch (err) {
-            setError(err.message);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+      setData(result.data);
+      return result.data;
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const createJournal = async (data) => {
-        setLoading(true);
-        try {
-            const response = await customFetch('/journals', {
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
+  return { data, loading, error, getDailyJournals };
+}
 
-            if (result.error) {
-                throw new Error(result.error);
-            }
+export function useGetJournals() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-            return result;
-        } catch (err) {
-            setError(err.message);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+  const getJournals = async (tabId = null) => {
+    setLoading(true);
+    try {
+      const url = tabId ? `/journals?tabId=${tabId}` : '/journals';
+      const response = await customFetch(url, { method: 'GET' });
+      const result = await response.json();
+      console.log(result);
 
-    const updateJournal = async (id, data) => {
-        setLoading(true);
-        try {
-            const response = await customFetch(`/journals/${id}`, {
-                method: 'PUT',
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
+      if (result.error) {
+        throw new Error(result.error);
+      }
 
-            if (result.error) {
-                throw new Error(result.error);
-            }
+      setData(result.data);
+      return result.data;
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            return result;
-        } catch (err) {
-            setError(err.message);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+  return { data, loading, error, getJournals };
+}
 
-    const deleteJournal = async (id) => {
-        setLoading(true);
-        try {
-            const response = await customFetch(`/journals/${id}`, {
-                method: 'DELETE'
-            });
-            const result = await response.json();
+export function useCreateJournal() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-            if (result.error) {
-                throw new Error(result.error);
-            }
+  const createJournal = async ({ title, content, tabId = null }) => {
+    setLoading(true);
+    try {
+      const body = JSON.stringify(tabId ? { title, content, tabId } : { title, content });
 
-            return result;
-        } catch (err) {
-            setError(err.message);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+      const response = await customFetch('/journals', {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'application/json' }
+      });
 
-    return {
-        loading,
-        error,
-        getAllJournals,
-        createJournal,
-        updateJournal,
-        deleteJournal
-    };
-}; 
+      const result = await response.json();
+      console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      return result.data;
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { createJournal, loading, error };
+}
