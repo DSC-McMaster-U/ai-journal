@@ -73,6 +73,23 @@ const createJournal = async (req, res) => {
   }
 };
 
+const getJournalById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.token.user.id;
+
+    const journal = await journalService.getJournalById(id, userId);
+
+    res.status(200).json({ data: journal });
+  } catch (error) {
+    if (error.message === 'Journal not found') {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'Failed to fetch journal' });
+    }
+  }
+};
+
 const updateJournalInfo = async (req, res) => {
   try {
     const { title, tabId } = req.body;
@@ -128,6 +145,7 @@ const deleteJournal = async (req, res) => {
 module.exports = {
   getJournals,
   createJournal,
+  getJournalById,
   updateJournalInfo,
   deleteJournal,
 };

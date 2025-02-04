@@ -14,39 +14,32 @@ import {
 } from '@/hooks/useJournals';
 import { useToast } from '@/hooks/use-toast';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
+import Modal from '@/components/common/Modal';
+import { DialogClose } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
-export default function JournalsPage({ defaultTab = '' }) {
-  const pathName = usePathname();
-  const router = useRouter();
+export default function JournalsPage({ currentTab = '' }) {
   const { toast } = useToast();
 
-  const [currentTab, setCurrentTab] = useState(defaultTab);
+  const [journalName, setJournalName] = useState('Untitled Journal');
+  const [journalTabSelected, setJournalTabSelected] = useState(currentTab);
   const [entries, setEntries] = useState([]);
 
   const { getTabById, loading: loadingTab, data: tab } = useGetTabById();
 
+  const { loading: loadingDaily, getDailyJournals } = useGetDailyJournals();
+  const { loading: loadingJournals, getJournals } = useGetJournals();
   const {
-    data: dailyJournals,
-    loading: loadingDaily,
-    error: errorDaily,
-    getDailyJournals
-  } = useGetDailyJournals();
-  const {
-    data: journals,
-    loading: loadingJournals,
-    error: errorJournals,
-    getJournals
-  } = useGetJournals();
-  const { createJournal, loading: creatingJournal, error: errorCreateJournal } = useCreateJournal();
+    createJournal,
+    loading: loadingCreatingJournal,
+    error: errorCreateJournal
+  } = useCreateJournal();
 
   useEffect(() => {
     getTabById(currentTab);
     fetchJournals();
   }, [currentTab]);
-
-  // useEffect(() => {
-  //   setCurrentTab(defaultTab);
-  // }, [defaultTab]);
 
   const fetchJournals = async () => {
     try {
@@ -68,12 +61,12 @@ export default function JournalsPage({ defaultTab = '' }) {
   const handleCreateJournal = async () => {
     try {
       const newJournal = await createJournal({
-        title: 'Untitled Entry',
+        title: journalName,
         content: '',
-        tabId: currentTab !== '' ? currentTab : null
+        tabId: journalTabSelected
       });
 
-      // router.push(`/journals/${currentTab}/${newJournal.id}`);
+      router.push(`/journals/entries/${newJournal.id}`);
     } catch (err) {
       toast({
         title: 'Error',
@@ -98,18 +91,7 @@ export default function JournalsPage({ defaultTab = '' }) {
       <div className="flex-1 overflow-y-auto">
         <div>
           {entries.length > 0 ? (
-            entries.map((entry) => (
-              <div key={entry.id} className="p-4 border-b-[1px]">
-                <h2 className="text-lg">{entry.title}</h2>
-                <p>{entry.content}</p>
-              </div>
-              // <EntryCard
-              //   key={entry.id}
-              //   entry={entry}
-              //   currentTab={currentTab}
-              //   onDelete={fetchJournals}
-              // />
-            ))
+            entries.map((entry) => <EntryCard key={entry.id} entry={entry} />)
           ) : (
             <div className="text-center p-8">No entries in this journal yet.</div>
           )}
@@ -117,12 +99,36 @@ export default function JournalsPage({ defaultTab = '' }) {
       </div>
 
       <JournalTabs />
-      <Button
-        onClick={handleCreateJournal}
-        size="icon"
-        className="rounded-full p-6 fixed right-[20px] bottom-[100px] z-[5] transition-all hover:-translate-y-[2px]">
-        <Plus className="!w-6 !h-6" strokeWidth={3} />
-      </Button>
+      <Modal
+        title={'Create a New Journal Entry'}
+        trigger={
+          <Button
+            size="icon"
+            className="rounded-full p-6 fixed right-[20px] bottom-[100px] z-[5] transition-all hover:-translate-y-[2px]">
+            <Plus className="!w-6 !h-6" strokeWidth={3} />
+          </Button>
+        }>
+        <div>
+          <Label htmlFor="journal-name" className="text-right">
+            Journal Name
+          </Label>
+          <Input
+            value={journalName}
+            onChange={(e) => setJournalName(e.target.value)}
+            id="journal-name"
+            placeholder="Enter journal name"
+            className="col-span-3"
+          />
+        </div>
+        <div className="flex gap-2 mt-6">
+          <DialogClose className="flex-1" asChild>
+            <Button onClick={handleCreateJournal}>Create Journal</Button>
+          </DialogClose>
+          <DialogClose className="flex-1" asChild>
+            <Button variant="secondary">Cancel</Button>
+          </DialogClose>
+        </div>
+      </Modal>
     </div>
   );
 }

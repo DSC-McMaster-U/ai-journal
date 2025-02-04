@@ -5,7 +5,8 @@ const getDailyJournals = async (userId) => {
   const journals = await executeQuery(
     `SELECT * FROM journals 
        WHERE user_id = ? 
-       AND tab_id IS NULL`,
+       AND tab_id IS NULL
+       ORDER BY created_at DESC`,
     [userId]
   );
 
@@ -23,7 +24,8 @@ const getTabJournals = async (userId, tabId) => {
   const journals = await executeQuery(
     `SELECT * FROM journals 
        WHERE user_id = ? 
-       AND tab_id = ?`,
+       AND tab_id = ?
+       ORDER BY created_at DESC`,
     [userId, tabId]
   );
 
@@ -35,6 +37,28 @@ const getTabJournals = async (userId, tabId) => {
     created_at: journal.created_at,
     updated_at: journal.updated_at,
   }));
+};
+
+const getJournalById = async (journalId, userId) => {
+  const journal = await executeQuery(
+    `SELECT * FROM journals WHERE id = ? AND user_id = ?`,
+    [journalId, userId]
+  );
+
+  if (journal.length === 0) {
+    throw new Error('Journal not found');
+  }
+
+  return {
+    id: journal[0].id,
+    title: journal[0].title,
+    content: JSON.parse(journal[0].content),
+    user_id: journal[0].user_id,
+    tab_id: journal[0].tab_id,
+    daily_record_id: journal[0].daily_record_id,
+    created_at: journal[0].created_at,
+    updated_at: journal[0].updated_at,
+  };
 };
 
 const createDailyJournal = async (userId, dailyRecordId, title, content) => {
@@ -148,6 +172,7 @@ const deleteJournal = async (journalId, userId) => {
 module.exports = {
   getDailyJournals,
   getTabJournals,
+  getJournalById,
   createDailyJournal,
   createTabJournal,
   updateJournalInfo,

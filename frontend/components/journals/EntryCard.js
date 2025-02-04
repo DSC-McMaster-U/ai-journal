@@ -9,10 +9,9 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 
-function EntryCard({ entry, currentTab, onDelete }) {
+function EntryCard({ entry }) {
   const router = useRouter();
   const { toast } = useToast();
-  const { deleteJournal } = useJournals();
   const { id, created_at, title, content } = entry;
 
   const formattedDate = new Date(created_at).toLocaleDateString('en-US', {
@@ -20,29 +19,11 @@ function EntryCard({ entry, currentTab, onDelete }) {
     day: 'numeric'
   });
 
-  const handleDelete = async (e) => {
-    e.stopPropagation();
-    try {
-      await deleteJournal(id);
-      toast({
-        title: 'Success',
-        description: 'Journal entry deleted successfully'
-      });
-      onDelete?.();
-    } catch (err) {
-      toast({
-        title: 'Error',
-        description: 'Failed to delete journal entry',
-        variant: 'destructive'
-      });
-    }
-  };
-
   return (
     <div
       key={id}
       className="flex justify-between items-center pl-6 pr-2 border-b-2 border-neutral h-20 cursor-pointer hover:bg-accent/30 transition-all"
-      onClick={() => router.push(`/journals/${currentTab}/${id}`)}>
+      onClick={() => router.push(`/journals/entries/${id}`)}>
       <div className="flex gap-8 items-center">
         <div className="max-w-6 w-6 h-12 flex flex-col items-center justify-center text-secondary-foreground">
           <p>{formattedDate.split(' ')[0]}</p>
@@ -61,19 +42,8 @@ function EntryCard({ entry, currentTab, onDelete }) {
           <EllipsisVertical />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push(`/journals/${currentTab}/${id}`);
-            }}
-            className="cursor-pointer">
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleDelete}
-            className="cursor-pointer text-destructive">
-            Delete
-          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">Edit</DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer text-destructive">Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

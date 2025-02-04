@@ -60,6 +60,34 @@ export function useGetJournals() {
   return { data, loading, error, getJournals };
 }
 
+export function useGetJournalById() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const getJournalById = async (id) => {
+    setLoading(true);
+    try {
+      const response = await customFetch(`/journals/${id}`, { method: 'GET' });
+      const result = await response.json();
+      console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      setData(result.data);
+      return result.data;
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, error, getJournalById };
+}
+
 export function useCreateJournal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
