@@ -1,22 +1,54 @@
 const { log } = require('../logger');
 const journalService = require('../services/journalService');
 
-const createDailyJournal = async (req, res) => {
+const getJournals = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const userId = req.token.user.id;
+    const dailyRecordId = req.dailyRecord.id;
+    const { tabId } = req.query;
+
+    let journals;
+    if (tabId) {
+      journals = await journalService.getTabJournals(userId, tabId);
+    } else {
+      journals = await journalService.getDailyJournals(userId, dailyRecordId);
+    }
+
+    res.status(200).json({ data: journals });
+  } catch (error) {
+    log(`Controller Error: ${error.message}`);
+    res.status(500).json({ error: 'Failed to fetch journals' });
+  }
+};
+
+const createJournal = async (req, res) => {
+  try {
+    const { title, content, tabId } = req.body;
     const userId = req.token.user.id;
     const dailyRecordId = req.dailyRecord.id;
 
-    if (!title || !content) {
+    if (!title) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const journal = await journalService.createDailyJournal(
-      userId,
-      dailyRecordId,
-      title,
-      content
-    );
+    let journal;
+
+    if (tabId) {
+      journal = await journalService.createTabJournal(
+        userId,
+        dailyRecordId,
+        tabId,
+        title,
+        content
+      );
+    } else {
+      journal = await journalService.createDailyJournal(
+        userId,
+        dailyRecordId,
+        title,
+        content
+      );
+    }
 
     res.status(201).json({
       data: {
@@ -24,58 +56,47 @@ const createDailyJournal = async (req, res) => {
         title: journal.title,
         content: journal.content,
         userId: journal.user_id,
-        dailyRecordId: journal.daily_record_id,
+        tabId: journal.tab_id || null,
+        dailyRecordId: journal.daily_record_id || null,
         createdAt: journal.created_at,
         updatedAt: journal.updated_at,
       },
     });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
+
     if (error.message === 'A daily journal already exists for this record') {
-      res.status(409).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: 'Failed to create daily journal' });
+      return res.status(409).json({ error: error.message });
     }
+
+    res.status(500).json({ error: 'Failed to create journal' });
   }
 };
 
-const createTabJournal = async (req, res) => {
+const getJournalById = async (req, res) => {
   try {
-    const { title, content, tabId } = req.body;
+    const { id } = req.params;
     const userId = req.token.user.id;
 
-    if (!title || !content || !tabId) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
+    const journal = await journalService.getJournalById(id, userId);
 
-    const journal = await journalService.createTabJournal(
-      userId,
-      tabId,
-      title,
-      content
-    );
-
-    const response = {
-      id: journal.id,
-      title: journal.title,
-      content: journal.content,
-      userId: journal.user_id,
-      tabId: journal.tab_id,
-      createdAt: journal.created_at,
-      updatedAt: journal.updated_at,
-    };
-
-    res.status(201).json(response);
+    res.status(200).json({ data: journal });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create journal' });
+    if (error.message === 'Journal not found') {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'Failed to fetch journal' });
+    }
   }
 };
 
 const updateJournalInfo = async (req, res) => {
   try {
-    const { title, tabId } = req.body;
+    const { title, tabId, content } = req.body;
     const { id } = req.params;
     const userId = req.token.user.id;
+
+    console.log(content);
 
     if (!title) {
       return res.status(400).json({ error: 'Title is required' });
@@ -85,25 +106,25 @@ const updateJournalInfo = async (req, res) => {
       id,
       userId,
       title,
-      tabId
+      tabId,
+      content
     );
 
     const response = {
       id: journal.id,
       title: journal.title,
       tabId: journal.tab_id,
+      content: journal.content ?? undefined,
       updatedAt: journal.updated_at,
     };
 
     res.status(200).json(response);
   } catch (error) {
-    if (error.message === 'Cannot modify tab of a daily record journal') {
-      res.status(400).json({ error: error.message });
-    } else if (error.message === 'Journal not found') {
-      res.status(404).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: 'Failed to update journal' });
+    if (error.message === 'Journal not found') {
+      return res.status(404).json({ error: error.message });
     }
+
+    res.status(500).json({ error: 'Failed to update journal' });
   }
 };
 
@@ -124,8 +145,9 @@ const deleteJournal = async (req, res) => {
 };
 
 module.exports = {
-  createDailyJournal,
-  createTabJournal,
+  getJournals,
+  createJournal,
+  getJournalById,
   updateJournalInfo,
   deleteJournal,
 };
