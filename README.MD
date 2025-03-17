@@ -6,6 +6,8 @@
 
   <h1 align="center">☕️ Espressly</h1>
 
+  <img src="./docs/assets/app.png"/>
+
   <p align="center">
   Open-source AI-assisted journaling and mood-tracking application designed to improve mental health using insightful analysis and personalized support for their users' mental well-being
     <br />
