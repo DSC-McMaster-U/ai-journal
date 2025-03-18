@@ -67,7 +67,7 @@ export function useUpdateMood() {
   const updateMood = async (id, moodData) => {
     setLoading(true);
     try {
-      const response = await customFetch(`/api/moods/${id}`, {
+      const response = await customFetch(`/moods/${id}`, {
         method: 'PUT',
         body: JSON.stringify(moodData),
       });
@@ -97,7 +97,7 @@ export function useDeleteMood() {
   const deleteMood = async (id) => {
     setLoading(true);
     try {
-      const response = await customFetch(`/api/moods/${id}`, {
+      const response = await customFetch(`/moods/${id}`, {
         method: 'DELETE'
       });
 

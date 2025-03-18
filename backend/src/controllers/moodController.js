@@ -16,13 +16,13 @@ const getMoodEntriesToday = async (req, res) => {
 const getMoodEntriesByDate = async (req, res) => {
   try {
     const userId = req.token.user.id;
-    const { date } = req.params;
+    const date = req.params.date;
 
     if (!date.match(/^\d{4}-\d{2}-\d{2}$/)) {
       return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD.' });
     }
 
-    const result = await moodService.getMoodEntries(userId, date);
+    const result = await moodService.getMoodEntriesByDate(userId, date);
 
     res.status(200).json({ data: result });
   } catch (error) {
@@ -52,11 +52,15 @@ const createMoodEntry = async (req, res) => {
 
 const editMoodEntry = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { moodId } = req.body;
     const userId = req.token.user.id;
+    const moodInstanceId = req.params.id;
+    const { moods } = req.body;
 
-    const result = await moodService.editMoodEntry(id, moodId, userId);
+    if (!userId || !moodInstanceId || !moods) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const result = await moodService.editMoodEntry(userId, moodInstanceId, moods);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Mood entry not found' });
@@ -64,8 +68,7 @@ const editMoodEntry = async (req, res) => {
 
     res.status(200).json({
       data: {
-        id,
-        mood_id: moodId,
+        id: moodInstanceId,
         user_id: userId,
       },
     });
