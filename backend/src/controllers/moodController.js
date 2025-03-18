@@ -13,6 +13,18 @@ const getMoodEntries = async (req, res) => {
   }
 };
 
+const getMoodEntriesToday = async (req, res) => {
+  try {
+    const userId = req.token.user.id;
+    const result = await moodService.getMoodEntriesToday(userId);
+
+    res.status(200).json({ data: result });
+  } catch (error) {
+    log(`Controller Error: ${error.message}`);
+    res.status(500).json({ error: 'Failed to retrieve mood entries' });
+  }
+}
+
 const createMoodEntry = async (req, res) => {
   try {
     const userId = req.token.user.id;
@@ -77,6 +89,7 @@ const deleteMoodEntry = async (req, res) => {
 
 module.exports = {
   getMoodEntries,
+  getMoodEntriesToday,
   createMoodEntry,
   editMoodEntry,
   deleteMoodEntry,
