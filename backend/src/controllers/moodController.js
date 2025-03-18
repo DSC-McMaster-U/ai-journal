@@ -17,26 +17,15 @@ const createMoodEntry = async (req, res) => {
   try {
     const userId = req.token.user.id;
     const dailyRecordId = req.dailyRecord.id;
-    const { moodId } = req.body;
+    const { moods } = req.body;
 
-    if (!userId || !moodId || !dailyRecordId) {
+    if (!userId || !moods || !dailyRecordId) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const result = await moodService.createMoodEntry(
-      userId,
-      moodId,
-      dailyRecordId
-    );
+    const result = await moodService.createMoodEntry(userId, moods, dailyRecordId);
 
-    res.status(201).json({
-      data: {
-        id: result.insertId,
-        mood_id: moodId,
-        daily_record_id: dailyRecordId,
-        user_id: userId,
-      },
-    });
+    res.status(201).json({ data: result});
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to create mood entry' });

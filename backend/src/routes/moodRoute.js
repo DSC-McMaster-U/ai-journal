@@ -57,9 +57,11 @@ router.get('/', moodController.getMoodEntries);
  *               userId:
  *                 type: string
  *                 example: "123e4567-e89b-12d3-a456-426614174000"
- *               moodId:
- *                 type: integer
- *                 example: 1
+ *               moods:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2, 3]
  *               dailyRecordId:
  *                 type: integer
  *                 example: 101
