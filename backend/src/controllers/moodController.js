@@ -80,7 +80,7 @@ const editMoodEntry = async (req, res) => {
 
 const deleteMoodEntry = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
     const userId = req.token.user.id;
 
     const result = await moodService.deleteMoodEntry(id, userId);

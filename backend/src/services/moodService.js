@@ -7,7 +7,7 @@ const getMoodEntriesToday = (userId) => {
                 'FROM `ai-journal`.`user_moods` ' +
                 'JOIN `ai-journal`.`user_mood_instances` ' +
                 'ON `ai-journal`.`user_moods`.mood_instance_id = `ai-journal`.`user_mood_instances`.id ' +
-                'WHERE DATE(`ai-journal`.`user_mood_instances`.created_at) = CURDATE()';
+                'WHERE `ai-journal`.`user_mood_instances`.user_id = ? AND DATE(`ai-journal`.`user_mood_instances`.created_at) = CURDATE()';
   return executeQuery(query, [userId]);
 }
 
@@ -77,8 +77,11 @@ const editMoodEntry = async (userId, moodInstanceId, moods) => {
     });
 };
 
-const deleteMoodEntry = (id, userId) => {
-  const query = 'DELETE FROM `ai-journal`.`user_moods` WHERE id = ? AND user_id = ?';
+const deleteMoodEntry = async (id, userId) => {
+  const moodsQuery = 'DELETE FROM `ai-journal`.`user_moods` WHERE mood_instance_id = ? AND user_id = ?';
+  const result = await executeQuery(moodsQuery, [id, userId]);
+
+  const query = 'DELETE FROM `ai-journal`.`user_mood_instances` WHERE id = ? AND user_id = ?';
   return executeQuery(query, [id, userId]);
 };
 

@@ -112,12 +112,12 @@ export default function APITesting() {
       </Button>
 
       {/* Moods Section */}
-      <h1 className="text-lg text-center">MOODS API TESTING</h1>
+      <h1 className="text-lg text-center">MOODS</h1>
       <Input placeholder="Date (YYYY-MM-DD)" value={date} onChange={(e) => setDate(e.target.value)} />
       <Button onClick={() => getMoods('/moods/today')} className="bg-blue-500" disabled={loadingMoods}>
         Get Today's Moods
       </Button>
-      <Button onClick={() => getMoods(`/api/moods/${date}`)} className="bg-blue-500" disabled={loadingMoods}>
+      <Button onClick={() => getMoods(`/moods/${date}`)} className="bg-blue-500" disabled={loadingMoods}>
         Get Moods by Date
       </Button>
       <Input placeholder="Moods (comma separated and no spaces)" value={moods} onChange={(e) => setMoods(e.target.value.split(','))} />
