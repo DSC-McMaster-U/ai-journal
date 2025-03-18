@@ -6,7 +6,7 @@ const getChats = (userId) => {
   return executeQuery(query, [userId]);
 };
 
-const createChat = (userId, chatName) => {
+const createChat = async (userId, chatName) => {
   let query;
   let values;
 
@@ -18,7 +18,8 @@ const createChat = (userId, chatName) => {
     query = 'INSERT INTO `ai-journal`.`chat_instances` (user_id) VALUES (?)';
     values = [userId];
   }
-  return executeQuery(query, values);
+
+  return await executeQuery(query, values);
 };
 
 const editChat = (instanceId, chatName, favourited) => {

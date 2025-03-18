@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const chatsController = require('../controllers/chatsController')
+const chatsController = require('../controllers/chatsController');
 
-router.get('/', chatsController.getChats)
-router.post('/', chatsController.createChat)
-router.put('/:id', chatsController.editChat)
-router.delete('/:id', chatsController.deleteChat)
- 
+router.get('/', chatsController.getChats);
+router.post('/', chatsController.createChat);
+router.put('/:instanceId', chatsController.editChat);
+router.delete('/:instanceId', chatsController.deleteChat);
+router.get('/test', chatsController.testFunctions);
+
 module.exports = router;
