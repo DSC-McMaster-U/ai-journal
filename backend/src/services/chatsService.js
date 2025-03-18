@@ -1,42 +1,37 @@
 const { executeQuery } = require('../utils/query');
 
-
 const getChats = (userId) => {
   const query =
-    'SELECT * FROM `ai-journal`.`chat_instances` ' +
-    'WHERE user_id = ?'
-  return executeQuery(query, [userId])
-}
+    'SELECT * FROM `ai-journal`.`chat_instances` ' + 'WHERE user_id = ?';
+  return executeQuery(query, [userId]);
+};
 
-const createChat = (userId, chatName = null) => {
+const createChat = (userId, chatName) => {
   let query;
   let values;
 
-  if (chatName) {
-    query = 'INSERT INTO `ai-journal`.`chat_instances` (user_id, chat_name) VALUES (?, ?)';
-    values = [userId, chatName]
-  } else { 
+  if (chatName !== null) {
+    query =
+      'INSERT INTO `ai-journal`.`chat_instances` (user_id, chat_name) VALUES (?, ?)';
+    values = [userId, chatName];
+  } else {
     query = 'INSERT INTO `ai-journal`.`chat_instances` (user_id) VALUES (?)';
-    values = [userId]
+    values = [userId];
   }
-  return executeQuery(query, values)
+  return executeQuery(query, values);
+};
 
-}
-
-const editChat = (instanceId, chatName, favourited ) => {
-  const query =  
-    'UPDATE `ai-journal`.`chat_instances` ' + 
+const editChat = (instanceId, chatName, favourited) => {
+  const query =
+    'UPDATE `ai-journal`.`chat_instances` ' +
     'SET chat_name = ?, favorited = ? ' +
     'WHERE id = ?';
-  return executeQuery(query, [chatName, favourited, instanceId])
+  return executeQuery(query, [chatName, favourited, instanceId]);
+};
 
-}
+const deleteChat = (instanceId) => {
+  const query = 'DELETE FROM `ai-journal`.`chat_instances` ' + 'WHERE id = ?';
+  return executeQuery(query, [instanceId]);
+};
 
-const deleteChat =  (instanceId) => {
-  const query =  
-    'DELETE FROM `ai-journal`.`chat_instances` ' + 
-    'WHERE id = ?';
-  return executeQuery(query, [instanceId])
-}
- 
-module.exports = { getChats, createChat, editChat, deleteChat }
+module.exports = { getChats, createChat, editChat, deleteChat };
