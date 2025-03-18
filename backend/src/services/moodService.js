@@ -1,10 +1,5 @@
 const { executeQuery } = require('../utils/query');
 
-const getMoodEntries = (userId) => {
-  const query = 'SELECT * FROM `ai-journal`.`user_moods` WHERE user_id = ?';
-  return executeQuery(query, [userId]);
-};
-
 const getMoodEntriesToday = (userId) => {
   const query = 'SELECT `ai-journal`.`user_moods`.*, ' +
                 '`ai-journal`.`user_mood_instances`.daily_record_id, ' +
@@ -14,6 +9,17 @@ const getMoodEntriesToday = (userId) => {
                 'ON `ai-journal`.`user_moods`.mood_instance_id = `ai-journal`.`user_mood_instances`.id ' +
                 'WHERE DATE(`ai-journal`.`user_mood_instances`.created_at) = CURDATE()';
   return executeQuery(query, [userId]);
+}
+
+const getMoodEntriesByDate = (userId, date) => {
+  const query = 'SELECT `ai-journal`.`user_moods`.*, ' +
+                '`ai-journal`.`user_mood_instances`.daily_record_id, ' +
+                '`ai-journal`.`user_mood_instances`.created_at AS mood_instance_created_at ' +
+                'FROM `ai-journal`.`user_moods` ' +
+                'JOIN `ai-journal`.`user_mood_instances` ' +
+                'ON `ai-journal`.`user_moods`.mood_instance_id = `ai-journal`.`user_mood_instances`.id ' +
+                'WHERE DATE(`ai-journal`.`user_mood_instances`.created_at) = ?';
+  return executeQuery(query, [userId, date]);
 }
 
 const createMoodEntry = async (userId, moods, dailyRecordId) => {
@@ -38,8 +44,8 @@ const deleteMoodEntry = (id, userId) => {
 };
 
 module.exports = {
-  getMoodEntries,
   getMoodEntriesToday,
+  getMoodEntriesByDate,
   createMoodEntry,
   editMoodEntry,
   deleteMoodEntry,
