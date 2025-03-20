@@ -235,7 +235,6 @@ const authProtect = (req, res, next) => {
     .then((result) => {
       req.token = result;
       log('============== AUTH PROTECT: SUCCESS ==================');
-      log(JSON.stringify(req.token));
       next();
     })
     .catch((err) => {

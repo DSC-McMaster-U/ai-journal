@@ -41,6 +41,10 @@ router.get(
     const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET || '', {
       expiresIn: '24h',
     });
+
+    console.log('============TOKEN=RESULT===============');
+    console.log(token);
+
     res.cookie('jwtToken', token);
     res.redirect('http://localhost:3000/login?method=o-auth-google');
   }
