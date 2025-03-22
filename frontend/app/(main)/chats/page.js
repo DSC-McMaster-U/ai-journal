@@ -10,7 +10,6 @@ import {
   DropdownMenuItem
 } from '@radix-ui/react-dropdown-menu';
 import { EllipsisVertical } from 'lucide-react';
-import Color from '@tiptap/extension-color';
 
 export default function ChatsPage() {
   const data = GetTestChats();
