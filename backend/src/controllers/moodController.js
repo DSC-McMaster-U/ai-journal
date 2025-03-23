@@ -73,7 +73,14 @@ const createMoodEntry = async (req, res) => {
     }
 
     const result = await moodService.createMoodEntry(userId, moods, dailyRecordId);
-    res.status(201).json({ data: result});
+    res.status(201).json({ 
+      data: {
+        mood_instance_id: result.mood_instance_id,
+        user_id: result.user_id,
+        created_at: result.created_at,
+        user_moods: result.user_moods
+      }
+    });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to create mood entry' });
@@ -96,7 +103,14 @@ const editMoodEntry = async (req, res) => {
       return res.status(404).json({ error: 'Mood entry not found' });
     }
 
-    res.status(200).json({ data: result });
+    res.status(200).json({ 
+      data: {
+        mood_instance_id: result.mood_instance_id,
+        user_id: result.user_id,
+        updated_at: result.updated_at,
+        user_moods: result.user_moods
+      }
+    });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to update mood entry' });
