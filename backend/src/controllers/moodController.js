@@ -37,7 +37,7 @@ const createMoodEntry = async (req, res) => {
     const dailyRecordId = req.dailyRecord.id;
     const { moods } = req.body;
 
-    if (!userId || !moods || !dailyRecordId) {
+    if (!userId || !moods || !dailyRecordId || moods.length === 0) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
