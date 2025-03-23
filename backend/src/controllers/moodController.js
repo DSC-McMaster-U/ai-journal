@@ -5,11 +5,8 @@ const getMoodEntriesToday = async (req, res) => {
   try {
     const userId = req.token.user.id;
     const result = await moodService.getMoodEntriesToday(userId);
-    const formattedData = formatResponseData(result);
-    console.log(`PRINTING FORMATTED DATA`);
-    console.log(formattedData);
 
-    res.status(200).json({ data: formattedData });
+    res.status(200).json({ data: formatResponseData(result) });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to retrieve mood entries' });
@@ -26,18 +23,15 @@ const getMoodEntriesByDate = async (req, res) => {
     }
 
     const result = await moodService.getMoodEntriesByDate(userId, date);
-    const formattedData = formatResponseData(result);
-    console.log(`PRINTING FORMATTED DATA`);
-    console.log(formattedData);
 
-    res.status(200).json({ data: formattedData });
+    res.status(200).json({ data: formatResponseData(result) });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to retrieve mood entries' });
   }
 };
 
-// result is array, return is array
+// Helper function to format the response data
 const formatResponseData = (result) => {
   const formattedData = result.reduce((acc, curr) => {
     const { 
@@ -79,7 +73,6 @@ const createMoodEntry = async (req, res) => {
     }
 
     const result = await moodService.createMoodEntry(userId, moods, dailyRecordId);
-
     res.status(201).json({ data: result});
   } catch (error) {
     log(`Controller Error: ${error.message}`);
@@ -103,12 +96,7 @@ const editMoodEntry = async (req, res) => {
       return res.status(404).json({ error: 'Mood entry not found' });
     }
 
-    res.status(200).json({
-      data: {
-        id: moodInstanceId,
-        user_id: userId,
-      },
-    });
+    res.status(200).json({ data: result });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to update mood entry' });
