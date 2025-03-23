@@ -5,8 +5,11 @@ const getMoodEntriesToday = async (req, res) => {
   try {
     const userId = req.token.user.id;
     const result = await moodService.getMoodEntriesToday(userId);
+    const formattedData = formatResponseData(result);
+    console.log(`PRINTING FORMATTED DATA`);
+    console.log(formattedData);
 
-    res.status(200).json({ data: result });
+    res.status(200).json({ data: formattedData });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to retrieve mood entries' });
@@ -23,13 +26,47 @@ const getMoodEntriesByDate = async (req, res) => {
     }
 
     const result = await moodService.getMoodEntriesByDate(userId, date);
+    const formattedData = formatResponseData(result);
+    console.log(`PRINTING FORMATTED DATA`);
+    console.log(formattedData);
 
-    res.status(200).json({ data: result });
+    res.status(200).json({ data: formattedData });
   } catch (error) {
     log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to retrieve mood entries' });
   }
 };
+
+// result is array, return is array
+const formatResponseData = (result) => {
+  const formattedData = result.reduce((acc, curr) => {
+    const { 
+      mood_instance_id, 
+      user_id, 
+      daily_record_id, 
+      mood_instance_created_at, 
+      id, 
+      mood_id 
+    } = curr;
+
+    // Check if mood_instance_id already exists in the accumulator
+    let groupedData = acc.find(item => item.mood_instance_id === mood_instance_id);
+    if (!groupedData) {
+      groupedData = {
+        mood_instance_id,
+        user_id,
+        daily_record_id,
+        created_at: mood_instance_created_at,
+        user_moods: []
+      };
+      acc.push(groupedData);
+    }
+
+    groupedData.user_moods.push({ id, mood_id });
+    return acc;
+  }, []);
+  return formattedData;
+}
 
 const createMoodEntry = async (req, res) => {
   try {
