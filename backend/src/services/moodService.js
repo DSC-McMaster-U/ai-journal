@@ -30,7 +30,8 @@ const createMoodEntry = async (userId, moods, dailyRecordId) => {
   const values = moods.map(moodId => [userId, moodId, moodInstanceId, new Date()]);
   const query = 'INSERT INTO `ai-journal`.`user_moods` (user_id, mood_id, mood_instance_id, created_at) VALUES ?';
 
-  return executeQuery(query, [values]);
+  return executeQuery(query, [values])
+  .then(() => ({ mood_instance_id: moodInstanceId, user_id: userId, created_at: new Date(), user_moods: moods.map(moodId => ({ mood_id: parseInt(moodId) })) }));
 };
 
 const editMoodEntry = async (userId, moodInstanceId, moods) => {
@@ -67,7 +68,7 @@ const editMoodEntry = async (userId, moodInstanceId, moods) => {
 
       return Promise.all(queries.map(query => executeQuery(query.query, query.values || [])));
     })
-    .then(() => ({ mood_instance_id: moodInstanceId, user_id: userId }))
+    .then(() => ({ mood_instance_id: parseInt(moodInstanceId), user_id: userId, updated_at: new Date(), user_moods: moods.map(moodId => ({ mood_id: parseInt(moodId) })) }))
     .catch(error => {
       // Rollback if any error occurs
       return executeQuery('ROLLBACK').then(() => {
