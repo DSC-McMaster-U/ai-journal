@@ -30,6 +30,10 @@ export const MoodSelector = () => {
   const [selectedMoods, setSelectedMoods] = React.useState([]);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
 
+  useEffect(() => {
+    setSelectedMoods(initialMoods);
+  }, [initialMoods]);
+
   const toggleMood = (moodName) => {
     setSelectedMoods((prevMoods) =>
       prevMoods.includes(moodName)
@@ -46,7 +50,8 @@ export const MoodSelector = () => {
   const handleSubmit = () => {
     console.log('Selected moods: ', selectedMoods);
     setIsPopoverOpen(false);
-    setSelectedMoods([]);
+    // setSelectedMoods([]);
+    onSubmit?.(selectedMoods);
   };
 
   return (
