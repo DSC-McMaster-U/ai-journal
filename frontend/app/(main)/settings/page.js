@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Modal from '@/components/common/Modal';
 import { DialogFooter } from '@/components/ui/dialog';
 import Image from 'next/image';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -50,7 +51,7 @@ export default function SettingsPage() {
   };
 
   if (user == undefined) {
-    return <h1>Loading...</h1>;
+    return <LoadingSpinner />;
   }
 
   return (
