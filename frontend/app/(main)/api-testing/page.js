@@ -13,7 +13,15 @@ import {
   useUpdateTab,
   useDeleteTab
 } from '@/hooks/useTabs';
-import { useGetMoods, useCreateMood, useUpdateMood, useDeleteMood } from '@/hooks/useMoods';
+import {
+  useGetMoods,
+  useCreateMood,
+  useUpdateMood,
+  useDeleteMood,
+  useGetMoodTypes
+} from '@/hooks/useMoods';
+import { useGetChatMessages, useSendChatMessage } from '@/hooks/useChatLogs';
+import { useCreateChat, useDeleteChat, useGetChats, useUpdateChat } from '@/hooks/useChats';
 
 export default function APITesting() {
   const [tabId, setTabId] = useState('');
@@ -22,6 +30,15 @@ export default function APITesting() {
   const [moods, setMoods] = useState([]);
   const [moodInstanceId, setMoodInstanceId] = useState('');
   const [date, setDate] = useState('');
+  const [chatId, setChatId] = useState('');
+  const [messageContent, setMessageContent] = useState('');
+  const [chatName, setChatName] = useState('');
+
+  // CHAT HOOKS
+  const { data: chats, loading: loadingChats, error: errorChats, getChats } = useGetChats();
+  const { createChat, loading: creatingChat, error: errorCreateChat } = useCreateChat();
+  const { updateChat, loading: updatingChat, error: errorUpdateChat } = useUpdateChat();
+  const { deleteChat, loading: deletingChat, error: errorDeleteChat } = useDeleteChat();
 
   /** JOURNAL HOOKS */
   const {
@@ -51,13 +68,28 @@ export default function APITesting() {
   const { deleteTab, loading: deletingTab, error: errorDeleteTab } = useDeleteTab();
 
   /** MOOD HOOKS */
+  const {
+    data: moodTypes,
+    loading: loadingMoodTypes,
+    error: errorMoodTypes,
+    getMoodTypes
+  } = useGetMoodTypes();
   const { data: moodEntries, loading: loadingMoods, error: errorMoods, getMoods } = useGetMoods();
   const { createMood, loading: creatingMood, error: errorCreateMood } = useCreateMood();
   const { updateMood, loading: updatingMood, error: errorUpdateMood } = useUpdateMood();
   const { deleteMood, loading: deletingMood, error: errorDeleteMood } = useDeleteMood();
 
+  /** CHAT HOOKS */
+  const {
+    messages,
+    loading: loadingMessages,
+    error: errorMessages,
+    getChatMessages
+  } = useGetChatMessages();
+  const { sendMessage, loading: sendingMessage, error: errorSendMessage } = useSendChatMessage();
+
   return (
-    <div className="flex flex-col space-y-8 mx-8 mt-8">
+    <div className="flex flex-col space-y-8 mx-8 mt-8 mb-8">
       {/* Journals Section */}
       <h1 className="text-lg text-center">JOURNALS</h1>
       <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -113,23 +145,112 @@ export default function APITesting() {
 
       {/* Moods Section */}
       <h1 className="text-lg text-center">MOODS</h1>
-      <Input placeholder="Date (YYYY-MM-DD)" value={date} onChange={(e) => setDate(e.target.value)} />
-      <Button onClick={() => getMoods('/moods/today')} className="bg-blue-500" disabled={loadingMoods}>
+      <Button onClick={() => getMoodTypes()} className="bg-blue-500" disabled={loadingMoodTypes}>
+        Get Mood Types
+      </Button>
+      <Input
+        placeholder="Date (YYYY-MM-DD)"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+      />
+      <Button
+        onClick={() => getMoods('/moods/today')}
+        className="bg-blue-500"
+        disabled={loadingMoods}>
         Get Today's Moods
       </Button>
-      <Button onClick={() => getMoods(`/moods/${date}`)} className="bg-blue-500" disabled={loadingMoods}>
+      <Button
+        onClick={() => getMoods(`/moods/${date}`)}
+        className="bg-blue-500"
+        disabled={loadingMoods}>
         Get Moods by Date
       </Button>
-      <Input placeholder="Moods (comma separated and no spaces)" value={moods} onChange={(e) => setMoods(e.target.value.split(','))} />
-      <Button onClick={() => createMood({ moods: moods })} className="bg-green-500" disabled={creatingMood}>
+      <Input
+        placeholder="Moods (comma separated and no spaces)"
+        value={moods}
+        onChange={(e) => setMoods(e.target.value.split(','))}
+      />
+      <Button
+        onClick={() => createMood({ moods: moods })}
+        className="bg-green-500"
+        disabled={creatingMood}>
         Create Mood
       </Button>
-      <Input placeholder="Mood Instance ID" value={moodInstanceId} onChange={(e) => setMoodInstanceId(e.target.value)} />
-      <Button onClick={() => updateMood(moodInstanceId, { moods })} className="bg-orange-500" disabled={updatingMood}>
+      <Input
+        placeholder="Mood Instance ID"
+        value={moodInstanceId}
+        onChange={(e) => setMoodInstanceId(e.target.value)}
+      />
+      <Button
+        onClick={() => updateMood(moodInstanceId, { moods })}
+        className="bg-orange-500"
+        disabled={updatingMood}>
         Update Mood
       </Button>
-      <Button onClick={() => deleteMood(moodInstanceId)} className="bg-red-500" disabled={deletingMood}>
+      <Button
+        onClick={() => deleteMood(moodInstanceId)}
+        className="bg-red-500"
+        disabled={deletingMood}>
         Delete Mood
+      </Button>
+
+      {/* Chat Logs Section */}
+      <h1 className="text-lg text-center">CHAT LOGS</h1>
+      <Input placeholder="Chat ID" value={chatId} onChange={(e) => setChatId(e.target.value)} />
+      <Button
+        onClick={() => getChatMessages(chatId)}
+        className="bg-blue-500"
+        disabled={loadingMessages}>
+        Get Chat Messages
+      </Button>
+      <Input
+        placeholder="Message Content"
+        value={messageContent}
+        onChange={(e) => setMessageContent(e.target.value)}
+      />
+      <Button
+        onClick={() => sendMessage(chatId, messageContent)}
+        className="bg-green-500"
+        disabled={sendingMessage}>
+        Send User Message
+      </Button>
+      <Button
+        onClick={() => sendMessage(chatId, messageContent, false)}
+        className="bg-purple-500"
+        disabled={sendingMessage}>
+        Send AI Message
+      </Button>
+
+      {/* Chats Section */}
+      <h1 className="text-lg text-center">CHATS</h1>
+      <Input
+        placeholder="Chat Name"
+        value={chatName}
+        onChange={(e) => setChatName(e.target.value)}
+      />
+      <Button onClick={() => getChats()} className="bg-blue-500" disabled={loadingChats}>
+        Get All Chats
+      </Button>
+      <Button
+        onClick={() => createChat({ chatName })}
+        className="bg-green-500"
+        disabled={creatingChat}>
+        Create New Chat
+      </Button>
+      <Button
+        onClick={() =>
+          updateChat({
+            instanceId: chatId,
+            chatName,
+            favourited: true
+          })
+        }
+        className="bg-orange-500"
+        disabled={updatingChat}>
+        Update Chat (Favourite)
+      </Button>
+      <Button onClick={() => deleteChat(chatId)} className="bg-red-500" disabled={deletingChat}>
+        Delete Chat
       </Button>
     </div>
   );
