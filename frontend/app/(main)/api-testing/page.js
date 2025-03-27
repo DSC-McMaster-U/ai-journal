@@ -13,14 +13,21 @@ import {
   useUpdateTab,
   useDeleteTab
 } from '@/hooks/useTabs';
-// import { useGetMoods, useCreateMood, useUpdateMood, useDeleteMood } from '@/hooks/useMoods';
+import {
+  useGetMoods,
+  useCreateMood,
+  useUpdateMood,
+  useDeleteMood,
+  useGetMoodTypes
+} from '@/hooks/useMoods';
 
 export default function APITesting() {
   const [tabId, setTabId] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  // const [moodId, setMoodId] = useState('');
-  // const [userMoodId, setUserMoodId] = useState('');
+  const [moods, setMoods] = useState([]);
+  const [moodInstanceId, setMoodInstanceId] = useState('');
+  const [date, setDate] = useState('');
 
   /** JOURNAL HOOKS */
   const {
@@ -50,13 +57,19 @@ export default function APITesting() {
   const { deleteTab, loading: deletingTab, error: errorDeleteTab } = useDeleteTab();
 
   /** MOOD HOOKS */
-  // const { data: moods, loading: loadingMoods, error: errorMoods, getMoods } = useGetMoods();
-  // const { createMood, loading: creatingMood, error: errorCreateMood } = useCreateMood();
-  // const { updateMood, loading: updatingMood, error: errorUpdateMood } = useUpdateMood();
-  // const { deleteMood, loading: deletingMood, error: errorDeleteMood } = useDeleteMood();
+  const {
+    data: moodTypes,
+    loading: loadingMoodTypes,
+    error: errorMoodTypes,
+    getMoodTypes
+  } = useGetMoodTypes();
+  const { data: moodEntries, loading: loadingMoods, error: errorMoods, getMoods } = useGetMoods();
+  const { createMood, loading: creatingMood, error: errorCreateMood } = useCreateMood();
+  const { updateMood, loading: updatingMood, error: errorUpdateMood } = useUpdateMood();
+  const { deleteMood, loading: deletingMood, error: errorDeleteMood } = useDeleteMood();
 
   return (
-    <div className="flex flex-col space-y-8 mx-8 mt-8">
+    <div className="flex flex-col space-y-8 mx-8 mt-8 mb-8">
       {/* Journals Section */}
       <h1 className="text-lg text-center">JOURNALS</h1>
       <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -111,31 +124,55 @@ export default function APITesting() {
       </Button>
 
       {/* Moods Section */}
-      {/* <h1 className="text-lg text-center">MOODS</h1>
+      <h1 className="text-lg text-center">MOODS</h1>
+      <Button onClick={() => getMoodTypes()} className="bg-blue-500" disabled={loadingMoodTypes}>
+        Get Mood Types
+      </Button>
       <Input
-        placeholder="User Mood ID"
-        type="number"
-        value={userMoodId}
-        onChange={(e) => setUserMoodId(e.target.value)}
+        placeholder="Date (YYYY-MM-DD)"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
       />
+      <Button
+        onClick={() => getMoods('/moods/today')}
+        className="bg-blue-500"
+        disabled={loadingMoods}>
+        Get Today's Moods
+      </Button>
+      <Button
+        onClick={() => getMoods(`/moods/${date}`)}
+        className="bg-blue-500"
+        disabled={loadingMoods}>
+        Get Moods by Date
+      </Button>
       <Input
-        placeholder="Mood ID"
-        type="number"
-        value={moodId}
-        onChange={(e) => setMoodId(e.target.value)}
+        placeholder="Moods (comma separated and no spaces)"
+        value={moods}
+        onChange={(e) => setMoods(e.target.value.split(','))}
       />
-      <Button onClick={getMoods} className="bg-blue-500" disabled={loadingMoods}>
-        Get All Moods
+      <Button
+        onClick={() => createMood({ moods: moods })}
+        className="bg-green-500"
+        disabled={creatingMood}>
+        Create Mood
       </Button>
-      <Button onClick={() => createMood({ moodId, name: 'New Mood' })} className="bg-green-500" disabled={creatingMood}>
-        Create a New Mood
+      <Input
+        placeholder="Mood Instance ID"
+        value={moodInstanceId}
+        onChange={(e) => setMoodInstanceId(e.target.value)}
+      />
+      <Button
+        onClick={() => updateMood(moodInstanceId, { moods })}
+        className="bg-orange-500"
+        disabled={updatingMood}>
+        Update Mood
       </Button>
-      <Button onClick={() => updateMood(userMoodId, { moodId })} className="bg-orange-500" disabled={updatingMood}>
-        Update an Existing Mood
+      <Button
+        onClick={() => deleteMood(moodInstanceId)}
+        className="bg-red-500"
+        disabled={deletingMood}>
+        Delete Mood
       </Button>
-      <Button onClick={() => deleteMood(userMoodId)} className="bg-red-500" disabled={deletingMood}>
-        Delete a Mood
-      </Button> */}
     </div>
   );
 }

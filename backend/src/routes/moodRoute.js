@@ -5,13 +5,38 @@ const moodController = require('../controllers/moodController');
 
 /**
  * @swagger
- * /api/moods:
+ * /api/moods/:
  *   get:
- *     summary: Retrieve all mood entries
- *     description: Fetches a list of all mood entries in the database.
+ *     summary: Retrieve all mood types
+ *     description: Fetches a list of all available mood types.
  *     responses:
  *       200:
- *         description: A list of mood entries retrieved successfully
+ *         description: A list of mood types retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "Happy"
+ */
+router.get('/', moodController.getMoods);
+
+/**
+ * @swagger
+ * /api/moods/today:
+ *   get:
+ *     summary: Retrieve all mood entries
+ *     description: Fetches a list of all mood instance entries for the current day in the database.
+ *     responses:
+ *       200:
+ *         description: A list of mood instance entries retrieved successfully
  *         content:
  *           application/json:
  *             schema:
@@ -28,6 +53,9 @@ const moodController = require('../controllers/moodController');
  *                   moodId:
  *                     type: integer
  *                     example: 1
+ *                   moodInstanceId:
+ *                     type: integer
+ *                     example: 1
  *                   dailyRecordId:
  *                     type: integer
  *                     example: 101
@@ -35,12 +63,54 @@ const moodController = require('../controllers/moodController');
  *                     type: string
  *                     format: date-time
  *                     example: "2024-11-24T12:00:00Z"
- *                   updatedAt:
+ *                   moodInstanceCreatedAt:
  *                     type: string
  *                     format: date-time
- *                     example: "2024-11-24T12:30:00Z"
+ *                     example: "2024-11-24T12:00:00Z"
  */
-router.get('/', moodController.getMoodEntries);
+router.get('/today', moodController.getMoodEntriesToday);
+
+/**
+ * @swagger
+ * /api/moods/{date}:
+ *   get:
+ *     summary: Retrieve all mood entries
+ *     description: Fetches a list of all mood instance entries for the specific day in the database.
+ *     responses:
+ *       200:
+ *         description: A list of mood instance entries retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   userId:
+ *                     type: string
+ *                     example: "123e4567-e89b-12d3-a456-426614174000"
+ *                   moodId:
+ *                     type: integer
+ *                     example: 1
+ *                   moodInstanceId:
+ *                     type: integer
+ *                     example: 1
+ *                   dailyRecordId:
+ *                     type: integer
+ *                     example: 101
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-11-24T12:00:00Z"
+ *                   moodInstanceCreatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-11-24T12:00:00Z"
+ */
+router.get('/:date', moodController.getMoodEntriesByDate);
 
 /**
  * @swagger
@@ -57,9 +127,11 @@ router.get('/', moodController.getMoodEntries);
  *               userId:
  *                 type: string
  *                 example: "123e4567-e89b-12d3-a456-426614174000"
- *               moodId:
- *                 type: integer
- *                 example: 1
+ *               moods:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2, 3]
  *               dailyRecordId:
  *                 type: integer
  *                 example: 101
@@ -91,9 +163,11 @@ router.post('/', moodController.createMoodEntry);
  *               userId:
  *                 type: string
  *                 example: "123e4567-e89b-12d3-a456-426614174000"
- *               moodId:
- *                 type: integer
- *                 example: 1
+ *               moods:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2, 3]
  *               dailyRecordId:
  *                 type: integer
  *                 example: 101

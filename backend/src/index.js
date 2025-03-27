@@ -6,8 +6,9 @@ const app = express();
 const { log, warn, error } = require('./logger');
 
 // Body parser middleware
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
+//const bodyParser = require('body-parser');
+//app.use(bodyParser.json());
+app.use(express.json());
 
 // CORS
 const cors = require('cors');
