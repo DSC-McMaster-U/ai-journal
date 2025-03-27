@@ -1,4 +1,5 @@
 'use client';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 import Navbar from '@/components/common/Navbar';
 import { useAuthentication } from '@/hooks/authentication';
 import { usePathname, useRouter } from 'next/navigation';
@@ -21,7 +22,7 @@ export default function MainLayout({ children }) {
   );
 
   if (user == undefined) {
-    return <h1>Loading...</h1>;
+    return <LoadingSpinner />;
   }
 
   return (

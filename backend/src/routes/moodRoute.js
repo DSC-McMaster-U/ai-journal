@@ -5,6 +5,31 @@ const moodController = require('../controllers/moodController');
 
 /**
  * @swagger
+ * /api/moods/:
+ *   get:
+ *     summary: Retrieve all mood types
+ *     description: Fetches a list of all available mood types.
+ *     responses:
+ *       200:
+ *         description: A list of mood types retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "Happy"
+ */
+router.get('/', moodController.getMoods);
+
+/**
+ * @swagger
  * /api/moods/today:
  *   get:
  *     summary: Retrieve all mood entries

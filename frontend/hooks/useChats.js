@@ -2,15 +2,15 @@
 import { useState } from 'react';
 import { customFetch } from '@/lib/customFetch';
 
-export function useGetMoodTypes() {
+export function useGetChats() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getMoodTypes = async () => {
+  const getChats = async () => {
     setLoading(true);
     try {
-      const response = await customFetch('/moods', { method: 'GET' });
+      const response = await customFetch('/chats', { method: 'GET' });
       const result = await response.json();
       console.log(result);
 
@@ -27,77 +27,20 @@ export function useGetMoodTypes() {
     }
   };
 
-  return { data, loading, error, getMoodTypes };
+  return { data, loading, error, getChats };
 }
 
-export function useGetMoods() {
-  const [data, setData] = useState(null);
+export function useCreateChat() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const getMoods = async (endpoint) => {
+  const createChat = async ({ chatName = null }) => {
     setLoading(true);
     try {
-      const response = await customFetch(endpoint, { method: 'GET' });
-      const result = await response.json();
-      console.log(result);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      setData(result.data);
-      return result.data;
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { data, loading, error, getMoods };
-}
-
-export function useCreateMood() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const createMood = async (moodData) => {
-    setLoading(true);
-    try {
-      const response = await customFetch('/moods', {
+      const response = await customFetch('/chats', {
         method: 'POST',
-        body: JSON.stringify(moodData)
-      });
-
-      const result = await response.json();
-      console.log(result);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      return result;
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { createMood, loading, error };
-}
-
-export function useUpdateMood() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const updateMood = async (id, moodData) => {
-    setLoading(true);
-    try {
-      const response = await customFetch(`/moods/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(moodData)
+        body: JSON.stringify({ chatName }),
+        headers: { 'Content-Type': 'application/json' }
       });
 
       const result = await response.json();
@@ -115,17 +58,48 @@ export function useUpdateMood() {
     }
   };
 
-  return { updateMood, loading, error };
+  return { createChat, loading, error };
 }
 
-export function useDeleteMood() {
+export function useUpdateChat() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const deleteMood = async (id) => {
+  const updateChat = async ({ instanceId, chatName, favourited }) => {
     setLoading(true);
     try {
-      const response = await customFetch(`/moods/${id}`, {
+      const response = await customFetch(`/chats/${instanceId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ chatName, favourited }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      return result.data;
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { updateChat, loading, error };
+}
+
+export function useDeleteChat() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const deleteChat = async (instanceId) => {
+    setLoading(true);
+    try {
+      const response = await customFetch(`/chats/${instanceId}`, {
         method: 'DELETE'
       });
 
@@ -139,10 +113,11 @@ export function useDeleteMood() {
       return result.data;
     } catch (err) {
       setError(err);
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  return { deleteMood, loading, error };
+  return { deleteChat, loading, error };
 }
