@@ -24,7 +24,7 @@ const getChatbotResponse = async (message) => {
     messages: [
       { role: 'system', content: chatbotRole },
       // { role: 'user', content: message },
-      // user message is stringified in chatLogsController so we do not need a user role
+      // user message is stringified in chatLogsController, no explicit user role required
       ...message
     ],
     max_tokens: 1000,
