@@ -213,6 +213,22 @@ const authProtect = (req, res, next) => {
     );
   };
 
+  console.log('AUTHBYPASS ' + process.env.AUTHBYPASS);
+
+  //Bypass added to not require DB usage
+  if (process.env.AUTHBYPASS) {
+    log('============== AUTH PROTECT: BYPASS ==================');
+    req.token = {
+      user: {
+        name: 'By passed',
+        id: '1930411341',
+        email: 'Bypassed@gmail.com',
+      },
+    };
+    next();
+    return;
+  }
+
   const token = req.header('Authorization');
 
   if (!token) {

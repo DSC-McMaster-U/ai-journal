@@ -8,5 +8,6 @@ router.post('/', chatsController.createChat);
 router.put('/:instanceId', chatsController.editChat);
 router.delete('/:instanceId', chatsController.deleteChat);
 router.get('/test', chatsController.testFunctions);
+router.get('/withlastmessage/', chatsController.getChatsWithLastMessage);
 
 module.exports = router;

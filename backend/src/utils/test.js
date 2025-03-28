@@ -14,4 +14,4 @@ const send_authenticated_test_request = async (
   });
 };
 
-export { send_authenticated_test_request };
+module.exports = { send_authenticated_test_request };

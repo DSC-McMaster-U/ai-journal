@@ -57,6 +57,18 @@ const deleteChat = async (req, res) => {
   }
 };
 
+const getChatsWithLastMessage = async (req, res) => {
+  try {
+    const userId = req.token.user.id;
+    const chats = await chatsService.getChatsWithLastMessage(userId);
+
+    res.status(200).json({ data: chats });
+  } catch (err) {
+    error(`Controller Error: ${err.message}`);
+    res.status(500).json({ error: 'Failed to fetch chats' });
+  }
+};
+
 const testFunctions = async (req, res) => {
   console.log('===== TESTING CHAT FUNCTIONS =====');
   const userId = req.token.user.id;
@@ -141,4 +153,11 @@ const testFunctions = async (req, res) => {
   res.status(200).json({ 'Test Result': 'Successful' });
 };
 
-module.exports = { getChats, createChat, editChat, deleteChat, testFunctions };
+module.exports = {
+  getChats,
+  createChat,
+  editChat,
+  deleteChat,
+  testFunctions,
+  getChatsWithLastMessage,
+};
