@@ -57,6 +57,7 @@ export function useCreateChat() {
 
   const createChat = async ({ chatName = null }) => {
     setLoading(true);
+
     try {
       const response = await customFetch('/chats', {
         method: 'POST',

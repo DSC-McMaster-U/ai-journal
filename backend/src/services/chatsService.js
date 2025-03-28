@@ -39,9 +39,9 @@ const getChatsWithLastMessage = (userId) => {
   //Dont ask
   const query =
     'WITH chat_with_msgs AS ( ' +
-    'SELECT I.id as id, I.user_id as user_id, I.created_at as created_at, ' +
-    'L.created_at as message_time, L.is_user as is_user, ' +
-    'L.id as msg_id, L.content as content, ' +
+    'SELECT I.id as id, I.user_id as user_id, I.created_at as created_at,  ' +
+    'L.created_at as message_time, L.is_user as is_user,  ' +
+    'L.id as msg_id, L.content as content,  ' +
     'I.chat_name as chat_name, favorited ' +
     'FROM chat_instances AS I ' +
     'LEFT JOIN chat_logs as L ON I.id = L.chat_instance_id ' +
@@ -52,8 +52,14 @@ const getChatsWithLastMessage = (userId) => {
     'INNER JOIN chat_with_msgs as R ON L.id = R.id ' +
     'WHERE L.message_time < R.message_time ' +
     ') ' +
-    'SELECT * FROM chat_with_msgs WHERE msg_id IS NULL or msg_id NOT IN (SELECT DISTINCT msg_id FROM not_latest) ' +
-    'ORDER BY created_at DESC, message_time DESC; ';
+    'SELECT *,  ' +
+    'CASE ' +
+    'WHEN message_time is NULL or created_at > message_time THEN created_at ' +
+    'ELSE message_time ' +
+    'END AS latest_time  ' +
+    'FROM chat_with_msgs WHERE msg_id IS NULL or  ' +
+    'msg_id NOT IN (SELECT DISTINCT msg_id FROM not_latest) ' +
+    'ORDER BY latest_time DESC; ';
 
   return executeQuery(query, [userId]);
 };

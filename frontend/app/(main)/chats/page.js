@@ -9,8 +9,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem
 } from '@radix-ui/react-dropdown-menu';
-import { EllipsisVertical } from 'lucide-react';
-import { useGetChats } from '@/hooks/useChats';
+import { EllipsisVertical, Plus } from 'lucide-react';
+import { useCreateChat, useGetChats } from '@/hooks/useChats';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 export default function ChatsPage() {
@@ -34,7 +34,12 @@ export default function ChatsPage() {
     return <div className="flex justify-center text-3xl p-5">No chats yet, Start One!</div>;
   }
 
-  return <div className="w-full border-y-[2px] border-accent">{rows}</div>;
+  return (
+    <div>
+      <ChatHeader />
+      <div className="w-full border-y-[2px] border-accent">{rows}</div>
+    </div>
+  );
 }
 
 const getLinkFromChat = (chat) => {
@@ -48,11 +53,16 @@ const convertMessageTime = (message_time) => {
       year: 'numeric',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'America/Toronto'
+      minute: '2-digit'
     };
 
-    return new Date(message_time).toLocaleString('en-US', options);
+    let utcDate = new Date(message_time);
+
+    let offset = utcDate.getTimezoneOffset();
+
+    let newDate = new Date(utcDate - offset * 60000);
+
+    return newDate.toLocaleString('en-US', options);
   }
   return '';
 };
@@ -135,6 +145,50 @@ function ChatOptions(props) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+const getLatestChat = (chats) => {
+  return chats.reduce((last, next) => {
+    if (last == undefined) {
+      return next;
+    }
+
+    const lastID = new Date(last['id']);
+    const nextID = new Date(next['id']);
+
+    if (nextID > lastID) {
+      return next;
+    } else {
+      return last;
+    }
+  });
+};
+
+function ChatHeader() {
+  const { createChat, loading, error } = useCreateChat();
+  const { getChats } = useGetChats();
+  const router = useRouter();
+
+  const clickCreateChat = async () => {
+    await createChat({ chatName: null });
+
+    let chats = await getChats();
+
+    let latestChat = getLatestChat(chats);
+
+    router.push(`/chats/${latestChat['id']}`);
+  };
+
+  return (
+    <div className="flex w-full justify-around p-5">
+      <div className="text-5xl self-center">Chats</div>
+      <div
+        className="rounded-full w-[10vw] h-[10vw] bg-primary text-accent text-xl self-center flex flex-wrap justify-center content-center"
+        onClick={clickCreateChat}>
+        <Plus className="w-[6vw] h-[6vw]" />
+      </div>
+    </div>
   );
 }
 
