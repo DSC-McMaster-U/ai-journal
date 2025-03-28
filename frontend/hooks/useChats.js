@@ -27,7 +27,28 @@ export function useGetChats() {
     }
   };
 
-  return { data, loading, error, getChats };
+  const getChatsWithLastMessage = async () => {
+    setLoading(true);
+
+    try {
+      const response = await customFetch('/chats/withlastmessage', { method: 'GET' });
+      const result = await response.json();
+      console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      setData(result.data);
+      return result.data;
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, error, getChats, getChatsWithLastMessage };
 }
 
 export function useCreateChat() {

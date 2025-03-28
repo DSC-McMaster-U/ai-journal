@@ -4,7 +4,7 @@ const { getCookie, deleteCookie } = require('cookies-next');
 const userCookie = 'jwtToken';
 
 function getAuthCookie() {
-  return 'Bearer' + getCookie(userCookie);
+  return 'Bearer ' + getCookie(userCookie);
 }
 
 //Todo!

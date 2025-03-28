@@ -10,27 +10,61 @@ import {
   DropdownMenuItem
 } from '@radix-ui/react-dropdown-menu';
 import { EllipsisVertical } from 'lucide-react';
+import { useGetChats } from '@/hooks/useChats';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 export default function ChatsPage() {
-  const data = GetTestChats();
+  const { data, loading, error, getChats, getChatsWithLastMessage } = useGetChats();
 
-  let rows = data.map(ChatItemToRow);
+  useEffect(() => {
+    getChatsWithLastMessage();
+  }, []);
 
-  if (data == undefined || data.length == 0) {
+  let rows = (data ?? []).map(ChatItemToRow);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (rows.length == 0) {
     return <div className="flex justify-center text-3xl p-5">No chats yet, Start One!</div>;
   }
 
   return <div className="w-full border-y-[2px] border-accent">{rows}</div>;
 }
 
+const getLinkFromChat = (chat) => {
+  return `/chats/${chat['id']}`;
+};
+
+const convertMessageTime = (message_time) => {
+  if (message_time != null) {
+    let options = {
+      month: 'numeric',
+      year: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'America/Toronto'
+    };
+
+    return new Date(message_time).toLocaleString('en-US', options);
+  }
+  return '';
+};
+
 const ChatItemToRow = (item) => {
   return (
     <ChatRow
-      lastMessage={item.lastMessage}
-      lastMessageTime={item.lastMessageTime}
+      lastMessage={item.content}
+      lastMessageTime={convertMessageTime(item.message_time)}
       chatName={item.chat_name}
-      link={item.link}
-      unread={item.unread}
+      link={getLinkFromChat(item)}
+      unread={item.favorited}
     />
   );
 };
@@ -57,8 +91,8 @@ function ChatRow(props) {
       <ChatImage src="images/espressly_with_white.png" />
       <div className="w-full ml-5" onClick={goToChat}>
         <div className="flex justify-between mb-3">
-          <div className="text-lg self-center">{chatName}</div>
-          <div className="mr-5 text-sm text-primary self-center">{lastMessageTime ?? ''}</div>
+          <div className="text-md self-center">{chatName}</div>
+          <div className="mr-5 text-[0.75em] text-primary self-center">{lastMessageTime ?? ''}</div>
         </div>
         <div className="text-primary text-md">{lastMessage ?? ''}</div>
       </div>
@@ -102,92 +136,6 @@ function ChatOptions(props) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
-
-function GetAllChats() {
-  const [data, setData] = useState([]);
-
-  const getChatsForUser = () => {
-    return fetch('http://localhost:8080/api/chats', {
-      method: 'GET',
-      headers: {
-        Authorization: getAuthCookie()
-      }
-    })
-      .then((result) => {
-        return result.json();
-      })
-      .then((json) => {
-        return json['data'];
-      });
-  };
-
-  const addLink = (chat) => {
-    let newChat = structuredClone(chat);
-
-    newChat['link'] = `/chats/${chat['id']}`;
-
-    return newChat;
-  };
-
-  const findLastMessage = (messages) => {
-    return messages.reduce((last, next) => {
-      if (last == undefined) {
-        return next;
-      }
-
-      if (cmpMessagesByDate(last, next) >= 0) {
-        return last;
-      }
-
-      return next;
-    }, undefined);
-  };
-
-  const cmpMessagesByDate = (messageA, messageB) => {
-    const dateA = new Date(messageA['created_at']);
-    const dateB = new Date(messageB['created_at']);
-
-    if (dateA > dateB) {
-      return 1;
-    } else if (dateA < dateB) {
-      return -1;
-    }
-
-    return 0;
-  };
-
-  const addLatestMessageToChat = (chatInfo) => {
-    return fetch(`http://localhost:8080/api/chats/messages/${chatInfo['id']}`, {
-      method: 'GET',
-      headers: {
-        Authorization: getAuthCookie()
-      }
-    })
-      .then((result) => {
-        return result.json();
-      })
-      .then((json) => {
-        return json['data'];
-      })
-      .then((data) => findLastMessage(data))
-      .then((lastMessage) => {
-        let newInfo = structuredClone(chatInfo);
-
-        newInfo['lastMessage'] = lastMessage['content'];
-        newInfo['lastMessageTime'] = lastMessage['created_at'];
-
-        return newInfo;
-      });
-  };
-
-  useEffect(() => {
-    getChatsForUser().then((data) => {
-      setData(data.map(addLink).map(addLatestMessageToChat));
-    });
-  }, []);
-
-  return data;
 }
 
 function GetTestChats() {
