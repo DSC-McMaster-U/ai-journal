@@ -1,4 +1,6 @@
+const { getChatbotResponse } = require('../services/chatbotService');
 const chatMessagesService = require('../services/chatLogsService');
+
 
 const getMessages = async (req, res) => {
   try {
@@ -35,8 +37,30 @@ const sendMessage = async (req, res) => {
       return res.status(403).json({ error: 'Unauthorized to send messages in this chat' });
     }
 
+    // save users message to the database
     const response = await chatMessagesService.sendMessage(chatId, userId, content, is_user);
-    res.status(201).json({ data: response });
+
+    // get message history
+    const messages = await chatMessagesService.getMessages(chatId);
+
+    // stringify message history
+    const userMessageContent = messages
+      .filter((msg) => msg.is_user !== false)
+      .map((msg) => msg.content)
+      .join("\n");
+
+    // send stringified content under the users role
+    const formattedMessages = [
+      { role: 'system', content: chatbotRole },
+      { role: 'user', content: userMessageContent }
+    ];
+
+    const aiResponse = await getChatbotResponse(formattedMessages);
+
+    // reuse sendMessage() to store chatbots response to database
+    const aiMessage = await chatMessagesService.sendMessage(chatId, userId, aiResponse, false);
+    
+    res.status(201).json({ data: response, aiMessage: aiMessage });
   } catch (error) {
     console.log(`Controller Error: ${error.message}`);
     res.status(500).json({ error: 'Failed to send message' });
