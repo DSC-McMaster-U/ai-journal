@@ -3,6 +3,10 @@ const { getCookie, deleteCookie } = require('cookies-next');
 
 const userCookie = 'jwtToken';
 
+function getAuthCookie() {
+  return 'Bearer ' + getCookie(userCookie);
+}
+
 //Todo!
 function addUserToState(user) {}
 
@@ -16,7 +20,7 @@ async function requestBackendUser(onSuccess, onFailure) {
   let response = await fetch('http://localhost:8080/api/auth/get-session-user', {
     method: 'GET',
     headers: {
-      Authorization: 'Bearer ' + getCookie(userCookie)
+      Authorization: getAuthCookie()
     }
   });
 
@@ -57,4 +61,4 @@ function logout() {
   deleteCookie(userCookie);
 }
 
-module.exports = { useAuthentication, logout };
+module.exports = { useAuthentication, logout, getAuthCookie };
