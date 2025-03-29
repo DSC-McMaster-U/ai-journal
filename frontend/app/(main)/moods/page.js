@@ -1,166 +1,133 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-// import MoodSelector from '@/components/ui/MoodSelector';
-import { MoodSelector } from '@/components/ui/mood-selector';
 
-// import JournalTabs from '@/components/journals/JournalTabs';
-// import EntryCard from '@/components/journals/EntryCard';
-import { MoodCard } from '@/components/moods/MoodCard';
-// import { useGetTabById } from '@/hooks/useTabs';
-import {
-    useGetMoods,
-    useCreateMood,
-    useUpdateMood,
-    useDeleteMood,
-} from '@/hooks/useMoods';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { MOODS, MoodSelector } from '@/components/ui/mood-selector';
+import { useGetMoods, useCreateMood, useDeleteMood } from '@/hooks/useMoods';
 import { useToast } from '@/hooks/use-toast';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import Modal from '@/components/common/Modal';
-import { DialogClose } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { Trash2 } from 'lucide-react';
 
 export default function MoodsPage() {
-    const { toast } = useToast();
-    const router = useRouter();
+  const { toast } = useToast();
+  const [moodEntries, setMoodEntries] = useState([]);
 
-    //   const [journalName, setJournalName] = useState('Untitled Journal');
-    //   const [journalTabSelected, setJournalTabSelected] = useState(currentTab);
-    //   const [entries, setEntries] = useState([]);
+  const { loading: loadingMoods, getMoods } = useGetMoods();
+  const { createMood, loading: creatingMood } = useCreateMood();
+  const { deleteMood, loading: deletingMood } = useDeleteMood();
 
-    const [moods, setMoods] = useState([]);
-    // const [newMoodText, setNewMoodText] = useState('');
-    // const [editingMood, setEditingMood] = useState(null);
+  useEffect(() => {
+    fetchMoods();
+  }, []);
 
-    // const { getTabById, loading: loadingTab, data: tab } = useGetTabById();
+  const fetchMoods = async () => {
+    try {
+      const moods = await getMoods('/moods/today');
+      setMoodEntries(moods || []);
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch mood entries'
+      });
+    }
+  };
 
-    // const { loading: loadingDaily, getDailyJournals } = useGetDailyJournals();
-    // const { loading: loadingJournals, getJournals } = useGetJournals();
-    // const { createJournal } = useCreateJournal();
-    // const { updateJournal } = useUpdateJournal();
-    // const { deleteJournal } = useDeleteJournal();
+  const handleCreateMood = async (selectedMoods) => {
+    if (selectedMoods.length === 0) {
+      toast({
+        title: 'Error',
+        description: 'Please select at least one mood'
+      });
+      return;
+    }
 
-    useEffect(() => {
-        //     getTabById(currentTab);
-        //     fetchJournals();
-        // }, [currentTab]);
-        fetchMoods(); // Fetch all moods when the page loads
-    }, []);
+    try {
+      await createMood({
+        moods: selectedMoods
+      });
+      toast({
+        title: 'Success',
+        description: 'Mood entry added successfully'
+      });
+      fetchMoods();
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to create mood entry'
+      });
+    }
+  };
 
-    const fetchMoods = async () => {
-        try {
-            // if (currentTab === '') {
-            const res = await getMoods();
-            setMoods(res);
-            // } else {
-            // const res = await getJournals(currentTab);
-            // setEntries(res);
-            // }
-        } catch (err) {
-            toast({
-                title: 'Error',
-                description: 'Failed to fetch moods'
-            });
-        }
-    };
+  const handleDeleteMood = async (id) => {
+    try {
+      await deleteMood(id);
+      await fetchMoods();
+      toast({
+        title: 'Success',
+        description: 'Mood entry deleted successfully'
+      });
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete mood entry'
+      });
+    }
+  };
 
-    const handleCreateMood = async () => {
-        try {
-            const newMood = await createMood({
-                title: journalName,
-                content: '',
-                tabId: journalTabSelected
-            });
+  if (loadingMoods) {
+    return <LoadingSpinner />;
+  }
 
-            router.push(`/journals/entries/${newJournal.id}`);
-        } catch (err) {
-            console.log(err);
-            toast({
-                title: 'Error',
-                description: 'Failed to create new mood'
-            });
-        }
-    };
-
-    // if (loadingMoods) {
-        // return <LoadingSpinner />;
-    // }
-
-    const handleDeleteMood = async (id) => {
-        try {
-            await deleteMood(id);
-            await fetchMoods();
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const editMoodHandler = async (id, name) => {
-        try {
-            await updateMood({ id, title: name });
-            await fetchMoods();
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    return (
-        <div className="flex flex-col">
-            <h1 className="p-4 text-2xl capitalize border-b-[6px]">
-                {currentTab === '' ? 'Today\'s Moods' : tab && tab.data.name}
-            </h1>
-
-            <div className="flex-1 overflow-y-auto">
-                <div>
-                    {moods.length > 0 ? (
-                        moods.map((mood) => (
-                            <MoodCard
-                                key={mood.id}
-                                mood={mood} // Passing mood object to the MoodCard component
-                                onDelete={handleDeleteMood} // Passing delete handler
-                                onEdit={handleEditMood} // Passing edit handler
-                            />
-                        ))
-                    ) : (
-                        <div className="text-center p-8">No moods entered yet.</div>
-                    )}
-                </div>
-            </div>
-
-            <JournalTabs />
-            <Modal
-                title={'Add Mood'}
-                trigger={
-                    <Button
-                        size="icon"
-                        className="rounded-full p-6 fixed right-[20px] bottom-[100px] z-[5] transition-all hover:-translate-y-[2px]">
-                        <Plus className="!w-6 !h-6" strokeWidth={3} />
-                    </Button>
-                }>
-                <div>
-                    <Label htmlFor="journal-name" className="text-right">
-                        Journal Name
-                    </Label>
-                    <Input
-                        value={journalName}
-                        onChange={(e) => setJournalName(e.target.value)}
-                        id="journal-name"
-                        placeholder="Enter journal name"
-                        className="col-span-3"
-                    />
-                </div>
-                <div className="flex gap-2 mt-6">
-                    <DialogClose className="flex-1" asChild>
-                        <Button onClick={handleCreateJournal}>Create Journal</Button>
-                    </DialogClose>
-                    <DialogClose className="flex-1" asChild>
-                        <Button variant="secondary">Cancel</Button>
-                    </DialogClose>
-                </div>
-            </Modal>
+  return (
+    <div className="flex flex-col">
+      <h1 className="p-4 text-2xl border-b-[6px]">Mood Tracker</h1>
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl">Today's Moods</h2>
+          <MoodSelector onSubmit={handleCreateMood} />
         </div>
-    );
+        {moodEntries.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {moodEntries.map((entry) => (
+              <div key={entry.mood_instance_id} className="p-4 border rounded-lg shadow-sm bg-card">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">
+                    Your mood at{' '}
+                    {new Date(entry.created_at).toLocaleString('en-US', {
+                      hour: 'numeric',
+                      minute: 'numeric'
+                    })}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDeleteMood(entry.mood_instance_id)}
+                    disabled={deletingMood}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2 my-2">
+                  {entry.user_moods.map((mood, index) => {
+                    const moodInfo = MOODS.find((m) => +m.id === +mood.mood_id);
+                    return (
+                      <div
+                        key={index}
+                        className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full flex items-center gap-1.5">
+                        {moodInfo?.icon}
+                        <span className="text-xs">{moodInfo?.name || mood.mood_id}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center p-8 text-muted-foreground">
+            No mood entries yet. Track your first mood above!
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

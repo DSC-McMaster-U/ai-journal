@@ -107,7 +107,7 @@ export default function JournalsPage({ currentTab = '' }) {
 
       <div className="flex-1 overflow-y-auto">
         <div>
-          {entries.length > 0 ? (
+          {entries && entries.length > 0 ? (
             entries.map((entry) => (
               <EntryCard
                 key={entry.id}
