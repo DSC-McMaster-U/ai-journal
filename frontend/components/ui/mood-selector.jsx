@@ -1,55 +1,32 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import {
-  Smile,
-  Frown,
-  Meh,
-  Ghost,
-  X,
-  HeartOff,
-  Laugh,
-  Annoyed,
-  Angry,
-  Activity,
-  Zap,
-  Leaf,
-  Snail,
-  Shrink,
-  MessageCircleQuestion,
-  HandHelping,
-  Bomb,
-  PersonStanding,
-  Rocket,
-  MessageSquareWarning,
-  MessageCircleMore,
-  Plus
-} from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export const MOODS = [
-  { name: 'Happy', id: '5', icon: <Laugh size={24} /> },
-  { name: 'Sad', id: '6', icon: <Frown size={24} /> },
-  { name: 'Angry', id: '7', icon: <Angry size={24} /> },
-  { name: 'Anxious', id: '4', icon: <Activity size={24} /> },
-  { name: 'Excited', id: '3', icon: <Zap size={24} /> },
-  { name: 'Calm', id: '1', icon: <Leaf size={24} /> },
-  { name: 'Tired', id: '2', icon: <Snail size={24} /> },
-  { name: 'Stressed', id: '8', icon: <Shrink size={24} /> },
-  { name: 'Confused', id: '9', icon: <MessageCircleQuestion size={24} /> },
-  { name: 'Grateful', id: '10', icon: <HandHelping size={24} /> },
-  { name: 'Frustrated', id: '11', icon: <Bomb size={24} /> },
-  { name: 'Lonely', id: '12', icon: <PersonStanding size={24} /> },
-  { name: 'Confident', id: '13', icon: <Rocket size={24} /> },
-  { name: 'Afraid', id: '14', icon: <MessageSquareWarning size={24} /> },
-  { name: 'Content', id: '15', icon: <MessageCircleMore size={24} /> },
-  { name: 'Bored', id: '16', icon: <Meh size={24} /> }
+  { name: 'Happy', id: '5', icon: '😊' },
+  { name: 'Sad', id: '6', icon: '😢' },
+  { name: 'Angry', id: '7', icon: '😡' },
+  { name: 'Anxious', id: '4', icon: '😰' },
+  { name: 'Excited', id: '3', icon: '🤩' },
+  { name: 'Calm', id: '1', icon: '😌' },
+  { name: 'Tired', id: '2', icon: '😴' },
+  { name: 'Stressed', id: '8', icon: '😫' },
+  { name: 'Confused', id: '9', icon: '🤔' },
+  { name: 'Grateful', id: '10', icon: '🙏' },
+  { name: 'Frustrated', id: '11', icon: '😤' },
+  { name: 'Lonely', id: '12', icon: '🥺' },
+  { name: 'Confident', id: '13', icon: '💪' },
+  { name: 'Afraid', id: '14', icon: '😨' },
+  { name: 'Content', id: '15', icon: '🥰' },
+  { name: 'Bored', id: '16', icon: '🥱' }
 ];
 
 export const MoodSelector = ({ onSubmit }) => {
-  const [selectedMoods, setSelectedMoods] = React.useState([]);
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const [selectedMoods, setSelectedMoods] = useState([]);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const toggleMood = (moodId) => {
     setSelectedMoods((prevMoods) =>
