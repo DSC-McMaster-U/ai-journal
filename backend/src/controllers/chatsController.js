@@ -1,6 +1,13 @@
 const chatsService = require('../services/chatsService');
 const { log, error } = require('../logger');
 const { send_authenticated_test_request } = require('../utils/test');
+const chatMessagesService = require('../services/chatLogsService');
+
+// when creating a new chat this is the message that should be displayed
+const greetingMessage = `Welcome to Expressly, your personal journal and AI companion. 
+Here, you can express your thoughts, track your moods, and reflect on your journey—whenever you need to. 
+Remember, while I'm here to listen and offer support, 
+I'm not a substitute for professional care. Together, we'll help you make sense of your feelings and grow, one entry at a time`;
 
 const getChats = async (req, res) => {
   try {
@@ -20,6 +27,9 @@ const createChat = async (req, res) => {
     const { chatName = null } = req.body;
 
     const response = await chatsService.createChat(userId, chatName);
+
+    // initial greeting message when a chat is created
+    await chatMessagesService.sendMessage(response.insertId, userId, greetingMessage, false);
 
     res.status(200).json({ data: response });
   } catch (err) {
