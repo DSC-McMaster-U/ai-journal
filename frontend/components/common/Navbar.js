@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { House, MessageSquare, Notebook, Settings, User } from 'lucide-react';
+import { House, MessageSquare, Notebook, Settings, Smile, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Navbar({ isSidebarOpen }) {
@@ -22,11 +22,11 @@ export default function Navbar({ isSidebarOpen }) {
       path: '/chats',
       icon: <MessageSquare strokeWidth={2} size={22} />
     },
-    // {
-    //   name: 'Stats',
-    //   path: '/stats',
-    //   icon: <FaChartColumn strokeWidth={2} size={26} />
-    // },
+    {
+      name: 'Moods',
+      path: '/moods',
+      icon: <Smile strokeWidth={2} size={22} />
+    },
     {
       name: 'Settings',
       path: '/settings',
